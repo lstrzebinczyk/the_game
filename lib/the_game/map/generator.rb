@@ -6,18 +6,10 @@ class TheGame
         grid = new_grid(size)
         map = Map.new(grid)
         populate_with_food(map)
-        populate_with_person(map)
         map
       end
 
       private
-
-      def populate_with_person(map)
-        person = Person.new
-        map.fetch(@size/2, @size/2) do |tile|
-          tile.set_person(person)
-        end
-      end
 
       def populate_with_food(map)
         map.each_tile do |tile|
@@ -29,10 +21,10 @@ class TheGame
 
       def new_grid(size)
         grid = []
-        size.times do
+        size.times do |row_index|
           row = []
-          size.times do
-            row << Map::Tile.new
+          size.times do |column_index|
+            row << Map::Tile.new(row_index, column_index)
           end
           grid << row
         end

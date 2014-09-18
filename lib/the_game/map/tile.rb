@@ -1,36 +1,40 @@
 class TheGame
   class Map
     class Tile
-      class Tree
+      class Content
+        def has_food?
+          false
+        end
+      end
+
+      class Tree < Content
         def to_s
           "x"
         end
       end
 
-      class Null
+      class Null < Content
         def to_s
           "."
         end
       end
 
-      class Food
+      class Food < Content
+        def has_food?
+          true
+        end
+
         def to_s
           "f"
         end
       end
 
-      class Person
-        def initialize(person)
-          @person = person
-        end
+      attr_reader :x, :y
 
-        def to_s
-          "P"
-        end
-      end
-
-      def initialize
+      def initialize(x, y)
         @content = Null.new
+        @x = x
+        @y = y
       end
 
       def set_tree
@@ -41,8 +45,12 @@ class TheGame
         @content = Food.new
       end
 
-      def set_person(person)
-        @content = Person.new(person)
+      def clear
+        @content = Null.new
+      end
+
+      def has_food?
+        @content.has_food?
       end
 
       def to_s

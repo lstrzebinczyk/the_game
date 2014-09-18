@@ -11,7 +11,12 @@ class TheGame
 
     def fetch(width, height)
       tile = @grid[width][height]
-      yield(tile)
+      yield(tile) if block_given?
+      tile
+    end
+
+    def size
+      @grid.length
     end
 
     def each_tile

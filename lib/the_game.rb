@@ -1,7 +1,10 @@
+require_relative "logger"
 require_relative "the_game/person"
 require_relative "the_game/map"
 require_relative "the_game/engine"
 require_relative "the_game/window"
+
+require "pry"
 
 class TheGame
   def setup
@@ -19,7 +22,7 @@ class TheGame
       while true
         @engine.update
         @window.render
-        sleep(0.2)
+        sleep(0.1)
       end
     ensure
       @window.close
