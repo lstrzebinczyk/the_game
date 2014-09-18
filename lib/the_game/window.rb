@@ -52,12 +52,15 @@ class TheGame
     end
 
     def render_people_stats
+      setpos(0, map.width + 2)
+      addstr("Alive: #{people.size}")
+
       people.each_with_index do |person, index|
-        setpos(1 + 4 * index, map.width + 2)
-        addstr("Person stats:")
         setpos(2 + 4 * index, map.width + 2)
-        addstr("  hunger: #{person.hunger}")
+        addstr("Person stats:")
         setpos(3 + 4 * index, map.width + 2)
+        addstr("  hunger: #{person.hunger}")
+        setpos(4 + 4 * index, map.width + 2)
         addstr("  action: #{person.action.description}")
       end
     end

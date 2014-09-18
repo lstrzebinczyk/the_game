@@ -6,16 +6,18 @@ class TheGame
       end
 
       def perform(person, map)
-        closest = map.fetch(0, 0)
-        map.each_tile do |tile|
-          if tile.has_food?
-            if person.distance_to(tile) < person.distance_to(closest)
-              closest = tile
+        closest = map.find {|tile| tile.has_food? }
+
+        if closest
+          map.each_tile do |tile|
+            if tile.has_food?
+              if person.distance_to(tile) < person.distance_to(closest)
+                closest = tile
+              end
             end
           end
+          person.action = FetchFood.new(closest)
         end
-
-        person.action = FetchFood.new(closest)
       end
     end
   end

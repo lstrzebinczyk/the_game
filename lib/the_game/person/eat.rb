@@ -11,7 +11,7 @@ class TheGame
 
       def perform(person, map)
         @turns_spent_eating += 1
-        person.hunger += 0.05
+        person.hunger += 0.10
 
         if @turns_spent_eating == 3
           person.action = WonderForNoReason.new

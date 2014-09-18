@@ -8,7 +8,7 @@ class TheGame
     attr_accessor :x, :y, :action, :hunger
 
     def initialize(attrs = {})
-      @hunger = rand
+      @hunger = rand + 0.1
 
       @action = WonderForNoReason.new
 
@@ -18,7 +18,22 @@ class TheGame
 
     def update(map, time_in_minutes)
       update_hunger(time_in_minutes)
+      if should_die?
+        die!
+      end
       @action.perform(self, map)
+    end
+
+    def should_die?
+      @hunger < 0.1
+    end
+
+    def dead?
+      @dead == true
+    end
+
+    def die!
+      @dead = true
     end
 
     def update_hunger(minutes)

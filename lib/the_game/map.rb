@@ -15,6 +15,15 @@ class TheGame
       tile
     end
 
+    def find
+      each_tile do |tile|
+        if yield(tile)
+          return tile
+        end
+      end
+      return nil
+    end
+
     def width
       @grid.first.length
     end

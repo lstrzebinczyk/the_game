@@ -9,6 +9,8 @@ class TheGame
     end
 
     def update(time_in_minutes = 60)
+      remove_dead_people!
+
       @people.each do |person|
         person.update(@map, time_in_minutes)
       end
@@ -16,9 +18,16 @@ class TheGame
 
     private
 
+    def remove_dead_people!
+      @people.delete_if{|person| person.dead? }
+    end
+
     def generate_people!
-      2.times do
-        person = Person.new(x: 10, y: 8)
+      srand
+      10.times do
+        x = rand(map.height)
+        y = rand(map.width)
+        person = Person.new(x: x, y: y)
         @people << person
       end
     end

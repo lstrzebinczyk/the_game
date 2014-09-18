@@ -19,14 +19,14 @@ class TheGame
         if person.x < 0
           person.x = 0
         end
-        if person.x > map.width - 1
-          person.x = map.width - 1
+        if person.x > map.height - 1
+          person.x = map.height - 1
         end
         if person.y < 0
           person.y = 0
         end
-        if person.y > map.height - 1
-          person.y = map.height - 1
+        if person.y > map.width - 1
+          person.y = map.width - 1
         end
       end
 
