@@ -1,3 +1,4 @@
+require_relative "the_game/person"
 require_relative "the_game/map"
 require_relative "the_game/engine"
 require_relative "the_game/window"

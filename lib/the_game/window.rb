@@ -24,23 +24,10 @@ class TheGame
       map.grid.each_with_index do |row, row_index|
         row.each_with_index do |tile, column_index|
           setpos(row_index, column_index)
-          addstr(pixel(tile))
+          addstr(tile.to_s)
         end
       end
       refresh
-    end
-
-    private
-
-    def pixel(tile)
-      case tile.feature
-      when nil
-        "."
-      when :tree
-        "x"
-      when :person
-        "P"
-      end
     end
   end
 end
