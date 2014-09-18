@@ -15,7 +15,11 @@ class TheGame
       tile
     end
 
-    def size
+    def width
+      @grid.first.length
+    end
+
+    def height
       @grid.length
     end
 

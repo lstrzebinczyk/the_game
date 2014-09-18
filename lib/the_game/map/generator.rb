@@ -1,9 +1,11 @@
 class TheGame
   class Map
     class Generator
-      def generate(size = 32)
-        @size = size
-        grid = new_grid(size)
+      def generate(width = 120, height = 30)
+        @width  = width
+        @height = height
+
+        grid = new_grid
         map = Map.new(grid)
         populate_with_food(map)
         map
@@ -19,11 +21,11 @@ class TheGame
         end
       end
 
-      def new_grid(size)
+      def new_grid
         grid = []
-        size.times do |row_index|
+        @height.times do |row_index|
           row = []
-          size.times do |column_index|
+          @width.times do |column_index|
             row << Map::Tile.new(row_index, column_index)
           end
           grid << row
