@@ -14,6 +14,8 @@ class TheGame
       @people.each do |person|
         person.update(@map, time_in_minutes)
       end
+
+      @map.update
     end
 
     private

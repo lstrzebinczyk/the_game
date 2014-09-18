@@ -53,6 +53,14 @@ class TheGame
         @content.has_food?
       end
 
+      def update
+        if @content.is_a? Null
+          if rand < 0.0001
+            set_food
+          end
+        end
+      end
+
       def to_s
         @content.to_s
       end

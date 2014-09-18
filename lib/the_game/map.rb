@@ -24,6 +24,12 @@ class TheGame
       return nil
     end
 
+    def update
+      each_tile do |tile|
+        tile.update
+      end
+    end
+
     def width
       @grid.first.length
     end
