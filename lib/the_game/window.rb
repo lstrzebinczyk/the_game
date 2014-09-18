@@ -58,7 +58,7 @@ class TheGame
         setpos(2 + 4 * index, map.size + 2)
         addstr("  hunger: #{person.hunger}")
         setpos(3 + 4 * index, map.size + 2)
-        addstr("  action: #{person.action_description}")
+        addstr("  action: #{person.action.description}")
       end
     end
   end
