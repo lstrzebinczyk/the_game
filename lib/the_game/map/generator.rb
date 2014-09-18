@@ -7,10 +7,7 @@ class TheGame
         map = Map.new(grid)
         populate_with_trees(map)
         populate_with_person(map)
-
         map
-
-
       end
 
       private

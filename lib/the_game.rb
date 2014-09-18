@@ -15,31 +15,11 @@ class TheGame
   def start
     @window.init
     begin
-      # @window.cr
-      # while true
-        # @engine.update
-        # while true
-
-        # trap
-
-        while true
-          @engine.update
-          @window.render
-        end
-        # require "pry"
-        # binding.pry
-        # end
-      # end
-      # end
-    # ensure
-      # @window.close
-    # end
-
-    # @window.init
-    # begin
-    #   while true
-    #     @window.render
-    #   end
+      while true
+        @engine.update
+        @window.render
+        sleep(0.2)
+      end
     ensure
       @window.close
     end
