@@ -5,15 +5,17 @@ require_relative "person/wonder_for_no_reason"
 
 class TheGame
   class Person
-    attr_accessor :x, :y, :action, :hunger
+    include TheGame::HasPosition
+
+    attr_accessor :action, :hunger
 
     def initialize(attrs = {})
       @hunger = rand + 0.1
 
       @action = WonderForNoReason.new
 
-      @x = attrs[:x]
-      @y = attrs[:y]
+      self.x = attrs[:x]
+      self.y = attrs[:y]
     end
 
     def update(map, time_in_minutes)
@@ -39,10 +41,6 @@ class TheGame
     def update_hunger(minutes)
       @hunger -= minutes.to_f / 14500
       @hunger = (@hunger * 100).to_i.to_f / 100
-    end
-
-    def distance_to(object)
-      (@x - object.x) ** 2 + (@y - object.y) ** 2
     end
 
     def hungry?

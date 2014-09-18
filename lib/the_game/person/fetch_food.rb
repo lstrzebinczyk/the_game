@@ -21,16 +21,7 @@ class TheGame
           end
         else
           # go to proper tile
-          if @food_tile.x < person.x
-            person.x -= 1
-          elsif @food_tile.x > person.x
-            person.x += 1
-          end
-          if @food_tile.y < person.y
-            person.y -= 1
-          elsif @food_tile.y > person.y
-            person.y += 1
-          end
+          person.go_to(@food_tile)
         end
       end
     end

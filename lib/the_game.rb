@@ -1,4 +1,5 @@
 require_relative "logger"
+require_relative "the_game/has_position"
 require_relative "the_game/person"
 require_relative "the_game/map"
 require_relative "the_game/engine"

@@ -29,12 +29,12 @@ class TheGame
         end
       end
 
-      attr_reader :x, :y
+      include TheGame::HasPosition
 
       def initialize(x, y)
         @content = Null.new
-        @x = x
-        @y = y
+        self.x = x
+        self.y = y
       end
 
       def set_tree
