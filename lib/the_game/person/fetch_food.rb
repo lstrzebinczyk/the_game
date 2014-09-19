@@ -20,8 +20,12 @@ class TheGame
             person.action = LookForFood.new
           end
         else
-          # go to proper tile
-          person.go_to(@food_tile)
+          if @food_tile.has_food?
+            # go to proper tile
+            person.go_to(@food_tile)
+          else
+            person.action = LookForFood.new
+          end
         end
       end
     end

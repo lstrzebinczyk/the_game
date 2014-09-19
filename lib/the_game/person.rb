@@ -40,11 +40,10 @@ class TheGame
 
     def update_hunger(minutes)
       @hunger -= minutes.to_f / 14500
-      @hunger = (@hunger * 100).to_i.to_f / 100
     end
 
     def hungry?
-      hunger < 0.4
+      hunger < 0.5
     end
 
     def to_s
