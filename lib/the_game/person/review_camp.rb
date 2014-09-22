@@ -8,6 +8,10 @@ class TheGame
       def perform(person, map, time_in_minutes)
         stash = map.find_stash
         person.stash_tile = stash
+
+        fire = map.find_fire
+        person.fire_tile = fire
+
         person.action = WonderForNoReason.new
       end
     end

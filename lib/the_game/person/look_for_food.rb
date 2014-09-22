@@ -6,8 +6,11 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        check_stash(person, map)
-        find_for_harvest(person, map)
+        unless @stash_checked
+          check_stash(person, map)
+        else
+          find_for_harvest(person, map)
+        end
       end
 
       private
@@ -21,6 +24,7 @@ class TheGame
             person.action = Eat.new(food)
             return
           end
+          @stash_checked = true
         else
           person.go_to(person.stash_tile)
         end

@@ -25,6 +25,12 @@ class TheGame
       end
     end
 
+    def find_fire
+      find do |tile|
+        tile.content.is_a? Tile::Fire
+      end
+    end
+
     def find
       each_tile do |tile|
         if yield(tile)

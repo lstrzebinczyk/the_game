@@ -26,6 +26,7 @@ class TheGame
       Curses.init_pair(COLOR_BLUE,COLOR_BLUE,COLOR_BLACK)
       Curses.init_pair(COLOR_YELLOW,COLOR_YELLOW,COLOR_BLACK)
       Curses.init_pair(COLOR_GREEN,COLOR_GREEN,COLOR_BLACK)
+      Curses.init_pair(COLOR_RED,COLOR_RED,COLOR_BLACK)
       init_screen
     end
 
@@ -64,6 +65,10 @@ class TheGame
             Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
               addstr(tile.to_s)
             }
+          elsif tile.color == :red
+            Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
+              addstr(tile.to_s)
+            }
           else
             addstr(tile.to_s)
           end
@@ -98,17 +103,24 @@ class TheGame
       addstr("Alive: #{people.size}")
 
       people.each_with_index do |person, index|
-        setpos(2 + 4 * index, map.width + 2)
+        setpos(2 + 5 * index, map.width + 2)
         addstr " " * 50
-        setpos(2 + 4 * index, map.width + 2)
+        setpos(2 + 5 * index, map.width + 2)
         addstr("Person stats:")
-        setpos(3 + 4 * index, map.width + 2)
+
+        setpos(3 + 5 * index, map.width + 2)
         addstr " " * 50
-        setpos(3 + 4 * index, map.width + 2)
+        setpos(3 + 5 * index, map.width + 2)
         addstr("  hunger: #{person.hunger}")
-        setpos(4 + 4 * index, map.width + 2)
+
+        setpos(4 + 5 * index, map.width + 2)
         addstr " " * 50
-        setpos(4 + 4 * index, map.width + 2)
+        setpos(4 + 5 * index, map.width + 2)
+        addstr("  energy: #{person.energy}")
+
+        setpos(5 + 5 * index, map.width + 2)
+        addstr " " * 50
+        setpos(5 + 5 * index, map.width + 2)
         addstr("  action: #{person.action.description}")
       end
     end

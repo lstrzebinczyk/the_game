@@ -6,17 +6,20 @@ require_relative "person/wonder_for_no_reason"
 require_relative "person/harvest"
 require_relative "person/carry_food_to_stash"
 require_relative "person/review_camp"
+require_relative "person/look_for_place_to_sleep"
+require_relative "person/sleep"
 
 class TheGame
   class Person
     include TheGame::HasPosition
 
-    attr_accessor :action, :hunger
-    attr_accessor :stash_tile
+    attr_accessor :action, :hunger, :energy
+    attr_accessor :stash_tile, :fire_tile
     attr_reader :inventory
 
     def initialize(attrs = {})
-      @hunger = rand + 0.1
+      @hunger = 0.8 + rand / 10
+      @energy = 0.3 + rand / 2
 
       @action = ReviewCamp.new
 
@@ -30,8 +33,14 @@ class TheGame
       close_enough_to(@stash_tile)
     end
 
+    def is_standing_near_fireplace?
+      distance_to(@fire_tile) < 4.0
+    end
+
     def update(map, time_in_minutes)
       update_hunger(time_in_minutes)
+      update_energy(time_in_minutes)
+
       if should_die?
         die!
       end
@@ -65,8 +74,30 @@ class TheGame
       @hunger -= minutes / 4320.0
     end
 
+    def update_energy(minutes)
+      # assume that:
+      # 8 hours of sleep is enough rest for 16 hours of being awake
+      # therefore energy goes from 1 to 0 in 16 hours
+      # and goes back when sleeping in 8 hours
+      # during one minute energy decreases by 1 / (16*60) => 0.00104167
+      # lets call that beta
+      # when sleeping energy increases by 3 beta
+      @energy -= minutes / 960.0
+      if @energy < 0
+        @energy = 0
+      end
+    end
+
     def hungry?
       hunger < (5.0/6)
+    end
+
+    def full?
+      hunger > 0.96
+    end
+
+    def sleepy?
+      energy < 0.02
     end
 
     def to_s

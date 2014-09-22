@@ -71,6 +71,20 @@ class TheGame
         end
       end
 
+      class Fire < Content
+        def passable?
+          false
+        end
+
+        def to_s
+          "F"
+        end
+
+        def color
+          :red
+        end
+      end
+
       class Stash < Content
         attr_reader :stash
 
@@ -95,6 +109,10 @@ class TheGame
 
       def set_stash
         @content = Stash.new
+      end
+
+      def set_fire
+        @content = Fire.new
       end
 
       def set_tree

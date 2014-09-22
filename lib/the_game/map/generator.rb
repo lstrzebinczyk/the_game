@@ -23,6 +23,13 @@ class TheGame
         map.fetch(stash_x, stash_y) do |tile|
           tile.set_stash
         end
+
+        fire_x = map.height / 2 + 1
+        fire_y = map.width  / 2 + 2
+
+        map.fetch(fire_x, fire_y) do |tile|
+          tile.set_fire
+        end
       end
 
       def create_river(map)

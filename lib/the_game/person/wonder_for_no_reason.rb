@@ -10,6 +10,8 @@ class TheGame
 
         if person.hungry?
           person.action = LookForFood.new
+        elsif person.sleepy?
+          person.action = LookForPlaceToSleep.new
         else
           person.action = LookForFoodToHarvest.new
         end
