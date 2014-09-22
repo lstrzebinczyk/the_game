@@ -20,7 +20,7 @@ class TheGame
 
       @action = ReviewCamp.new
 
-      @inventory = []
+      @inventory = Container.new
 
       self.x = attrs[:x]
       self.y = attrs[:y]
@@ -28,11 +28,6 @@ class TheGame
 
     def is_standing_near_stash?
       close_enough_to(@stash_tile)
-    end
-
-    def get_food_from_inventory
-      #because there is nothing else than food possible
-      @inventory.pop
     end
 
     def update(map, time_in_minutes)

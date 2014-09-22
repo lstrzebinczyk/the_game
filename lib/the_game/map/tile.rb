@@ -63,7 +63,7 @@ class TheGame
         attr_reader :stash
 
         def initialize
-          @stash = TheGame::Stash.new
+          @stash = TheGame::Container.new
         end
 
         def to_s
