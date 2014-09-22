@@ -17,6 +17,10 @@ class TheGame
     end
 
     def init
+      Curses.start_color
+      Curses.init_pair(COLOR_BLUE,COLOR_BLUE,COLOR_BLACK)
+      Curses.init_pair(COLOR_YELLOW,COLOR_YELLOW,COLOR_BLACK)
+      Curses.init_pair(COLOR_GREEN,COLOR_GREEN,COLOR_BLACK)
       init_screen
     end
 
@@ -25,7 +29,7 @@ class TheGame
     end
 
     def render
-      clear
+      # clear
       render_map
       render_people
       render_people_stats
@@ -39,7 +43,22 @@ class TheGame
       map.grid.each_with_index do |row, row_index|
         row.each_with_index do |tile, column_index|
           setpos(row_index, column_index)
-          addstr(tile.to_s)
+
+          if tile.color == :blue
+            Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
+              addstr(tile.to_s)
+            }
+          elsif tile.color == :yellow
+            Curses.attron(color_pair(COLOR_YELLOW)|A_NORMAL) {
+              addstr(tile.to_s)
+            }
+          elsif tile.color == :green
+            Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+              addstr(tile.to_s)
+            }
+          else
+            addstr(tile.to_s)
+          end
         end
       end
     end

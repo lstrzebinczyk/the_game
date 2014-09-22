@@ -9,11 +9,19 @@ class TheGame
         def passable?
           true
         end
+
+        def color
+          :white
+        end
       end
 
       class Tree < Content
         def to_s
-          "x"
+          "t"
+        end
+
+        def color
+          :green
         end
       end
 
@@ -31,6 +39,10 @@ class TheGame
         def to_s
           ["~", " "].sample
         end
+
+        def color
+          :blue
+        end
       end
 
       class Food < Content
@@ -40,6 +52,10 @@ class TheGame
 
         def to_s
           "f"
+        end
+
+        def color
+          :yellow
         end
       end
 
@@ -85,6 +101,10 @@ class TheGame
 
       def passable?
         @content.passable?
+      end
+
+      def color
+        @content.color
       end
 
       def impassable?
