@@ -1,11 +1,13 @@
 class TheGame
   class Engine
-    attr_accessor :map, :people
+    attr_accessor :map, :people, :time
 
     def initialize
       @map = Map::Generator.new.generate
       @people = []
       generate_people!
+
+      @time = Time.new(1000, 1, 1, 12, 0, 0)
     end
 
     def update(time_in_minutes = 60)
@@ -16,6 +18,7 @@ class TheGame
       end
 
       @map.update
+      @time += time_in_minutes * 60
     end
 
     private
@@ -28,7 +31,7 @@ class TheGame
       x_center = map.height / 2
       y_center = map.width  / 2
 
-      [-1].each do |x_offset|
+      [-1, 0].each do |x_offset|
         [-1, 0].each do |y_offset|
       # [-1, 0, 1].each do |x_offset|
       #   [-1, 0, 1].each do |y_offset|

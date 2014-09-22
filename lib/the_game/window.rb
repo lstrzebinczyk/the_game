@@ -17,6 +17,10 @@ class TheGame
       @engine.people
     end
 
+    def time
+      @engine.time.strftime("%H:%M %S")
+    end
+
     def init
       Curses.start_color
       Curses.init_pair(COLOR_BLUE,COLOR_BLUE,COLOR_BLACK)
@@ -35,6 +39,7 @@ class TheGame
       render_people
       render_people_stats
       render_stash_stats
+      render_time
 
       refresh
       @iteration += 1
@@ -71,6 +76,12 @@ class TheGame
         setpos(person.x, person.y)
         addstr(person.to_s)
       end
+    end
+
+    def render_time
+      setpos(0, map.width + 15)
+
+      addstr("Time: #{time}")
     end
 
     def render_stash_stats
