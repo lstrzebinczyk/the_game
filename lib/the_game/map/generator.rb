@@ -9,11 +9,21 @@ class TheGame
         map = Map.new(grid)
         populate_with_trees(map)
         populate_with_food(map)
+        create_camp(map)
         create_river(map)
         map
       end
 
       private
+
+      def create_camp(map)
+        stash_x = map.height / 2 + 2
+        stash_y = map.width  / 2 + 2
+
+        map.fetch(stash_x, stash_y) do |tile|
+          tile.set_stash
+        end
+      end
 
       def create_river(map)
         map.each_tile do |tile|

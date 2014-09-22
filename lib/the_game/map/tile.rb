@@ -59,12 +59,30 @@ class TheGame
         end
       end
 
+      class Stash < Content
+        attr_reader :stash
+
+        def initialize
+          @stash = TheGame::Stash.new
+        end
+
+        def to_s
+          "S"
+        end
+      end
+
       include TheGame::HasPosition
+
+      attr_reader :content
 
       def initialize(x, y)
         @content = Null.new
         self.x = x
         self.y = y
+      end
+
+      def set_stash
+        @content = Stash.new
       end
 
       def set_tree

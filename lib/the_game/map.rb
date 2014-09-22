@@ -15,6 +15,12 @@ class TheGame
       tile
     end
 
+    def find_stash
+      find do |tile|
+        tile.content.is_a? Tile::Stash
+      end
+    end
+
     def find
       each_tile do |tile|
         if yield(tile)

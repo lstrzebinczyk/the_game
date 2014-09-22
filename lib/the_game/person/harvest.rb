@@ -15,7 +15,12 @@ class TheGame
       def perform(person, map)
         if @turns_left == 0
           harvested_food = Food.new
-          person.action = Eat.new(harvested_food)
+          if person.hungry?
+            person.action = Eat.new(harvested_food)
+          else
+            person.inventory << harvested_food
+            person.action = CarryFoodToStash.new
+          end
         else
           @turns_left -= 1
         end

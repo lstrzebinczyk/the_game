@@ -7,7 +7,12 @@ class TheGame
 
       def perform(person, map)
         move_around(person, map)
-        check_if_hungry(person)
+
+        if person.hungry?
+          person.action = LookForFood.new
+        else
+          person.action = LookForFoodToHarvest.new
+        end
       end
 
       private
@@ -25,12 +30,6 @@ class TheGame
 
         person.x += offset_x
         person.y += offset_y
-      end
-
-      def check_if_hungry(person)
-        if person.hungry?
-          person.action = LookForFood.new
-        end
       end
     end
   end

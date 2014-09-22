@@ -6,6 +6,7 @@ class TheGame
 
     def initialize(engine)
       @engine = engine
+      @iteration = 0
     end
 
     def map
@@ -29,12 +30,13 @@ class TheGame
     end
 
     def render
-      # clear
+      clear if @iteration % 20 == 0
       render_map
       render_people
       render_people_stats
 
       refresh
+      @iteration += 1
     end
 
     private
