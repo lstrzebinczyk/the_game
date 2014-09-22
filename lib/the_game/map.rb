@@ -10,7 +10,7 @@ class TheGame
     end
 
     def fetch(width, height)
-      tile = @grid[width][height]
+      tile = @grid[width] && @grid[width][height]
       yield(tile) if block_given?
       tile
     end

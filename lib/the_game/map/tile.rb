@@ -5,6 +5,10 @@ class TheGame
         def has_food?
           false
         end
+
+        def passable?
+          true
+        end
       end
 
       class Tree < Content
@@ -16,6 +20,16 @@ class TheGame
       class Null < Content
         def to_s
           "."
+        end
+      end
+
+      class River < Content
+        def passable?
+          false
+        end
+
+        def to_s
+          ["~", " "].sample
         end
       end
 
@@ -45,6 +59,10 @@ class TheGame
         @content = Food.new
       end
 
+      def set_river
+        @content = River.new
+      end
+
       def clear
         @content = Null.new
       end
@@ -63,6 +81,14 @@ class TheGame
 
       def to_s
         @content.to_s
+      end
+
+      def passable?
+        @content.passable?
+      end
+
+      def impassable?
+        !passable?
       end
     end
   end

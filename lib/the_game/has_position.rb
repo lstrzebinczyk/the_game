@@ -25,8 +25,8 @@ class TheGame
       x_distance = object.x - self.x
       y_distance = object.y - self.y
 
-      self.x += x_distance / distance
-      self.y += y_distance / distance
+      self.x += x_distance.to_f / distance
+      self.y += y_distance.to_f / distance
     end
   end
 end

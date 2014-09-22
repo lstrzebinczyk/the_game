@@ -26,9 +26,13 @@ class TheGame
 
     def generate_people!
       srand
-      10.times do
+      20.times do
         x = rand(map.height)
         y = rand(map.width)
+        while !@map.fetch(x, y).passable?
+          x = rand(map.height)
+          y = rand(map.width)
+        end
         person = Person.new(x: x, y: y)
         @people << person
       end

@@ -13,21 +13,18 @@ class TheGame
       private
 
       def move_around(person, map)
-        person.x += (rand(3) - 1)
-        person.y += (rand(3) - 1)
+        offset_x = rand(3) - 1
+        offset_y = rand(3) - 1
+        tile = map.fetch(person.x + offset_x, person.y + offset_y)
 
-        if person.x < 0
-          person.x = 0
+        while tile.nil? or tile.impassable?
+          offset_x = rand(3) - 1
+          offset_y = rand(3) - 1
+          tile = map.fetch(person.x + offset_x, person.y + offset_y)
         end
-        if person.x > map.height - 1
-          person.x = map.height - 1
-        end
-        if person.y < 0
-          person.y = 0
-        end
-        if person.y > map.width - 1
-          person.y = map.width - 1
-        end
+
+        person.x += offset_x
+        person.y += offset_y
       end
 
       def check_if_hungry(person)
