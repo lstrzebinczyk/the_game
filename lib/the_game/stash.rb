@@ -20,5 +20,9 @@ class TheGame
     def has_food?
       @content.any?
     end
+
+    def food_count
+      @content.size
+    end
   end
 end

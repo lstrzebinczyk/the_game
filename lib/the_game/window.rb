@@ -34,6 +34,7 @@ class TheGame
       render_map
       render_people
       render_people_stats
+      render_stash_stats
 
       refresh
       @iteration += 1
@@ -70,6 +71,13 @@ class TheGame
         setpos(person.x, person.y)
         addstr(person.to_s)
       end
+    end
+
+    def render_stash_stats
+      setpos(0, map.width + 50)
+      addstr("Stash: ")
+      setpos(3, map.width + 50)
+      addstr("  food: #{map.stash.food_count}")
     end
 
     def render_people_stats

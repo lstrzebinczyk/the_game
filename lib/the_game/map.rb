@@ -9,6 +9,10 @@ class TheGame
       @grid = grid
     end
 
+    def stash
+      @stash ||= find_stash.content.stash
+    end
+
     def fetch(width, height)
       tile = @grid[width] && @grid[width][height]
       yield(tile) if block_given?

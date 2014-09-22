@@ -28,8 +28,10 @@ class TheGame
       x_center = map.height / 2
       y_center = map.width  / 2
 
-      [-1, 0, 1].each do |x_offset|
-        [-1, 0, 1].each do |y_offset|
+      [-1].each do |x_offset|
+        [-1, 0].each do |y_offset|
+      # [-1, 0, 1].each do |x_offset|
+      #   [-1, 0, 1].each do |y_offset|
           x = x_center + x_offset
           y = y_center + y_offset
           person = Person.new(x: x, y: y)
