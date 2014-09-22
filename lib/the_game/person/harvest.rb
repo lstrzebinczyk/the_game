@@ -3,7 +3,7 @@ class TheGame
     class Harvest
       def initialize(tile)
         @tile = tile
-        @turns_left = 2
+        @turns_left = 4
       end
 
       def description
