@@ -10,7 +10,7 @@ class TheGame
       @time = Time.new(1000, 1, 1, 12, 0, 0)
     end
 
-    def update(time_in_minutes = 60)
+    def update(time_in_minutes = 5)
       remove_dead_people!
 
       @people.each do |person|

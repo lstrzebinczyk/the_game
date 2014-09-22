@@ -1,11 +1,11 @@
 class TheGame
   class Food
-    def turns_to_eat
-      6
+    def minutes_to_eat
+      90
     end
 
-    def hunger_per_turn_added
-      0.03
+    def hunger_per_minute_added
+      5 * 0.0002314814814814815
     end
   end
 end

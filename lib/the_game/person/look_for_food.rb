@@ -5,7 +5,7 @@ class TheGame
         "looking for food"
       end
 
-      def perform(person, map)
+      def perform(person, map, time_in_minutes)
         check_stash(person, map)
         find_for_harvest(person, map)
       end

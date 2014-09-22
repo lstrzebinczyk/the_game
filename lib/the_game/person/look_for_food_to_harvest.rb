@@ -5,7 +5,7 @@ class TheGame
         "looking for food"
       end
 
-      def perform(person, map)
+      def perform(person, map, time_in_minutes)
         closest = map.find {|tile| tile.has_food? }
 
         if closest

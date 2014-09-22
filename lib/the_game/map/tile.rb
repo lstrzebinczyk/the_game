@@ -46,12 +46,24 @@ class TheGame
       end
 
       class Food < Content
+        def initialize
+          @food_count = 3
+        end
+
         def has_food?
           true
         end
 
         def to_s
           "f"
+        end
+
+        def decrease_food
+          @food_count -= 1
+        end
+
+        def any_food_left?
+          @food_count > 0
         end
 
         def color
@@ -101,16 +113,23 @@ class TheGame
         @content = Null.new
       end
 
+      def get_food
+        @content.decrease_food
+        unless @content.any_food_left?
+          clear
+        end
+      end
+
       def has_food?
         @content.has_food?
       end
 
       def update
-        if @content.is_a? Null
-          if rand < 0.0001
-            set_food
-          end
-        end
+        # if @content.is_a? Null
+        #   if rand < 0.0001
+        #     set_food
+        #   end
+        # end
       end
 
       def to_s

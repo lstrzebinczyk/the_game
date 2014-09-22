@@ -35,7 +35,7 @@ class TheGame
 
       def populate_with_food(map)
         map.each_tile do |tile|
-          if rand < 0.2
+          if rand < 0.12
             tile.set_food
           end
         end
@@ -43,7 +43,7 @@ class TheGame
 
       def populate_with_trees(map)
         map.each_tile do |tile|
-          if rand < 0.15
+          if rand < 0.08
             tile.set_tree
           end
         end

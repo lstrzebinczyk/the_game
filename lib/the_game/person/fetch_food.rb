@@ -11,10 +11,10 @@ class TheGame
         "fetching food at #{x}, #{y}"
       end
 
-      def perform(person, map)
+      def perform(person, map, time_in_minutes)
         if person.close_enough_to(@food_tile)
           if @food_tile.has_food?
-            @food_tile.clear
+            @food_tile.get_food
             person.action = Harvest.new(@food_tile)
           else
             person.action = LookForFood.new

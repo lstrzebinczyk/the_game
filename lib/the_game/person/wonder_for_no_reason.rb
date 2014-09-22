@@ -5,7 +5,7 @@ class TheGame
         "just wondering"
       end
 
-      def perform(person, map)
+      def perform(person, map, time_in_minutes)
         move_around(person, map)
 
         if person.hungry?

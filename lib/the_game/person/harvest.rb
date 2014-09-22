@@ -3,7 +3,7 @@ class TheGame
     class Harvest
       def initialize(tile)
         @tile = tile
-        @turns_left = 4
+        @minutes_left = 60
       end
 
       def description
@@ -12,8 +12,8 @@ class TheGame
         "harvesting food at #{x}, #{y}"
       end
 
-      def perform(person, map)
-        if @turns_left == 0
+      def perform(person, map, time_in_minutes)
+        if @minutes_left == 0
           harvested_food = Food.new
           if person.hungry?
             person.action = Eat.new(harvested_food)
@@ -22,7 +22,7 @@ class TheGame
             person.action = CarryFoodToStash.new
           end
         else
-          @turns_left -= 1
+          @minutes_left -= time_in_minutes
         end
       end
     end
