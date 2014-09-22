@@ -15,7 +15,7 @@ class TheGame
         if @food_tile.x == person.x and @food_tile.y == person.y
           if @food_tile.has_food?
             @food_tile.clear
-            person.action = Eat.new
+            person.action = Harvest.new(@food_tile)
           else
             person.action = LookForFood.new
           end

@@ -1,8 +1,9 @@
 class TheGame
   class Person
     class Eat
-      def initialize
-        @turns_spent_eating = 0
+      def initialize(food)
+        @food = food
+        @turns_spent_eating_left = @food.turns_to_eat
       end
 
       def description
@@ -10,10 +11,10 @@ class TheGame
       end
 
       def perform(person, map)
-        @turns_spent_eating += 1
-        person.hunger += 0.20
+        @turns_spent_eating_left -= 1
+        person.hunger += @food.hunger_per_turn_added
 
-        if @turns_spent_eating == 3
+        if @turns_spent_eating_left == 0
           person.action = WonderForNoReason.new
         end
       end

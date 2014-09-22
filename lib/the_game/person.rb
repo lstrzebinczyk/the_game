@@ -2,6 +2,7 @@ require_relative "person/eat"
 require_relative "person/fetch_food"
 require_relative "person/look_for_food"
 require_relative "person/wonder_for_no_reason"
+require_relative "person/harvest"
 
 class TheGame
   class Person
@@ -13,6 +14,8 @@ class TheGame
       @hunger = rand + 0.1
 
       @action = WonderForNoReason.new
+
+      @inventory = []
 
       self.x = attrs[:x]
       self.y = attrs[:y]
