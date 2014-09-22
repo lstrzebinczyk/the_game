@@ -25,16 +25,16 @@ class TheGame
     end
 
     def generate_people!
-      srand
-      20.times do
-        x = rand(map.height)
-        y = rand(map.width)
-        while !@map.fetch(x, y).passable?
-          x = rand(map.height)
-          y = rand(map.width)
+      x_center = map.height / 2
+      y_center = map.width  / 2
+
+      [-1, 0, 1].each do |x_offset|
+        [-1, 0, 1].each do |y_offset|
+          x = x_center + x_offset
+          y = y_center + y_offset
+          person = Person.new(x: x, y: y)
+          @people << person
         end
-        person = Person.new(x: x, y: y)
-        @people << person
       end
     end
   end
