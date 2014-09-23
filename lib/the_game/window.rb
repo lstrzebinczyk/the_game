@@ -15,6 +15,10 @@ class TheGame
       @engine.people
     end
 
+    def stash
+      TheGame::Settlement.instance.stash
+    end
+
     def time
       @engine.time.strftime("%H:%M %S")
     end
@@ -91,7 +95,7 @@ class TheGame
       setpos(0, map.width + 50)
       addstr("Stash: ")
       setpos(3, map.width + 50)
-      addstr("  food: #{map.stash.food_count}")
+      addstr("  food: #{stash.food_count}")
     end
 
     def render_people_stats

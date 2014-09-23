@@ -6,9 +6,9 @@ class TheGame
       @grid = grid
     end
 
-    def stash
-      @stash ||= find_stash.content.stash
-    end
+    # def stash
+    #   @stash ||= find_stash.content.stash
+    # end
 
     def fetch(width, height)
       tile = @grid[width] && @grid[width][height]
@@ -16,17 +16,17 @@ class TheGame
       tile
     end
 
-    def find_stash
-      find do |tile|
-        tile.content.is_a? Tile::Stash
-      end
-    end
+    # def find_stash
+    #   find do |tile|
+    #     tile.content.is_a? Tile::Stash
+    #   end
+    # end
 
-    def find_fire
-      find do |tile|
-        tile.content.is_a? Tile::Fire
-      end
-    end
+    # def find_fire
+    #   find do |tile|
+    #     tile.content.is_a? Tile::Fire
+    #   end
+    # end
 
     def find
       each_tile do |tile|
