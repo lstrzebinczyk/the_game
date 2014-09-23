@@ -1,30 +1,51 @@
 class TheGame
   class Container
-    attr_reader :content
-
     def initialize
-      @content = []
+      @content = {}
+      @content[:food] = []
+      @content[:axes] = []
+    end
+
+    def food
+      @content[:food]
+    end
+
+    def axes
+      @content[:axes]
     end
 
     def add(item)
-      @content << item
+      if item.is_a? food_class
+        @content[:food] << item
+      elsif item.is_a? axe_class
+        @content[:axes] << item
+      end
     end
 
     def get_food
-      #because there is nothing else than food possible
-      @content.pop
+      @content[:food].pop
     end
 
     def has_food?
-      @content.any?
+      @content[:food].any?
     end
 
     def food_count
-      @content.size
+      @content[:food].size
     end
 
     def food_amount
-      @content.map{|food| food.alphas }.inject(0, &:+)
+      @content[:food].map{|food| food.alphas }.inject(0, &:+)
+    end
+
+    private
+
+    def axe_class
+      TheGame::Item::Axe
+    end
+
+    def food_class
+      TheGame::Item::Food
     end
   end
 end
