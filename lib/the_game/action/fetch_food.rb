@@ -17,14 +17,14 @@ class TheGame
             @food_tile.get_food
             person.action = Action::Harvest.new(@food_tile)
           else
-            person.action = Action::LookForFood.new
+            person.action = Action::LookForFoodToHarvest.new
           end
         else
           if @food_tile.has_food?
             # go to proper tile
             person.go_to(@food_tile)
           else
-            person.action = Action::LookForFood.new
+            person.action = Action::LookForFoodToHarvest.new
           end
         end
       end
