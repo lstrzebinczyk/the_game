@@ -35,7 +35,7 @@ class TheGame
     end
 
     def render
-      clear if @iteration % 20 == 0
+      clear if @iteration % 200 == 0
       render_map
       render_people
       render_people_stats

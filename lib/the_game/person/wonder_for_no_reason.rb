@@ -12,7 +12,7 @@ class TheGame
           person.action = LookForFood.new
         elsif person.sleepy?
           person.action = LookForPlaceToSleep.new
-        else
+        elsif person.will_take_jobs
           person.action = LookForFoodToHarvest.new
         end
       end

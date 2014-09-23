@@ -10,7 +10,7 @@ class TheGame
       @time = Time.new(1000, 1, 1, 12, 0, 0)
     end
 
-    def update(time_in_minutes = 5)
+    def update(time_in_minutes = 1)
       remove_dead_people!
 
       @people.each do |person|
@@ -31,16 +31,21 @@ class TheGame
       x_center = map.height / 2
       y_center = map.width  / 2
 
-      [-1, 0].each do |x_offset|
-        [-1, 0].each do |y_offset|
-      # [-1, 0, 1].each do |x_offset|
-      #   [-1, 0, 1].each do |y_offset|
-          x = x_center + x_offset
-          y = y_center + y_offset
-          person = Person.new(x: x, y: y)
-          @people << person
-        end
+      3.times do
+        @people << Person.new(x: x_center, y: y_center)
       end
+      # [-1, 0].each do |x_offset|
+      #   [-1, 0].each do |y_offset|
+      # # [-1, 0, 1].each do |x_offset|
+      # #   [-1, 0, 1].each do |y_offset|
+      #     x = x_center + x_offset
+      #     y = y_center + y_offset
+      #     person = Person.new(x: x, y: y)
+      #     @people << person
+      #   end
+      # end
+      # @people << Person.new(x: x_center, y: y_center, will_take_jobs: false)
+      # @people << Person.new(x: x_center, y: y_center, will_take_jobs: false)
     end
   end
 end

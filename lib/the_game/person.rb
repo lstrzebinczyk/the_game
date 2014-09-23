@@ -13,7 +13,7 @@ class TheGame
   class Person
     include TheGame::HasPosition
 
-    attr_accessor :action, :hunger, :energy
+    attr_accessor :action, :hunger, :energy, :will_take_jobs
     attr_accessor :stash_tile, :fire_tile
     attr_reader :inventory
 
@@ -24,6 +24,12 @@ class TheGame
       @action = ReviewCamp.new
 
       @inventory = Container.new
+
+      if attrs[:will_take_jobs].nil?
+        @will_take_jobs = true
+      else
+        @will_take_jobs = attrs[:will_take_jobs]
+      end
 
       self.x = attrs[:x]
       self.y = attrs[:y]
