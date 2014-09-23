@@ -6,35 +6,26 @@ class TheGame
       @grid = grid
     end
 
-    # def stash
-    #   @stash ||= find_stash.content.stash
-    # end
-
     def fetch(width, height)
       tile = @grid[width] && @grid[width][height]
       yield(tile) if block_given?
       tile
     end
 
-    # def find_stash
-    #   find do |tile|
-    #     tile.content.is_a? Tile::Stash
-    #   end
-    # end
+    def find_closest_to(person)
+      closest = find {|tile| tile.has_food? }
 
-    # def find_fire
-    #   find do |tile|
-    #     tile.content.is_a? Tile::Fire
-    #   end
-    # end
-
-    def find
-      each_tile do |tile|
-        if yield(tile)
-          return tile
+      if closest
+        each_tile do |tile|
+          if yield(tile)
+            if person.distance_to(tile) < person.distance_to(closest)
+              closest = tile
+            end
+          end
         end
       end
-      return nil
+
+      closest
     end
 
     def update
@@ -58,5 +49,17 @@ class TheGame
         end
       end
     end
+
+    private
+
+    def find
+      each_tile do |tile|
+        if yield(tile)
+          return tile
+        end
+      end
+      return nil
+    end
+
   end
 end
