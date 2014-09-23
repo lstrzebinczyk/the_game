@@ -1,14 +1,12 @@
 class TheGame
   class Container
+    attr_reader :content
+
     def initialize
       @content = []
     end
 
-    def add(food)
-      @content << food
-    end
-
-    def <<(item)
+    def add(item)
       @content << item
     end
 

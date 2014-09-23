@@ -18,7 +18,7 @@ class TheGame
           if person.hungry?
             person.action = Action::Eat.new(harvested_food)
           else
-            person.inventory << harvested_food
+            person.inventory.add(harvested_food)
             person.action = Action::CarryFoodToStash.new
           end
         else

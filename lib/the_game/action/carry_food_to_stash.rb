@@ -10,7 +10,7 @@ class TheGame
 
         if person.close_enough_to(stash_tile)
           food = person.inventory.get_food
-          stash_tile.content.stash << food
+          stash_tile.content.stash.add(food)
           person.action = Action::WonderForNoReason.new
         else
           person.go_to(stash_tile)
