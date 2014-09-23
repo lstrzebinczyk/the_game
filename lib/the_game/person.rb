@@ -3,14 +3,13 @@ class TheGame
     include TheGame::HasPosition
 
     attr_accessor :action, :hunger, :energy, :will_take_jobs
-    attr_accessor :stash_tile, :fire_tile
     attr_reader :inventory
 
     def initialize(attrs = {})
       @hunger = 0.8 + rand / 10
       @energy = 0.3 + rand / 2
 
-      @action = ReviewCamp.new
+      @action = WonderForNoReason.new
 
       @inventory = Container.new
 
@@ -24,13 +23,13 @@ class TheGame
       self.y = attrs[:y]
     end
 
-    def is_standing_near_stash?
-      close_enough_to(@stash_tile)
-    end
+    # def is_standing_near_stash?
+    #   close_enough_to(@stash_tile)
+    # end
 
-    def is_standing_near_fireplace?
-      distance_to(@fire_tile) < 4.0
-    end
+    # def is_standing_near_fireplace?
+    #   distance_to(@fire_tile) < 4.0
+    # end
 
     def update(map, time_in_minutes)
       update_hunger(time_in_minutes)

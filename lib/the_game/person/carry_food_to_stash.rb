@@ -6,7 +6,7 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        stash_tile = person.stash_tile
+        stash_tile = TheGame::Settlement.instance.stash_tile
 
         if person.close_enough_to(stash_tile)
           food = person.inventory.get_food

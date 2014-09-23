@@ -22,6 +22,7 @@ class TheGame
 
         map.fetch(stash_x, stash_y) do |tile|
           tile.set_stash
+          TheGame::Settlement.instance.stash_tile = tile
         end
 
         fire_x = map.height / 2 + 1
@@ -29,6 +30,7 @@ class TheGame
 
         map.fetch(fire_x, fire_y) do |tile|
           tile.set_fire
+          TheGame::Settlement.instance.fire_tile = tile
         end
       end
 
