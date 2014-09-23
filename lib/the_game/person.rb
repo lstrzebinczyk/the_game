@@ -9,7 +9,7 @@ class TheGame
       @hunger = 0.8 + rand / 10
       @energy = 0.3 + rand / 2
 
-      @action = Action::WonderForNoReason.new
+      do_stuff
 
       @inventory = Container.new
 
@@ -21,6 +21,10 @@ class TheGame
 
       self.x = attrs[:x]
       self.y = attrs[:y]
+    end
+
+    def do_stuff
+      @action = Action::WonderForNoReason.new
     end
 
     def update(map, time_in_minutes)
@@ -49,7 +53,7 @@ class TheGame
       # assume that:
       # 3 days with no food at all == death from hunger
       # so 0.0002314814814814815 hunger is lost each minute
-      # lets call this value
+      # lets call this value alpha (1/4320)
       # 1.5h of eating should provide for ~6h of work, therefore
       # 1minute of eating should replenish for 5alpha
 

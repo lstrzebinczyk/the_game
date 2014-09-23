@@ -42,6 +42,7 @@ class TheGame
       render_people
       render_people_stats
       render_stash_stats
+      render_settlement_stats
       render_time
 
       refresh
@@ -96,6 +97,13 @@ class TheGame
       addstr("Stash: ")
       setpos(3, map.width + 50)
       addstr("  food: #{stash.food_count}")
+    end
+
+    def render_settlement_stats
+      setpos(5, map.width + 50)
+      addstr("Jobs: ")
+      setpos(7, map.width + 50)
+      addstr("  count: #{TheGame::Settlement.instance.jobs_count}")
     end
 
     def render_people_stats

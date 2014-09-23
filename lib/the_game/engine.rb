@@ -6,6 +6,7 @@ class TheGame
       @map = Map::Generator.new.generate
       @people = []
       generate_people!
+      TheGame::Settlement.instance.people = @people
 
       @time = Time.new(1000, 1, 1, 12, 0, 0)
     end
@@ -18,6 +19,8 @@ class TheGame
       end
 
       @map.update
+      TheGame::Settlement.instance.update(time_in_minutes)
+
       @time += time_in_minutes * 60
     end
 

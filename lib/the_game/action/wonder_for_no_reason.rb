@@ -13,7 +13,12 @@ class TheGame
         elsif person.sleepy?
           person.action = Action::LookForPlaceToSleep.new
         elsif person.will_take_jobs
-          person.action = Action::LookForFoodToHarvest.new
+          job = TheGame::Settlement.instance.get_job
+          if job
+            person.action = job
+          else
+            person.do_stuff
+          end
         end
       end
 

@@ -24,5 +24,9 @@ class TheGame
     def food_count
       @content.size
     end
+
+    def food_amount
+      @content.map{|food| food.alphas }.inject(0, &:+)
+    end
   end
 end
