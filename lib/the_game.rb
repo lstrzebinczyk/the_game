@@ -1,13 +1,8 @@
-require_relative "logger"
-require_relative "the_game/has_position"
-require_relative "the_game/person"
-require_relative "the_game/map"
-require_relative "the_game/engine"
-require_relative "the_game/window"
-require_relative "the_game/food"
-require_relative "the_game/container"
-
+require 'require_all'
+require "curses"
 require "pry"
+
+require_all "lib"
 
 class TheGame
   def setup

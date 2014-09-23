@@ -1,5 +1,3 @@
-require "curses"
-
 class TheGame
   class Window
     include Curses

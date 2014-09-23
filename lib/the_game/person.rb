@@ -1,14 +1,3 @@
-require_relative "person/eat"
-require_relative "person/fetch_food"
-require_relative "person/look_for_food"
-require_relative "person/look_for_food_to_harvest"
-require_relative "person/wonder_for_no_reason"
-require_relative "person/harvest"
-require_relative "person/carry_food_to_stash"
-require_relative "person/review_camp"
-require_relative "person/look_for_place_to_sleep"
-require_relative "person/sleep"
-
 class TheGame
   class Person
     include TheGame::HasPosition

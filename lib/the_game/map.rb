@@ -1,6 +1,3 @@
-require_relative "map/generator"
-require_relative "map/tile"
-
 class TheGame
   class Map
     attr_reader :grid
