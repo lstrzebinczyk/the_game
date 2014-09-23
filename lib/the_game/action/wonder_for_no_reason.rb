@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class WonderForNoReason
       def description
         "just wondering"
@@ -9,11 +9,11 @@ class TheGame
         move_around(person, map)
 
         if person.hungry?
-          person.action = LookForFood.new
+          person.action = Action::LookForFood.new
         elsif person.sleepy?
-          person.action = LookForPlaceToSleep.new
+          person.action = Action::LookForPlaceToSleep.new
         elsif person.will_take_jobs
-          person.action = LookForFoodToHarvest.new
+          person.action = Action::LookForFoodToHarvest.new
         end
       end
 

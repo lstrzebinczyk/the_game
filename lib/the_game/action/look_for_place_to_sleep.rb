@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class LookForPlaceToSleep
       def description
         "going near fireplace to sleep"
@@ -12,7 +12,7 @@ class TheGame
           # assume that person needs a safe place to sleep
           # for now, the only option is the fireplace
 
-          person.action = Sleep.new
+          person.action = Action::Sleep.new
         else
           person.go_to(fire_tile)
         end

@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class LookForFood
       def description
         "looking for food"
@@ -21,7 +21,7 @@ class TheGame
             person.action = Eat.new(food)
             return
           else
-            person.action = LookForFoodToHarvest.new
+            person.action = Action::LookForFoodToHarvest.new
           end
         else
           person.go_to(stash_tile)

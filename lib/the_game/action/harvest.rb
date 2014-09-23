@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class Harvest
       def initialize(tile)
         @tile = tile
@@ -16,10 +16,10 @@ class TheGame
         if @minutes_left == 0
           harvested_food = Food.new
           if person.hungry?
-            person.action = Eat.new(harvested_food)
+            person.action = Action::Eat.new(harvested_food)
           else
             person.inventory << harvested_food
-            person.action = CarryFoodToStash.new
+            person.action = Action::CarryFoodToStash.new
           end
         else
           @minutes_left -= time_in_minutes

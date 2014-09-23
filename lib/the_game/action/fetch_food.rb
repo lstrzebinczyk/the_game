@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class FetchFood
       def initialize(food_tile)
         @food_tile = food_tile
@@ -15,16 +15,16 @@ class TheGame
         if person.close_enough_to(@food_tile)
           if @food_tile.has_food?
             @food_tile.get_food
-            person.action = Harvest.new(@food_tile)
+            person.action = Action::Harvest.new(@food_tile)
           else
-            person.action = LookForFood.new
+            person.action = Action::LookForFood.new
           end
         else
           if @food_tile.has_food?
             # go to proper tile
             person.go_to(@food_tile)
           else
-            person.action = LookForFood.new
+            person.action = Action::LookForFood.new
           end
         end
       end

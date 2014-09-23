@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class LookForFoodToHarvest
       def description
         "looking for food"
@@ -11,7 +11,7 @@ class TheGame
         end
 
         if closest
-          person.action = FetchFood.new(closest)
+          person.action = Action::FetchFood.new(closest)
         end
       end
     end

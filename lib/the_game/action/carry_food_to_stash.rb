@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class CarryFoodToStash
       def description
         "carrying food to stash..."
@@ -11,7 +11,7 @@ class TheGame
         if person.close_enough_to(stash_tile)
           food = person.inventory.get_food
           stash_tile.content.stash << food
-          person.action = WonderForNoReason.new
+          person.action = Action::WonderForNoReason.new
         else
           person.go_to(stash_tile)
         end

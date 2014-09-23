@@ -1,5 +1,5 @@
 class TheGame
-  class Person
+  class Action
     class Eat
       def initialize(food)
         @food = food
@@ -16,9 +16,9 @@ class TheGame
 
         if @minutes_spent_eating_left == 0
           if person.full?
-            person.action = WonderForNoReason.new
+            person.action = Action::WonderForNoReason.new
           else
-            person.action = LookForFood.new
+            person.action = Action::LookForFood.new
           end
         end
       end
