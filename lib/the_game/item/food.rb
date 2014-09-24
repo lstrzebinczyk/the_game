@@ -3,13 +3,14 @@ class TheGame
     class Food
       def minutes_to_eat
         # How long can you eat a bunch of berries?
-        20
+        10
       end
 
       def hunger_per_minute_added
-        # 60 minutes should replenish 0.5
+        # 60 minutes should replenish 0.2
         # so 1 minute, this:
-        0.00834
+        # 0.00834
+        0.2 / minutes_to_eat
       end
 
       def alphas
