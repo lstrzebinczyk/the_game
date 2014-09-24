@@ -33,9 +33,11 @@ class TheGame
           @firewood_left = 60
         end
 
-        def get_firewood
-          @firewood_left -= 1
-          TheGame::Item::Firewood.new
+        def get(type)
+          if type == :firewood
+            @firewood_left -= 1
+            TheGame::Item::Firewood.new
+          end
         end
 
         def any_firewood_left?
@@ -143,6 +145,10 @@ class TheGame
 
       def add(item)
         @content.stash.add(item)
+      end
+
+      def get(type)
+        @content.get(type)
       end
 
       def set_stash(stash)

@@ -22,8 +22,15 @@ class TheGame
 
           if @minutes_left == 0
             @tile.tree_cut
+            stash_tile = TheGame::Settlement.instance.stash_tile
+
             @tile.content.firewood_left.times do
-              new_job = Action::CarryWoodToStash.new(@tile)
+              # st
+              new_job = Action::Get.new(:firewood, from: @tile)
+              new_job.then(Action::Carry.new(:firewood, to: stash_tile))
+
+
+              # new_job = Action::CarryWoodToStash.new(@tile)
               TheGame::Settlement.instance.add_job(new_job)
             end
             stash_tile = TheGame::Settlement.instance.stash_tile
