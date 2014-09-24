@@ -46,22 +46,14 @@ class TheGame
       # end
 
       def perform(person, map, time_in_minutes)
-        # bini
+        item = @place.get(@item_type)
 
-        if person.distance_to(@place) < 2.0
-          # binding.pry
-
-          item = @place.get(@item_type)
-
-          if item
-            person.inventory.add(item)
-            person.action = @next_action
-          else
-            Settlement.instance.add_job(self)
-            person.do_stuff
-          end
+        if item
+          person.inventory.add(item)
+          person.action = @next_action
         else
-          person.go_to(@place)
+          Settlement.instance.add_job(self)
+          person.do_stuff
         end
       end
     end
