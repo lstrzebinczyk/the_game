@@ -72,6 +72,8 @@ class TheGame
     # job types:
     # :haul, :management, :woodcutting, :gatherer
     def get_job(person)
+      #Try to get a job you'd prefer
+
       person.accepted_jobs.each do |job_type|
         job = @jobs.find{|job| job.type == job_type }
         if job
@@ -80,7 +82,9 @@ class TheGame
           return job
         end
       end
-      nil
+
+      #try to get any job
+      @jobs.pop
     end
 
     def jobs_count

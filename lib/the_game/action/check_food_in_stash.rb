@@ -21,8 +21,6 @@ class TheGame
           people_count = settlement.people_count
           expected_food_amount = 3 * people_count
 
-
-
           if stash.food_amount < expected_food_amount
             food_collected_per_job = Item::Food.new.alphas
 
