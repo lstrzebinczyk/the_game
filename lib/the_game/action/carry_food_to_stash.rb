@@ -5,6 +5,10 @@ class TheGame
         "carrying food to stash..."
       end
 
+      def type
+        :haul
+      end
+
       def perform(person, map, time_in_minutes)
         stash_tile = TheGame::Settlement.instance.stash_tile
 

@@ -5,6 +5,10 @@ class TheGame
         "checking food in stash"
       end
 
+      def type
+        :management
+      end
+
       def perform(person, map, time_in_minutes)
         settlement = TheGame::Settlement.instance
         stash_tile = settlement.stash_tile

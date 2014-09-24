@@ -9,6 +9,10 @@ class TheGame
         "carrying wood to stash..."
       end
 
+      def type
+        :haul
+      end
+
       def perform(person, map, time_in_minutes)
         if person.has_firewood?
           stash_tile = TheGame::Settlement.instance.stash_tile

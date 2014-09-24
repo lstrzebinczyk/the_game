@@ -37,7 +37,7 @@ class TheGame
     end
 
     def render
-      clear if @iteration % 200 == 0
+      clear if @iteration % 50 == 0
       render_map
       render_people
       render_people_stats
@@ -106,14 +106,23 @@ class TheGame
     def render_settlement_stats
       setpos(5, map.width + 50)
       addstr("Jobs: ")
-      setpos(6, map.width + 50)
-      addstr("  count: #{TheGame::Settlement.instance.jobs_count}")
 
+      jobs_count = TheGame::Settlement.instance.jobs_count
+
+      setpos(6, map.width + 50)
+      addstr("  haul:        #{jobs_count[:haul]}")
       setpos(7, map.width + 50)
+      addstr("  management:  #{jobs_count[:management]}")
+      setpos(8, map.width + 50)
+      addstr("  woodcutting: #{jobs_count[:woodcutting]}")
+      setpos(9, map.width + 50)
+      addstr("  gatherer:    #{jobs_count[:gatherer]}")
+
+      setpos(11, map.width + 50)
       addstr("Fire: ")
-      setpos(8, map.width + 50)
+      setpos(12, map.width + 50)
       addstr " " * 50
-      setpos(8, map.width + 50)
+      setpos(13, map.width + 50)
       addstr("  minutes left: #{TheGame::Settlement.instance.minutes_left_for_fire}")
     end
 
@@ -127,7 +136,7 @@ class TheGame
         setpos(2 + 5 * index, map.width + 2)
         addstr " " * 50
         setpos(2 + 5 * index, map.width + 2)
-        addstr("Person stats:")
+        addstr("Person (#{person.type}) stats:")
 
         setpos(3 + 5 * index, map.width + 2)
         addstr " " * 50

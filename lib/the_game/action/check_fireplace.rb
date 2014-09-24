@@ -5,6 +5,10 @@ class TheGame
         "checking fireplace"
       end
 
+      def type
+        :management
+      end
+
       def perform(person, map, time_in_minutes)
         settlement = TheGame::Settlement.instance
         fire_tile  = settlement.fire_tile

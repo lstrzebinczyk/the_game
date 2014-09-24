@@ -6,6 +6,10 @@ class TheGame
         @minutes_left = 180
       end
 
+      def type
+        :woodcutting
+      end
+
       def description
         x = @tile.x
         y = @tile.y

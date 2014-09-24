@@ -66,19 +66,27 @@ class TheGame
       @jobs << job
     end
 
-    def jobs_count
-      @jobs.count
+    # job types:
+    # :haul, :management, :woodcutting, :gatherer
+    def get_job(person)
+      person.accepted_jobs.each do |job_type|
+        job = @jobs.find{|job| job.type == job_type }
+        if job
+          index = @jobs.index(job)
+          @jobs.delete_at(index)
+          return job
+        end
+      end
+      nil
     end
 
-    def get_job
-      # retrieve sample job
-      # this will have to do unless we have a nice prioritizing and roles system
-      job = @jobs.sample
-      if job
-        index = @jobs.index(job)
-        @jobs.delete_at(index)
-      end
-      job
+    def jobs_count
+      {
+        haul: @jobs.count{|job| job.type == :haul },
+        management: @jobs.count{|job| job.type == :management },
+        woodcutting: @jobs.count{|job| job.type == :woodcutting },
+        gatherer: @jobs.count{|job| job.type == :gatherer },
+      }
     end
 
     def food_amount

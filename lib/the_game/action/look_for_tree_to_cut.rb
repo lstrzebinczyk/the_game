@@ -5,6 +5,10 @@ class TheGame
         "looking for food"
       end
 
+      def type
+        :woodcutting
+      end
+
       def perform(person, map, time_in_minutes)
         if person.has_axe?
           closest = map.find_closest_to(person) do |tile|

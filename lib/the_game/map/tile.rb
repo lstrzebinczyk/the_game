@@ -30,7 +30,7 @@ class TheGame
 
         def initialize
           # because why not
-          @firewood_left = 120
+          @firewood_left = 60
         end
 
         def get_firewood
