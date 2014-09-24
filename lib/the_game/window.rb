@@ -112,6 +112,8 @@ class TheGame
       setpos(7, map.width + 50)
       addstr("Fire: ")
       setpos(8, map.width + 50)
+      addstr " " * 50
+      setpos(8, map.width + 50)
       addstr("  minutes left: #{TheGame::Settlement.instance.minutes_left_for_fire}")
     end
 
@@ -130,18 +132,49 @@ class TheGame
         setpos(3 + 5 * index, map.width + 2)
         addstr " " * 50
         setpos(3 + 5 * index, map.width + 2)
-        addstr("  hunger: #{person.hunger}")
+        addstr("  hunger: #{progress_bar(person.hunger)}")
 
         setpos(4 + 5 * index, map.width + 2)
         addstr " " * 50
         setpos(4 + 5 * index, map.width + 2)
-        addstr("  energy: #{person.energy}")
+        addstr("  energy: #{progress_bar(person.energy)}")
 
         setpos(5 + 5 * index, map.width + 2)
         addstr " " * 50
         setpos(5 + 5 * index, map.width + 2)
         addstr("  action: #{person.action.description}")
       end
+    end
+
+    private
+
+    def progress_bar(value)
+      #TODO: Make sure person attributes are always in proper range
+
+      progress_bar_size = 30
+
+      if value < 0
+        proper_value = 0.0
+      elsif value > 1
+        proper_value = 1.0
+      else
+        proper_value = value
+      end
+
+      progress_bar_return = "|"
+
+      n = (proper_value * progress_bar_size).to_i
+
+      n.times do
+        progress_bar_return += "="
+      end
+
+      (progress_bar_size - n).times do
+        progress_bar_return += " "
+      end
+
+      progress_bar_return += "|"
+      progress_bar_return
     end
   end
 end
