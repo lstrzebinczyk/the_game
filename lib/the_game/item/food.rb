@@ -15,6 +15,10 @@ class TheGame
       def alphas
         minutes_to_eat * hunger_per_minute_added
       end
+
+      def type
+        :food
+      end
     end
   end
 end

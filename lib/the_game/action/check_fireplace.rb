@@ -21,7 +21,7 @@ class TheGame
             # Ignore the fact that person needs to walk between stash and fire for now
             # assume person can throw 1 piece of firewood per minute
 
-            firewood = settlement.stash.get_firewood
+            firewood = settlement.stash.get(:firewood)
             if firewood
               settlement.add_firewood_to_fire(firewood)
             else

@@ -96,11 +96,11 @@ class TheGame
       setpos(0, map.width + 50)
       addstr("Stash: ")
       setpos(1, map.width + 50)
-      addstr("  food:     #{stash.food_count}")
+      addstr("  food:     #{stash.count(:food)}")
       setpos(2, map.width + 50)
-      addstr("  firewood: #{stash.firewood_count}")
+      addstr("  firewood: #{stash.count(:firewood)}")
       setpos(3, map.width + 50)
-      addstr("  axes:     #{stash.axes_count}")
+      addstr("  axes:     #{stash.count(:axe)}")
     end
 
     def render_settlement_stats

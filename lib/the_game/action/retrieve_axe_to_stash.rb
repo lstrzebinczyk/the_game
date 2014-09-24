@@ -10,7 +10,7 @@ class TheGame
         stash      = TheGame::Settlement.instance.stash
 
         if person.close_enough_to(stash_tile)
-          axe = person.inventory.get_axe
+          axe = person.inventory.get(:axe)
           stash.add(axe)
           person.do_stuff
         else

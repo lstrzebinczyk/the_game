@@ -27,12 +27,8 @@ class TheGame
       @action = Action::WonderForNoReason.new
     end
 
-    def has_axe?
-      @inventory.any_axes?
-    end
-
-    def has_firewood?
-      @inventory.has_firewood?
+    def has?(type)
+      @inventory.has?(type)
     end
 
     def update(map, time_in_minutes)

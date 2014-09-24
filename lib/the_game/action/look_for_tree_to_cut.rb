@@ -10,7 +10,7 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        if person.has_axe?
+        if person.has?(:axe)
           closest = map.find_closest_to(person) do |tile|
             tile.has_tree?
           end
@@ -21,7 +21,7 @@ class TheGame
         else
           stash_tile = TheGame::Settlement.instance.stash_tile
           if person.distance_to(stash_tile) < 2.0
-            axe = TheGame::Settlement.instance.stash.get_axe
+            axe = TheGame::Settlement.instance.stash.get(:axe)
             person.inventory.add(axe)
           else
             person.go_to(stash_tile)

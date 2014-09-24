@@ -5,6 +5,10 @@ class TheGame
         # piece of wood big enough to sustain fireplace for n minutes
         30
       end
+
+      def type
+        :firewood
+      end
     end
   end
 end

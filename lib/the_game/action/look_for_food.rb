@@ -16,8 +16,8 @@ class TheGame
         stash      = TheGame::Settlement.instance.stash
 
         if person.distance_to(stash_tile) < 2.0
-          if stash.has_food?
-            food = stash.get_food
+          if stash.has?(:food)
+            food = stash.get(:food)
             person.action = Eat.new(food)
             return
           else
