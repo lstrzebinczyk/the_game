@@ -12,7 +12,7 @@ class TheGame
           # assume that person needs a safe place to sleep
           # for now, the only option is the fireplace
 
-          person.action = Action::Sleep.new
+          person.action = Action::Sleep.create
         else
           person.go_to(fire_tile)
         end

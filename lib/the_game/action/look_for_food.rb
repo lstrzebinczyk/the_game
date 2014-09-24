@@ -18,10 +18,10 @@ class TheGame
         if person.distance_to(stash_tile) < 2.0
           if stash.has?(:food)
             food = stash.get(:food)
-            person.action = Eat.new(food)
+            person.action = Eat.create(food)
             return
           else
-            person.action = Action::LookForFoodToHarvest.new
+            person.action = Action::LookForFoodToHarvest.create
           end
         else
           person.go_to(stash_tile)

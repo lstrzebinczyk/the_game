@@ -17,7 +17,7 @@ class TheGame
           harvested_food = Item::Food.new
           person.inventory.add(harvested_food)
           stash_tile = TheGame::Settlement.instance.stash_tile
-          person.action = Action::Carry.new(:food, to: stash_tile)
+          person.action = Action::Carry.create(:food, to: stash_tile)
         else
           @minutes_left -= time_in_minutes
         end

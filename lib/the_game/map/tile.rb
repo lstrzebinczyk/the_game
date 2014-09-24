@@ -57,6 +57,10 @@ class TheGame
         def to_s
           "."
         end
+
+        def description
+
+        end
       end
 
       class River < Content
@@ -80,6 +84,10 @@ class TheGame
 
         def has_food?
           true
+        end
+
+        def description
+          "food tile"
         end
 
         def to_s
@@ -111,6 +119,10 @@ class TheGame
         def color
           :red
         end
+
+        def description
+          "fireplace"
+        end
       end
 
       class Stash < Content
@@ -120,11 +132,15 @@ class TheGame
           @stash = stash
         end
 
+        def get(type)
+          @stash.get(type)
+        end
+
         def to_s
           "S"
         end
 
-        def type
+        def description
           :stash
         end
       end
@@ -139,8 +155,8 @@ class TheGame
         self.y = y
       end
 
-      def type
-        @content.type
+      def description
+        @content.description
       end
 
       def add(item)

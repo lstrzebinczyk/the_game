@@ -2,7 +2,7 @@ class TheGame
   class Person
     include TheGame::HasPosition
 
-    attr_accessor :action, :hunger, :energy, :will_take_jobs
+    attr_accessor :action,:hunger, :energy, :will_take_jobs
     attr_reader :inventory
 
     def initialize(attrs = {})
@@ -23,8 +23,13 @@ class TheGame
       self.y = attrs[:y]
     end
 
+    # def action=(action)
+    #   binding.pry if action.nil?
+    #   @action = action
+    # end
+
     def do_stuff
-      @action = Action::WonderForNoReason.new
+      @action = Action::WonderForNoReason.create
     end
 
     def has?(type)

@@ -8,14 +8,17 @@ class TheGame
 
     def initialize
       @jobs = []
-      @jobs << TheGame::Action::CheckFoodInStash.new
-      @jobs << TheGame::Action::CheckFirewoodInStash.new
 
       @minutes_until_next_food_check = Countdown.new(16 * 60)
       @minutes_until_next_fire_check = Countdown.new(2 * 60)
       @minutes_until_next_firewood_check = Countdown.new(24 * 60)
 
       @minutes_left_for_fire = Countdown.new(4 * 60)
+    end
+
+    def setup
+      @jobs << TheGame::Action::CheckFoodInStash.create
+      @jobs << TheGame::Action::CheckFirewoodInStash.create
     end
 
     def minutes_left_for_fire
@@ -42,7 +45,7 @@ class TheGame
       end
 
       if @minutes_until_next_fire_check.ready?
-        @jobs << TheGame::Action::CheckFireplace.new
+        @jobs << TheGame::Action::CheckFireplace.create
         @minutes_until_next_fire_check.reset!
       end
 

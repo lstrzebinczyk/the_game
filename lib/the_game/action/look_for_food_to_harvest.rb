@@ -15,7 +15,7 @@ class TheGame
         end
 
         if closest
-          person.action = Action::FetchFood.new(closest)
+          person.action = Action::FetchFood.create(closest)
         end
       end
     end

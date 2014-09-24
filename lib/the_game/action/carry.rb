@@ -7,7 +7,7 @@ class TheGame
       end
 
       def description
-        "carrying #{@item_type} to #{@place.type}..."
+        "carrying #{@item_type} to #{@place.description}..."
       end
 
       def type

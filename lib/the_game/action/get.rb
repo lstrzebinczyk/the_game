@@ -8,6 +8,7 @@ class TheGame
 
       def then(next_action)
         @next_action = next_action
+        self
       end
 
       def description
@@ -17,11 +18,19 @@ class TheGame
       end
 
       def type
-        :haul
+        if @next_action
+          @next_action.type
+        else
+          :haul
+        end
       end
 
       def perform(person, map, time_in_minutes)
+        # bini
+
         if person.distance_to(@place) < 2.0
+          # binding.pry
+
           item = @place.get(@item_type)
           person.inventory.add(item)
           person.action = @next_action

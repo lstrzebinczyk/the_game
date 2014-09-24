@@ -11,7 +11,7 @@ class TheGame
 
       def perform(person, map, time_in_minutes)
         if @minutes_left == 0
-          person.action = Action::WonderForNoReason.new
+          person.do_stuff
         else
           # this will be ok for a sleep in sort-of-good conditions
           # person.energy += 3 * 0.00104167 * time_in_minutes #beta

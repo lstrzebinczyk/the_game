@@ -9,12 +9,14 @@ class TheGame
         move_around(person, map)
 
         if person.hungry?
-          person.action = Action::LookForFood.new
+          person.action = Action::LookForFood.create
         elsif person.sleepy?
-          person.action = Action::LookForPlaceToSleep.new
+          person.action = Action::LookForPlaceToSleep.create
         elsif person.will_take_jobs
           job = TheGame::Settlement.instance.get_job(person)
+
           if job
+            # binding.pry
             person.action = job
           else
             person.do_stuff

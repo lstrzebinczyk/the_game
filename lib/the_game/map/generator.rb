@@ -38,6 +38,8 @@ class TheGame
           tile.set_fire
           TheGame::Settlement.instance.fire_tile = tile
         end
+
+        TheGame::Settlement.instance.setup
       end
 
       def create_river(map)
