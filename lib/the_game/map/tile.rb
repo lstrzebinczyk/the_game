@@ -121,6 +121,10 @@ class TheGame
         def to_s
           "S"
         end
+
+        def type
+          :stash
+        end
       end
 
       include TheGame::HasPosition
@@ -131,6 +135,14 @@ class TheGame
         @content = Null.new
         self.x = x
         self.y = y
+      end
+
+      def type
+        @content.type
+      end
+
+      def add(item)
+        @content.stash.add(item)
       end
 
       def set_stash(stash)

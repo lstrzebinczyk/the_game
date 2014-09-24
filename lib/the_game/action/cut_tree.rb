@@ -26,7 +26,8 @@ class TheGame
               new_job = Action::CarryWoodToStash.new(@tile)
               TheGame::Settlement.instance.add_job(new_job)
             end
-            person.action = RetrieveAxeToStash.new
+            stash_tile = TheGame::Settlement.instance.stash_tile
+            person.action = Action::Carry.new(:axe, to: stash_tile)
           end
         else
           person.go_to(@tile)

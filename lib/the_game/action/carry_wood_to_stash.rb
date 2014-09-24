@@ -16,14 +16,7 @@ class TheGame
       def perform(person, map, time_in_minutes)
         if person.has?(:firewood)
           stash_tile = TheGame::Settlement.instance.stash_tile
-          stash = TheGame::Settlement.instance.stash
-          if person.distance_to(stash_tile) < 2.0
-            firewood = person.inventory.get(:firewood)
-            stash.add(firewood)
-            person.do_stuff
-          else
-            person.go_to(stash_tile)
-          end
+          person.action = Action::Carry.new(:firewood, to: stash_tile)
         else
           if person.distance_to(@parent_tile) < 2.0
             firewood = @parent_tile.get_firewood
