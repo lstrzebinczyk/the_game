@@ -6,7 +6,7 @@ class TheGame
       end
 
       def accepted_jobs
-        [:gatherer, :haul]
+        [:survival, :gatherer, :haul]
       end
     end
   end

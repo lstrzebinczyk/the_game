@@ -15,12 +15,8 @@ class TheGame
       def perform(person, map, time_in_minutes)
         if @minutes_left == 0
           harvested_food = Item::Food.new
-          if person.hungry?
-            person.action = Action::Eat.new(harvested_food)
-          else
-            person.inventory.add(harvested_food)
-            person.action = Action::CarryFoodToStash.new
-          end
+          person.inventory.add(harvested_food)
+          person.action = Action::CarryFoodToStash.new
         else
           @minutes_left -= time_in_minutes
         end

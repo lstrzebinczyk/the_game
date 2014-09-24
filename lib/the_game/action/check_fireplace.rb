@@ -6,7 +6,7 @@ class TheGame
       end
 
       def type
-        :management
+        :survival
       end
 
       def perform(person, map, time_in_minutes)
