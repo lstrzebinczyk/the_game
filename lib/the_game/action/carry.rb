@@ -1,6 +1,10 @@
 class TheGame
   class Action
     class Carry < Action
+      def self.create(item_type, to: place)
+        GoTo.create(to).then(new(item_type, to: to))
+      end
+
       def initialize(item_type, to: place)
         @item_type  = item_type
         @place      = to
@@ -15,14 +19,9 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        if person.close_enough_to(@place)
-          item = person.inventory.get(@item_type)
-          @place.add(item)
-
-          person.do_stuff
-        else
-          person.go_to(@place)
-        end
+        item = person.inventory.get(@item_type)
+        @place.add(item)
+        person.do_stuff
       end
     end
   end
