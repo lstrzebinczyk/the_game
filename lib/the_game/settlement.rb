@@ -65,6 +65,10 @@ class TheGame
       @jobs << job
     end
 
+    def remove_gatherer_jobs!
+      @jobs.delete_if{|job| job.type == :gatherer }
+    end
+
     # job types:
     # :haul, :management, :woodcutting, :gatherer
     def get_job(person)
