@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class Harvest
+    class Harvest < Action
       def initialize(tile)
         @tile = tile
         @minutes_left = 60

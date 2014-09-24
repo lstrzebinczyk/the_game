@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class Sleep
+    class Sleep < Action
       def initialize
         @minutes_left = 8 * 60
       end

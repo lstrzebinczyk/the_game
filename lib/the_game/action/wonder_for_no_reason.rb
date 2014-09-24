@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class WonderForNoReason
+    class WonderForNoReason < Action
       def description
         "just wondering"
       end

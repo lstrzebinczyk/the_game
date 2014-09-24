@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class Eat
+    class Eat < Action
       def initialize(food)
         @food = food
         @minutes_spent_eating_left = @food.minutes_to_eat

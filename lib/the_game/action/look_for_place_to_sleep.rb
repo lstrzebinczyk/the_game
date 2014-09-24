@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class LookForPlaceToSleep
+    class LookForPlaceToSleep < Action
       def description
         "going near fireplace to sleep"
       end

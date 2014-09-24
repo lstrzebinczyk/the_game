@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class CutTree
+    class CutTree < Action
       def initialize(tile)
         @tile = tile
         @minutes_left = 180

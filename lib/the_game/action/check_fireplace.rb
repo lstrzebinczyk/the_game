@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class CheckFireplace
+    class CheckFireplace < Action
       def description
         "checking fireplace"
       end
@@ -29,13 +29,6 @@ class TheGame
               raise Exception
             end
           end
-
-          # expected_firewood_amount = 2 * 24 * 60
-          # if stash.firewood_amount < expected_firewood_amount
-          #   new_job = Action::LookForTreeToCut.new
-          # end
-
-          # person.do_stuff
         else
           person.go_to(fire_tile)
         end

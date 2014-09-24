@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class LookForFoodToHarvest
+    class LookForFoodToHarvest < Action
       def description
         "looking for food"
       end

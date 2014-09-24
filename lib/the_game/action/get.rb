@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class Get
+    class Get < Action
       def initialize(item_type, from: place)
         @item_type  = item_type
         @place      = from

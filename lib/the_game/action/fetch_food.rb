@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class FetchFood
+    class FetchFood < Action
       def initialize(food_tile)
         @food_tile = food_tile
       end

@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class CheckFoodInStash
+    class CheckFoodInStash < Action
       def description
         "checking food in stash"
       end

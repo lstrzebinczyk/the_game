@@ -1,6 +1,6 @@
 class TheGame
   class Action
-    class Carry
+    class Carry < Action
       def initialize(item_type, to: place)
         @item_type  = item_type
         @place      = to
