@@ -3,7 +3,7 @@ class TheGame
     class LookForTreeToCut < Action
       def self.create
         stash_tile = TheGame::Settlement.instance.stash_tile
-        Action::Get.create(:axe, from: stash_tile).then(new)
+        Action::Get.create(:axe, from: stash_tile, then_action: new)
       end
 
       def description

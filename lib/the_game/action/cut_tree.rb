@@ -25,8 +25,7 @@ class TheGame
             stash_tile = TheGame::Settlement.instance.stash_tile
 
             @tile.content.firewood_left.times do
-              new_job = Action::Get.create(:firewood, from: @tile)
-              new_job.then(Action::Carry.create(:firewood, to: stash_tile))
+              new_job = Action::Get.create(:firewood, from: @tile, then_action: Action::Carry.create(:firewood, to: stash_tile))
 
               TheGame::Settlement.instance.add_job(new_job)
             end

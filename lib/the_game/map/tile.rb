@@ -44,6 +44,10 @@ class TheGame
           @firewood_left > 0
         end
 
+        def description
+          "cut tree"
+        end
+
         def to_s
           "/"
         end

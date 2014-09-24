@@ -22,7 +22,7 @@ class TheGame
         dormitory.firewood_needed.times do
           # get firewood to dormitory
           stash_tile = settlement.stash_tile
-          job = Action::Get.create(:firewood, from: stash_tile).then(Action::Carry.create(:firewood, to: dormitory))
+          job = Action::Get.create(:firewood, from: stash_tile, then_action: Action::Carry.create(:firewood, to: dormitory))
 
           settlement.add_job(job)
 
