@@ -23,6 +23,10 @@ class TheGame
         def color
           :green
         end
+
+        def description
+          "tree"
+        end
       end
 
       class CutTree < Content
