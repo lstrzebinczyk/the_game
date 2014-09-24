@@ -112,6 +112,14 @@ class TheGame
           false
         end
 
+        def energy_per_minute_when_sleeping
+          # this will be ok for a sleep in sort-of-good conditions
+          # 3 * 0.00104167
+
+          # sleeping on floor is way less refreshing
+          2.3 * 0.00104167
+        end
+
         def to_s
           "F"
         end
@@ -157,6 +165,10 @@ class TheGame
 
       def description
         @content.description
+      end
+
+      def energy_per_minute_when_sleeping
+        @content.energy_per_minute_when_sleeping
       end
 
       def add(item)

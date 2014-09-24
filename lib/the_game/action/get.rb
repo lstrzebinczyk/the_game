@@ -32,8 +32,14 @@ class TheGame
           # binding.pry
 
           item = @place.get(@item_type)
-          person.inventory.add(item)
-          person.action = @next_action
+
+          if item
+            person.inventory.add(item)
+            person.action = @next_action
+          else
+            Settlement.instance.add_job(self)
+            person.do_stuff
+          end
         else
           person.go_to(@place)
         end

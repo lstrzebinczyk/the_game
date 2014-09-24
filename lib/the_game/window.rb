@@ -37,8 +37,9 @@ class TheGame
     end
 
     def render
-      clear if @iteration % 50 == 0
+      clear if @iteration % 500 == 0
       render_map
+      render_constructions
       render_people
       render_people_stats
       render_stash_stats
@@ -76,6 +77,91 @@ class TheGame
             addstr(tile.to_s)
           end
         end
+      end
+    end
+
+    def render_constructions
+      dormitory = TheGame::Settlement.instance.constructions.first
+      if dormitory
+        print_dormitory(dormitory)
+      end
+    end
+
+    def print_dormitory(dormitory)
+      dormitory_print = """
+      XXXX
+      X  X
+      X  X
+      X  X
+      """
+
+      x = dormitory.x
+      y = dormitory.y
+
+      if dormitory.status == :done
+        color = :white
+      else
+        color = :blue
+      end
+
+      setpos(x, y)
+      add_string("X", color)
+
+      setpos(x, y + 1)
+      add_string("X", color)
+
+      setpos(x, y + 2)
+      add_string("X", color)
+
+      setpos(x, y + 3)
+      add_string("X", color)
+
+      setpos(x + 1, y)
+      add_string("X", color)
+
+      setpos(x + 1, y + 1)
+      add_string(" ", color)
+
+      setpos(x + 1, y + 2)
+      add_string(" ", color)
+
+      setpos(x + 1, y + 3)
+      add_string("X", color)
+
+      setpos(x + 2, y)
+      add_string("X", color)
+
+      setpos(x + 2, y + 1)
+      add_string(" ", color)
+
+      setpos(x + 2, y + 2)
+      add_string(" ", color)
+
+      setpos(x + 2, y + 3)
+      add_string("X", color)
+
+      setpos(x + 3, y)
+      add_string("X", color)
+
+      setpos(x + 3, y + 1)
+      add_string(" ", color)
+
+      setpos(x + 3, y + 2)
+      add_string(" ", color)
+
+      setpos(x + 3, y + 3)
+      add_string("X", color)
+    end
+
+    def add_string(string, color)
+      if color == :blue
+        Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
+          addstr(string)
+        }
+      elsif color == :white
+        Curses.attron(color_pair(A_NORMAL)|A_NORMAL) {
+          addstr(string)
+        }
       end
     end
 
@@ -122,8 +208,26 @@ class TheGame
       addstr("Fire: ")
       setpos(12, map.width + 50)
       addstr " " * 50
-      setpos(13, map.width + 50)
+      setpos(12, map.width + 50)
       addstr("  minutes left: #{TheGame::Settlement.instance.minutes_left_for_fire}")
+
+      dormitory = Settlement.instance.constructions.first
+
+      if dormitory
+        setpos(14, map.width + 50)
+        addstr("Buildings:")
+        setpos(15, map.width + 50)
+        addstr("  Dormitory:")
+        setpos(16, map.width + 50)
+        addstr("    status:          #{dormitory.status}")
+        if dormitory.status == :plan
+          setpos(17, map.width + 50)
+          addstr("    firewood needed: #{dormitory.firewood_needed}")
+        elsif dormitory.status == :building
+          setpos(17, map.width + 50)
+          addstr("    construction left: #{dormitory.minutes_left}")
+        end
+      end
     end
 
     def render_people_stats

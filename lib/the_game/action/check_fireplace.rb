@@ -27,8 +27,11 @@ class TheGame
           if firewood
             settlement.add_firewood_to_fire(firewood)
           else
-            # don't know what to do yet
-            raise Exception
+            Settlement.instance.add_job(self)
+            person.do_stuff
+
+            # # don't know what to do yet
+            # raise Exception
           end
         end
       end

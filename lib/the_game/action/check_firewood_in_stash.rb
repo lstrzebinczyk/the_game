@@ -17,14 +17,23 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        stash      = TheGame::Settlement.instance.stash
+        settlement = Settlement.instance
+        stash      = settlement.stash
 
         # we need enough wood for the fireplace to burn for 2 days (2 * 24 * 60 minutes)
         expected_firewood_amount = 2 * 24 * 60
+
         if stash.firewood_amount < expected_firewood_amount
           new_job = Action::LookForTreeToCut.create
-          # binding.pry
           TheGame::Settlement.instance.add_job(new_job)
+        end
+
+        if settlement.firewood_needed == 60
+          2.times do
+            new_job = Action::LookForTreeToCut.create
+            TheGame::Settlement.instance.add_job(new_job)
+            settlement.firewood_needed = 0
+          end
         end
         person.do_stuff
       end

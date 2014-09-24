@@ -4,10 +4,14 @@ class TheGame
   class Settlement
     include Singleton
 
-    attr_accessor :stash_tile, :fire_tile, :people
+    attr_accessor :stash_tile, :fire_tile, :people, :constructions
+    attr_accessor :firewood_needed
 
     def initialize
       @jobs = []
+      @constructions = []
+
+      @firewood_needed = 0
 
       @minutes_until_next_food_check = Countdown.new(16 * 60)
       @minutes_until_next_fire_check = Countdown.new(2 * 60)
@@ -17,8 +21,22 @@ class TheGame
     end
 
     def setup
-      @jobs << TheGame::Action::CheckFoodInStash.create
-      @jobs << TheGame::Action::CheckFirewoodInStash.create
+      @jobs << Action::CheckFoodInStash.create
+      @jobs << Action::CheckFirewoodInStash.create
+      @jobs << Action::PlanDormitoryBuilding.create
+    end
+
+    def safe_place_to_sleep
+      #@constructions.first => dormitory
+      if @constructions.first
+        if @constructions.first.status == :done
+          @constructions.first
+        else
+          fire_tile
+        end
+      else
+        fire_tile
+      end
     end
 
     def minutes_left_for_fire
