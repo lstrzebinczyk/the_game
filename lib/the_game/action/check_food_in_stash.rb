@@ -11,9 +11,11 @@ class TheGame
         stash      = settlement.stash
 
         if person.distance_to(stash_tile) < 2.0
-          # we need days * people * 0.33 food in stash
+          # we need days * people
+          # since 1 is one bar of food
+
           people_count = TheGame::Settlement.instance.people_count
-          expected_food_amount = 2 * people_count * 0.33
+          expected_food_amount = 3 * people_count
           if stash.food_amount < expected_food_amount
             food_collected_per_job = Item::Food.new.alphas
             new_jobs_count = (expected_food_amount - stash.food_amount) / food_collected_per_job

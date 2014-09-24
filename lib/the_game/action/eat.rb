@@ -15,11 +15,7 @@ class TheGame
         person.hunger += @food.hunger_per_minute_added * time_in_minutes
 
         if @minutes_spent_eating_left == 0
-          if person.full?
-            person.action = Action::WonderForNoReason.new
-          else
-            person.action = Action::LookForFood.new
-          end
+          person.action = Action::WonderForNoReason.new
         end
       end
     end

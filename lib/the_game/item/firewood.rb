@@ -2,8 +2,8 @@ class TheGame
   class Item
     class Firewood
       def amount
-        # piece of wood big enough to sustain fireplace for 20 minutes
-        40
+        # piece of wood big enough to sustain fireplace for n minutes
+        30
       end
     end
   end

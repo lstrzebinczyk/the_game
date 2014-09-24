@@ -39,14 +39,14 @@ class TheGame
       update_hunger(time_in_minutes)
       update_energy(time_in_minutes)
 
-      if should_die?
-        die!
-      end
+      # if should_die?
+      #   die!
+      # end
       @action.perform(self, map, time_in_minutes)
     end
 
     def should_die?
-      @hunger < 0.01
+      # @hunger < 0.01
     end
 
     def dead?
@@ -58,18 +58,16 @@ class TheGame
     end
 
     def update_hunger(minutes)
-      # assume that:
-      # 3 days with no food at all == death from hunger
-      # so 0.0002314814814814815 hunger is lost each minute
-      # lets call this value alpha (1/4320)
-      # 1.5h of eating should provide for ~6h of work, therefore
-      # 1minute of eating should replenish for 5alpha
+      # assume that 2 meals a day needed
+      # an hour meal should add half the bar of hunger
+      # so 60 minutes => 0.5
+      # so 1 minute   => 0.5/60 (0.00834)
 
-      # also assume 8 hours of sleep and 16 hours of work
-      # this all means 6 big meals missed before death
-      # so person gets hungry when hunger gets lower than 5/6
 
-      @hunger -= minutes / 4320.0
+      @hunger -= minutes / (24.0 * 60)
+      if @hunger < 0
+        @hunger = 0
+      end
     end
 
     def update_energy(minutes)
@@ -87,11 +85,7 @@ class TheGame
     end
 
     def hungry?
-      hunger < (5.0/6)
-    end
-
-    def full?
-      hunger > 0.96
+      hunger < 0.5
     end
 
     def sleepy?

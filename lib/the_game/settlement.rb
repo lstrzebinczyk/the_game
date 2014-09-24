@@ -71,7 +71,14 @@ class TheGame
     end
 
     def get_job
-      @jobs.pop
+      # retrieve sample job
+      # this will have to do unless we have a nice prioritizing and roles system
+      job = @jobs.sample
+      if job
+        index = @jobs.index(job)
+        @jobs.delete_at(index)
+      end
+      job
     end
 
     def food_amount
