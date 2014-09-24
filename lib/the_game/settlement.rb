@@ -40,7 +40,7 @@ class TheGame
       @minutes_left_for_fire.add_minutes(minutes)
 
       if @minutes_until_next_food_check.ready?
-        @jobs << TheGame::Action::CheckFoodInStash.new
+        @jobs << TheGame::Action::CheckFoodInStash.create
         @minutes_until_next_food_check.reset!
       end
 
@@ -50,7 +50,7 @@ class TheGame
       end
 
       if @minutes_until_next_firewood_check.ready?
-        @jobs << TheGame::Action::CheckFirewoodInStash.new
+        @jobs << TheGame::Action::CheckFirewoodInStash.create
         @minutes_until_next_firewood_check.reset!
       end
     end
