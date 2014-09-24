@@ -34,7 +34,7 @@ class TheGame
       x_center = map.height / 2
       y_center = map.width  / 2
 
-      3.times do
+      5.times do
         @people << Person.new(x: x_center, y: y_center)
       end
       # [-1, 0].each do |x_offset|

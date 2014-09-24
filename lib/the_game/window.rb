@@ -95,15 +95,24 @@ class TheGame
     def render_stash_stats
       setpos(0, map.width + 50)
       addstr("Stash: ")
+      setpos(1, map.width + 50)
+      addstr("  food:     #{stash.food_count}")
+      setpos(2, map.width + 50)
+      addstr("  firewood: #{stash.firewood_count}")
       setpos(3, map.width + 50)
-      addstr("  food: #{stash.food_count}")
+      addstr("  axes:     #{stash.axes_count}")
     end
 
     def render_settlement_stats
       setpos(5, map.width + 50)
       addstr("Jobs: ")
-      setpos(7, map.width + 50)
+      setpos(6, map.width + 50)
       addstr("  count: #{TheGame::Settlement.instance.jobs_count}")
+
+      setpos(7, map.width + 50)
+      addstr("Fire: ")
+      setpos(8, map.width + 50)
+      addstr("  minutes left: #{TheGame::Settlement.instance.minutes_left_for_fire}")
     end
 
     def render_people_stats

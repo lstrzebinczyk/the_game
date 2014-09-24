@@ -25,6 +25,32 @@ class TheGame
         end
       end
 
+      class CutTree < Content
+        attr_reader :firewood_left
+
+        def initialize
+          # because why not
+          @firewood_left = 30
+        end
+
+        def get_firewood
+          @firewood_left -= 1
+          TheGame::Item::Firewood.new
+        end
+
+        def any_firewood_left?
+          @firewood_left > 0
+        end
+
+        def to_s
+          "/"
+        end
+
+        def color
+          :green
+        end
+      end
+
       class Null < Content
         def to_s
           "."
@@ -88,8 +114,8 @@ class TheGame
       class Stash < Content
         attr_reader :stash
 
-        def initialize
-          @stash = TheGame::Container.new
+        def initialize(stash)
+          @stash = stash
         end
 
         def to_s
@@ -107,8 +133,8 @@ class TheGame
         self.y = y
       end
 
-      def set_stash
-        @content = Stash.new
+      def set_stash(stash)
+        @content = Stash.new(stash)
       end
 
       def set_fire
@@ -117,6 +143,10 @@ class TheGame
 
       def set_tree
         @content = Tree.new
+      end
+
+      def tree_cut
+        @content = CutTree.new
       end
 
       def set_food
@@ -136,6 +166,18 @@ class TheGame
         unless @content.any_food_left?
           clear
         end
+      end
+
+      def get_firewood
+        firewood = @content.get_firewood
+        unless @content.any_firewood_left?
+          clear
+        end
+        firewood
+      end
+
+      def has_tree?
+        @content.is_a? Tree
       end
 
       def has_food?

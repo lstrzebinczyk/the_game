@@ -20,8 +20,14 @@ class TheGame
         stash_x = map.height / 2 + 2
         stash_y = map.width  / 2 + 2
 
+        stash = TheGame::Container.new
+        stash.add(TheGame::Item::Axe.new)
+        20.times do
+          stash.add(TheGame::Item::Firewood.new)
+        end
+
         map.fetch(stash_x, stash_y) do |tile|
-          tile.set_stash
+          tile.set_stash(stash)
           TheGame::Settlement.instance.stash_tile = tile
         end
 
