@@ -1,6 +1,11 @@
 class TheGame
   class Action
     class LookForFood < Action
+      def self.create
+        stash_tile = TheGame::Settlement.instance.stash_tile
+        GoTo.create(stash_tile).then(new)
+      end
+
       def description
         "looking for food"
       end
@@ -12,19 +17,14 @@ class TheGame
       private
 
       def check_stash(person, map)
-        stash_tile = TheGame::Settlement.instance.stash_tile
         stash      = TheGame::Settlement.instance.stash
 
-        if person.distance_to(stash_tile) < 2.0
-          if stash.has?(:food)
-            food = stash.get(:food)
-            person.action = Eat.create(food)
-            return
-          else
-            person.action = Action::LookForFoodToHarvest.create
-          end
+        if stash.has?(:food)
+          food = stash.get(:food)
+          person.action = Eat.create(food)
+          return
         else
-          person.go_to(stash_tile)
+          person.action = Action::LookForFoodToHarvest.create
         end
       end
     end
