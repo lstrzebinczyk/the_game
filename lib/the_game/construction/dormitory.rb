@@ -22,6 +22,10 @@ class TheGame
         end
       end
 
+      def need_wood?
+        @firewood_needed > 0
+      end
+
       def sleep_area
         if @status == :done
           # inside the shack
@@ -31,6 +35,10 @@ class TheGame
         end
       end
 
+      def ready_to_build?
+        @firewood_needed == 0 and @status == :building
+      end
+
       def add(item)
         if item.type == :firewood
           @firewood_needed -= 1
@@ -38,10 +46,10 @@ class TheGame
             @status = :building
 
             @minutes_left = 120
-            construction_job = Action::Construction.create(self)
+            # construction_job = Action::Construction.create(self)
 
-            settlement = Settlement.instance
-            settlement.add_job(construction_job)
+            # settlement = Settlement.instance
+            # settlement.add_job(construction_job)
           end
         end
       end

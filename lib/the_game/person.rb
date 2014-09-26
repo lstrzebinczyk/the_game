@@ -66,9 +66,9 @@ class TheGame
     end
 
     def update_thirst(minutes)
-      # assume half a day is full thirst bar
+      # assume third a day is full thirst bar
 
-      @thirst -= minutes / (12.0 * 60)
+      @thirst -= minutes / (8.0 * 60)
       if @thirst < 0
         @thirst = 0
       end

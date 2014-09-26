@@ -95,6 +95,11 @@ class TheGame
       stash = Settlement::instance.stash
       setpos(stash.x, stash.y)
       add_string("S")
+
+      Settlement.instance.fallen_trees.each do |tree|
+        setpos(tree.x, tree.y)
+        add_string("/", :green)
+      end
     end
 
     def print_dormitory(dormitory)
@@ -172,6 +177,10 @@ class TheGame
         Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
           addstr(string)
         }
+      elsif color == :green
+        Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+          addstr(string)
+        }
       else
         Curses.attron(color_pair(A_NORMAL)|A_NORMAL) {
           addstr(string)
@@ -204,19 +213,19 @@ class TheGame
     end
 
     def render_settlement_stats
-      setpos(5, map.width + 50)
-      addstr("Jobs: ")
+      # setpos(5, map.width + 50)
+      # addstr("Jobs: ")
 
-      jobs_count = TheGame::Settlement.instance.jobs_count
+      # jobs_count = TheGame::Settlement.instance.jobs_count
 
-      setpos(6, map.width + 50)
-      addstr("  haul:        #{jobs_count[:haul]}")
-      setpos(7, map.width + 50)
-      addstr("  management:  #{jobs_count[:management]}")
-      setpos(8, map.width + 50)
-      addstr("  woodcutting: #{jobs_count[:woodcutting]}")
-      setpos(9, map.width + 50)
-      addstr("  gatherer:    #{jobs_count[:gatherer]}")
+      # setpos(6, map.width + 50)
+      # addstr("  haul:        #{jobs_count[:haul]}")
+      # setpos(7, map.width + 50)
+      # addstr("  management:  #{jobs_count[:management]}")
+      # setpos(8, map.width + 50)
+      # addstr("  woodcutting: #{jobs_count[:woodcutting]}")
+      # setpos(9, map.width + 50)
+      # addstr("  gatherer:    #{jobs_count[:gatherer]}")
 
       setpos(11, map.width + 50)
       addstr("Fire: ")

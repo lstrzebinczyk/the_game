@@ -52,7 +52,8 @@ class TheGame
           person.inventory.add(item)
           person.action = @next_action
         else
-          Settlement.instance.add_job(self)
+          # binding.pry
+          # Settlement.instance.add_job(self)
           person.do_stuff
         end
       end

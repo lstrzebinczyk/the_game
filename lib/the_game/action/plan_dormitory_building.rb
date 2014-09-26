@@ -16,16 +16,16 @@ class TheGame
         dormitory   = TheGame::Construction::Dormitory.new(dormitory_x, dormitory_y)
 
         settlement.dormitory = dormitory
-        settlement.firewood_needed += dormitory.firewood_needed
+        # settlement.firewood_needed += dormitory.firewood_needed
 
-        dormitory.firewood_needed.times do
-          # get firewood to dormitory
-          stash = settlement.stash
-          job = Action::Get.create(:firewood, from: stash, then_action: Action::Carry.create(:firewood, to: dormitory))
+        # dormitory.firewood_needed.times do
+        #   # get firewood to dormitory
+        #   stash = settlement.stash
+        #   job = Action::Get.create(:firewood, from: stash, then_action: Action::Carry.create(:firewood, to: dormitory))
 
-          settlement.add_job(job)
+        #   settlement.add_job(job)
 
-        end
+        # end
 
         person.do_stuff
       end

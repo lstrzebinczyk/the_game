@@ -29,38 +29,6 @@ class TheGame
         end
       end
 
-      class CutTree < Content
-        attr_reader :firewood_left
-
-        def initialize
-          # one cut tree is enough to fire a fireplace for week
-          @firewood_left = 24 * 7
-        end
-
-        def get(type)
-          if type == :firewood
-            @firewood_left -= 1
-            TheGame::Item::Firewood.new
-          end
-        end
-
-        def any_firewood_left?
-          @firewood_left > 0
-        end
-
-        def description
-          "cut tree"
-        end
-
-        def to_s
-          "/"
-        end
-
-        def color
-          :green
-        end
-      end
-
       class Null < Content
         def to_s
           "."
@@ -141,10 +109,6 @@ class TheGame
         @content = Tree.new
       end
 
-      def tree_cut
-        @content = CutTree.new
-      end
-
       def set_food
         @content = Food.new
       end
@@ -162,14 +126,6 @@ class TheGame
         unless @content.any_food_left?
           clear
         end
-      end
-
-      def get_firewood
-        firewood = @content.get_firewood
-        unless @content.any_firewood_left?
-          clear
-        end
-        firewood
       end
 
       def has_tree?

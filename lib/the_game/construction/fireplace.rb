@@ -10,6 +10,12 @@ class TheGame
         @minutes_left_for_fire = Countdown.new(4 * 60)
       end
 
+      # def get_job(person)
+      #   if person.accepted_jobs.include?(:survival) and !fire_is_ok?
+      #     Action::CheckFireplace.create()
+      #   end
+      # end
+
       def sleep_area
         x_offset = [-2, -1, 0, 1, 2].sample
         y_offset = [-2, -1, 0, 1, 2].sample
