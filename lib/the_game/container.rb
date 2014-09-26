@@ -7,6 +7,7 @@ class TheGame
       @content[:firewood]    = []
       @content[:fishing_rod] = []
       @content[:fish]        = []
+      @content[:cooked_fish] = []
     end
 
     def food
@@ -42,7 +43,7 @@ class TheGame
     end
 
     def food_amount
-      @content[:food].map{|food| food.alphas }.inject(0, &:+)
+      @content[:food].map{|food| food.alphas }.inject(0, &:+) + @content[:cooked_fish].map{|food| food.alphas }.inject(0, &:+)
     end
   end
 end

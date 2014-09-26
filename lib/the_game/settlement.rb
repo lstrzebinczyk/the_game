@@ -57,6 +57,8 @@ class TheGame
           return Action::Construction.create(@dormitory)
         elsif job_type == :fisherman
           return Action::GoFishing.create()
+        elsif job_type == :cooking and @stash.has?(:fish)
+          return Action::Cook.create(:fish)
         end
       end
 

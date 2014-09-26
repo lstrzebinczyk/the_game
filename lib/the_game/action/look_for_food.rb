@@ -19,7 +19,11 @@ class TheGame
       def check_stash(person, map)
         stash      = TheGame::Settlement.instance.stash
 
-        if stash.has?(:food)
+        if stash.has?(:cooked_fish)
+          cooked_fish = stash.get(:cooked_fish)
+          person.action = Eat.create(cooked_fish)
+          return
+        elsif stash.has?(:food)
           food = stash.get(:food)
           person.action = Eat.create(food)
           return

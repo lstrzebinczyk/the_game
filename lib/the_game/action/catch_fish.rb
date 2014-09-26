@@ -17,7 +17,7 @@ class TheGame
         @minutes_spent_already += time_in_minutes
 
         #random chance on catching something
-        if rand < (0.01 * time_in_minutes)
+        if rand < (0.02 * time_in_minutes)
           catched_fish = Item::Fish.new
           person.inventory.add(catched_fish)
           stash = TheGame::Settlement.instance.stash
