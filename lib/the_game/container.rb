@@ -10,14 +10,6 @@ class TheGame
       @content[:cooked_fish] = []
     end
 
-    def food
-      @content[:food]
-    end
-
-    def axes
-      @content[:axe]
-    end
-
     def add(item)
       @content[item.type] << item
     end
@@ -32,10 +24,6 @@ class TheGame
 
     def count(type)
       @content[type].size
-    end
-
-    def any_axes?
-      axes_count > 0
     end
 
     def firewood_amount
