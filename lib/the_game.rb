@@ -1,6 +1,6 @@
-require 'require_all'
-require "curses"
-require "pry"
+# require 'require_all'
+# require "curses"
+# require "pry"
 
 require_all "lib"
 
@@ -20,7 +20,7 @@ class TheGame
       while true
         @engine.update
         @window.render
-        # sleep(0.01)
+        sleep(0.01)
       end
     ensure
       @window.close
