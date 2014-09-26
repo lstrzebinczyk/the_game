@@ -129,20 +129,8 @@ class TheGame
         @content.description
       end
 
-      def energy_per_minute_when_sleeping
-        @content.energy_per_minute_when_sleeping
-      end
-
-      def add(item)
-        @content.stash.add(item)
-      end
-
       def get(type)
         @content.get(type)
-      end
-
-      def set_stash(stash)
-        @content = Stash.new(stash)
       end
 
       def set_tree
@@ -186,14 +174,6 @@ class TheGame
 
       def has_food?
         @content.has_food?
-      end
-
-      def update
-        # if @content.is_a? Null
-        #   if rand < 0.0001
-        #     set_food
-        #   end
-        # end
       end
 
       def to_s

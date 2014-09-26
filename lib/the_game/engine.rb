@@ -18,7 +18,6 @@ class TheGame
         person.update(@map, time_in_minutes)
       end
 
-      @map.update
       TheGame::Settlement.instance.update(time_in_minutes)
 
       @time += time_in_minutes * 60
