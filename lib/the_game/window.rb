@@ -40,6 +40,7 @@ class TheGame
       clear if @iteration % 500 == 0
       render_map
       render_constructions
+      render_settlement
       render_people
       render_people_stats
       render_stash_stats
@@ -78,6 +79,14 @@ class TheGame
           end
         end
       end
+    end
+
+    def render_settlement
+      #render fireplace
+
+      fireplace = Settlement::instance.fireplace
+      setpos(fireplace.x, fireplace.y)
+      add_string("F", :red)
     end
 
     def render_constructions
@@ -158,7 +167,11 @@ class TheGame
         Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
           addstr(string)
         }
-      elsif color == :white
+      elsif color == :red
+        Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
+          addstr(string)
+        }
+      else
         Curses.attron(color_pair(A_NORMAL)|A_NORMAL) {
           addstr(string)
         }
@@ -209,7 +222,7 @@ class TheGame
       setpos(12, map.width + 50)
       addstr " " * 50
       setpos(12, map.width + 50)
-      addstr("  minutes left: #{TheGame::Settlement.instance.minutes_left_for_fire}")
+      addstr("  minutes left: #{TheGame::Settlement.instance.fireplace.minutes_left_for_fire}")
 
       dormitory = Settlement.instance.constructions.first
 

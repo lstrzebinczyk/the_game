@@ -2,8 +2,12 @@ class TheGame
   class Action
     class CheckFireplace < Action
       def self.create
-        fire_tile = TheGame::Settlement.instance.fire_tile
-        GoTo.create(fire_tile).then(new)
+        fireplace = TheGame::Settlement.instance.fireplace
+        GoTo.create(fireplace).then(new(fireplace))
+      end
+
+      def initialize(fireplace)
+        @fireplace = fireplace
       end
 
       def description
@@ -17,7 +21,7 @@ class TheGame
       def perform(person, map, time_in_minutes)
         settlement = TheGame::Settlement.instance
 
-        if settlement.fire_is_ok?
+        if @fireplace.fire_is_ok?
           person.do_stuff
         else
           # Ignore the fact that person needs to walk between stash and fire for now
@@ -25,7 +29,7 @@ class TheGame
 
           firewood = settlement.stash.get(:firewood)
           if firewood
-            settlement.add_firewood_to_fire(firewood)
+            @fireplace.add_firewood_to_fire(firewood)
           else
             Settlement.instance.add_job(self)
             person.do_stuff

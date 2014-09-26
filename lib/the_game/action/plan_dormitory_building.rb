@@ -11,8 +11,8 @@ class TheGame
 
       def perform(person, map, time_in_minutes)
         settlement = Settlement.instance
-        dormitory_x = settlement.fire_tile.x - 5
-        dormitory_y = settlement.fire_tile.y - 1
+        dormitory_x = settlement.fireplace.x - 5
+        dormitory_y = settlement.fireplace.y - 1
         dormitory   = TheGame::Construction::Dormitory.new(dormitory_x, dormitory_y)
 
         Settlement.instance.constructions << dormitory

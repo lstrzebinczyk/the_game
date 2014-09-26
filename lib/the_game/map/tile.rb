@@ -115,32 +115,6 @@ class TheGame
         end
       end
 
-      class Fire < Content
-        def passable?
-          false
-        end
-
-        def energy_per_minute_when_sleeping
-          # this will be ok for a sleep in sort-of-good conditions
-          # 3 * 0.00104167
-
-          # sleeping on floor is way less refreshing
-          2.3 * 0.00104167
-        end
-
-        def to_s
-          "F"
-        end
-
-        def color
-          :red
-        end
-
-        def description
-          "fireplace"
-        end
-      end
-
       class Stash < Content
         attr_reader :stash
 
@@ -189,10 +163,6 @@ class TheGame
 
       def set_stash(stash)
         @content = Stash.new(stash)
-      end
-
-      def set_fire
-        @content = Fire.new
       end
 
       def set_tree

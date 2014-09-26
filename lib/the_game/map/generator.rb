@@ -20,6 +20,10 @@ class TheGame
         stash_x = map.height / 2 + 2
         stash_y = map.width  / 2 + 2
 
+        TheGame::Settlement.instance.set_position(map.height / 2, map.width  / 2)
+
+        # binding.pry
+
         stash = TheGame::Container.new
         stash.add(TheGame::Item::Axe.new)
         20.times do
@@ -29,14 +33,6 @@ class TheGame
         map.fetch(stash_x, stash_y) do |tile|
           tile.set_stash(stash)
           TheGame::Settlement.instance.stash_tile = tile
-        end
-
-        fire_x = map.height / 2 + 1
-        fire_y = map.width  / 2 + 2
-
-        map.fetch(fire_x, fire_y) do |tile|
-          tile.set_fire
-          TheGame::Settlement.instance.fire_tile = tile
         end
 
         TheGame::Settlement.instance.setup
