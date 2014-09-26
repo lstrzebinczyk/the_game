@@ -33,8 +33,8 @@ class TheGame
         attr_reader :firewood_left
 
         def initialize
-          # because why not
-          @firewood_left = 60
+          # one cut tree is enough to fire a fireplace for week
+          @firewood_left = 24 * 7
         end
 
         def get(type)

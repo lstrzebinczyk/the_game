@@ -23,18 +23,16 @@ class TheGame
         # we need enough wood for the fireplace to burn for 2 days (2 * 24 * 60 minutes)
         expected_firewood_amount = 2 * 24 * 60
 
-        if stash.firewood_amount < expected_firewood_amount
+        current_firewood      = stash.firewood_amount
+        firewood_lying_around = map.firewood_lying_around
+
+
+        # decide on cutting new tree if there is not enough firewood
+        if stash.firewood_amount + firewood_lying_around < expected_firewood_amount + settlement.firewood_needed
           new_job = Action::LookForTreeToCut.create
           TheGame::Settlement.instance.add_job(new_job)
         end
 
-        if settlement.firewood_needed == 60
-          2.times do
-            new_job = Action::LookForTreeToCut.create
-            TheGame::Settlement.instance.add_job(new_job)
-            settlement.firewood_needed = 0
-          end
-        end
         person.do_stuff
       end
     end
