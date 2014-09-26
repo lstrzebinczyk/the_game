@@ -16,7 +16,6 @@ class TheGame
       def description
         if @status == :plan or @status == :building
           "Dormitory construction"
-        # if @status == :building
         else
           "Dormitory"
         end
@@ -44,12 +43,7 @@ class TheGame
           @firewood_needed -= 1
           if @firewood_needed == 0
             @status = :building
-
             @minutes_left = 120
-            # construction_job = Action::Construction.create(self)
-
-            # settlement = Settlement.instance
-            # settlement.add_job(construction_job)
           end
         end
       end

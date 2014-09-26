@@ -28,14 +28,6 @@ class TheGame
           settlement = Settlement.instance
           settlement.fallen_trees << TheGame::Construction::FallenTree.new(@tile.x, @tile.y)
           person.action = Action::Carry.create(:axe, to: settlement.stash)
-          # stash = settlement.stash
-
-          # @tile.content.firewood_left.times do
-          #   new_job = Action::Get.create(:firewood, from: @tile, then_action: Action::Carry.create(:firewood, to: stash))
-
-          #   TheGame::Settlement.instance.add_job(new_job)
-          # end
-          # stash = settlement.stash
         end
       end
     end

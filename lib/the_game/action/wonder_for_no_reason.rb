@@ -18,7 +18,6 @@ class TheGame
           job = TheGame::Settlement.instance.get_job(person)
 
           if job
-            # binding.pry
             person.action = job
           else
             person.do_stuff

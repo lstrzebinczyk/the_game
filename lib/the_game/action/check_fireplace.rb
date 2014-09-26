@@ -31,16 +31,7 @@ class TheGame
           if firewood
             @fireplace.add_firewood_to_fire(firewood)
           else
-            # take new job from stack, put this one back in
-
-            # person.action = Action::WonderForNoReason.create
-            # person.action.perform(person, map, time_in_minutes)
-
-            # Settlement.instance.add_job(self)
             person.do_stuff
-
-            # # don't know what to do yet
-            # raise Exception
           end
         end
       end

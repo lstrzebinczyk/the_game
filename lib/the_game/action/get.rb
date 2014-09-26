@@ -32,19 +32,6 @@ class TheGame
         end
       end
 
-      # def perform(person, map, time_in_minutes)
-      #   item = @place.get(@item_type)
-
-      #   if item
-      #     person.inventory.add(item)
-      #     person.action = @next_action
-      #   else
-      #     # return job to stack if you can't find proper item
-      #     Settlement.instance.add_job(self)
-      #     person.do_stuff
-      #   end
-      # end
-
       def perform(person, map, time_in_minutes)
         item = @place.get(@item_type)
 
@@ -52,8 +39,6 @@ class TheGame
           person.inventory.add(item)
           person.action = @next_action
         else
-          # binding.pry
-          # Settlement.instance.add_job(self)
           person.do_stuff
         end
       end

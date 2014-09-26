@@ -28,18 +28,6 @@ class TheGame
       closest
     end
 
-    # def firewood_lying_around
-    #   result = 0
-
-    #   each_tile do |tile|
-    #     if tile.content.is_a? TheGame::Map::Tile::CutTree
-    #       result += tile.content.firewood_left
-    #     end
-    #   end
-
-    #   result
-    # end
-
     def update
       each_tile do |tile|
         tile.update
