@@ -91,6 +91,10 @@ class TheGame
       if dormitory
         print_dormitory(dormitory)
       end
+
+      stash = Settlement::instance.stash
+      setpos(stash.x, stash.y)
+      add_string("S")
     end
 
     def print_dormitory(dormitory)
@@ -159,7 +163,7 @@ class TheGame
       add_string("X", color)
     end
 
-    def add_string(string, color)
+    def add_string(string, color = :white)
       if color == :blue
         Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
           addstr(string)

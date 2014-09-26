@@ -17,23 +17,18 @@ class TheGame
       private
 
       def create_camp(map)
+        settlement = TheGame::Settlement.instance
+        settlement.set_position(map.height / 2, map.width  / 2)
+
         stash_x = map.height / 2 + 2
         stash_y = map.width  / 2 + 2
-
-        TheGame::Settlement.instance.set_position(map.height / 2, map.width  / 2)
-
-        # binding.pry
-
-        stash = TheGame::Container.new
+        stash = TheGame::Construction::Stash.new(stash_x, stash_y)
         stash.add(TheGame::Item::Axe.new)
         20.times do
           stash.add(TheGame::Item::Firewood.new)
         end
 
-        map.fetch(stash_x, stash_y) do |tile|
-          tile.set_stash(stash)
-          TheGame::Settlement.instance.stash_tile = tile
-        end
+        settlement.stash = stash
 
         TheGame::Settlement.instance.setup
       end

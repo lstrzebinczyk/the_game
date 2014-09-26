@@ -3,9 +3,9 @@ class TheGame
     class CheckFoodInStash < Action
       def self.create
         settlement = TheGame::Settlement.instance
-        stash_tile = settlement.stash_tile
+        stash      = settlement.stash
 
-        GoTo.create(stash_tile).then(new)
+        GoTo.create(stash).then(new)
       end
 
       def description

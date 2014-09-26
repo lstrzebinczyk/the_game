@@ -4,7 +4,8 @@ class TheGame
   class Settlement
     include Singleton
 
-    attr_accessor :stash_tile, :people
+    attr_accessor :stash
+    attr_accessor :people
     attr_accessor :firewood_needed
     attr_accessor :fireplace, :dormitory
 
@@ -13,6 +14,7 @@ class TheGame
 
       @dormitory = nil
       @fireplace = nil
+      @stash     = nil
 
       @firewood_needed = 0
 
@@ -63,10 +65,6 @@ class TheGame
 
     def people_count
       @people.size
-    end
-
-    def stash
-      stash_tile.content.stash
     end
 
     def add_job(job)

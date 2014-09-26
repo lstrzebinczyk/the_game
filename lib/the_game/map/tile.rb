@@ -115,26 +115,6 @@ class TheGame
         end
       end
 
-      class Stash < Content
-        attr_reader :stash
-
-        def initialize(stash)
-          @stash = stash
-        end
-
-        def get(type)
-          @stash.get(type)
-        end
-
-        def to_s
-          "S"
-        end
-
-        def description
-          :stash
-        end
-      end
-
       include TheGame::HasPosition
 
       attr_reader :content

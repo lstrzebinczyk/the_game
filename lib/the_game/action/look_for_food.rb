@@ -2,8 +2,8 @@ class TheGame
   class Action
     class LookForFood < Action
       def self.create
-        stash_tile = TheGame::Settlement.instance.stash_tile
-        GoTo.create(stash_tile).then(new)
+        stash = TheGame::Settlement.instance.stash
+        GoTo.create(stash).then(new)
       end
 
       def description
