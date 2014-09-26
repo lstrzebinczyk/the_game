@@ -22,6 +22,15 @@ class TheGame
         end
       end
 
+      def sleep_area
+        if @status == :done
+          # inside the shack
+          position(x + [1, 2].sample, y + [1, 2].sample, self)
+        else
+          nil
+        end
+      end
+
       def add(item)
         if item.type == :firewood
           @firewood_needed -= 1

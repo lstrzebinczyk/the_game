@@ -39,7 +39,6 @@ class TheGame
     def render
       clear if @iteration % 500 == 0
       render_map
-      render_constructions
       render_settlement
       render_people
       render_people_stats
@@ -87,10 +86,8 @@ class TheGame
       fireplace = Settlement::instance.fireplace
       setpos(fireplace.x, fireplace.y)
       add_string("F", :red)
-    end
 
-    def render_constructions
-      dormitory = TheGame::Settlement.instance.constructions.first
+      dormitory = TheGame::Settlement.instance.dormitory
       if dormitory
         print_dormitory(dormitory)
       end
@@ -224,7 +221,7 @@ class TheGame
       setpos(12, map.width + 50)
       addstr("  minutes left: #{TheGame::Settlement.instance.fireplace.minutes_left_for_fire}")
 
-      dormitory = Settlement.instance.constructions.first
+      dormitory = Settlement.instance.dormitory
 
       if dormitory
         setpos(14, map.width + 50)

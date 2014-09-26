@@ -4,14 +4,15 @@ class TheGame
   class Settlement
     include Singleton
 
-    attr_accessor :stash_tile, :people, :constructions
+    attr_accessor :stash_tile, :people
     attr_accessor :firewood_needed
-    attr_accessor :fireplace
+    attr_accessor :fireplace, :dormitory
 
     def initialize
       @jobs = []
-      @constructions = []
-      # @TODO just make this @dormitory
+
+      @dormitory = nil
+      @fireplace = nil
 
       @firewood_needed = 0
 
@@ -34,16 +35,7 @@ class TheGame
     end
 
     def safe_place_to_sleep
-      #@constructions.first => dormitory
-      if @constructions.first
-        if @constructions.first.status == :done
-          @constructions.first
-        else
-          @fireplace
-        end
-      else
-        @fireplace
-      end
+      @dormitory.sleep_area || @fireplace.sleep_area
     end
 
     def update(minutes)

@@ -10,6 +10,19 @@ class TheGame
         @minutes_left_for_fire = Countdown.new(4 * 60)
       end
 
+      def sleep_area
+        x_offset = [-2, -1, 0, 1, 2].sample
+        y_offset = [-2, -1, 0, 1, 2].sample
+
+        # so we avoid people sleeping inside the fireplace
+        while(x_offset == 0 and y_offset == 0)
+          x_offset = [-2, -1, 0, 1, 2].sample
+          y_offset = [-2, -1, 0, 1, 2].sample
+        end
+
+        position(x + x_offset, y + y_offset, self)
+      end
+
       def update(minutes)
         @minutes_left_for_fire.add_minutes(minutes)
       end

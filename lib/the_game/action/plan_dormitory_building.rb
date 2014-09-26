@@ -15,7 +15,7 @@ class TheGame
         dormitory_y = settlement.fireplace.y - 1
         dormitory   = TheGame::Construction::Dormitory.new(dormitory_x, dormitory_y)
 
-        Settlement.instance.constructions << dormitory
+        Settlement.instance.dormitory = dormitory
 
         Settlement.instance.firewood_needed += dormitory.firewood_needed
 
