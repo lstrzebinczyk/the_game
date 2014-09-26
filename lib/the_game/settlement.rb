@@ -55,6 +55,8 @@ class TheGame
           end
         elsif job_type == :building and @dormitory and @dormitory.ready_to_build?
           return Action::Construction.create(@dormitory)
+        elsif job_type == :fisherman
+          return Action::GoFishing.create()
         end
       end
 

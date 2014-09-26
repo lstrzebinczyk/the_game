@@ -2,9 +2,11 @@ class TheGame
   class Container
     def initialize
       @content = {}
-      @content[:food]     = []
-      @content[:axe]      = []
-      @content[:firewood] = []
+      @content[:food]        = []
+      @content[:axe]         = []
+      @content[:firewood]    = []
+      @content[:fishing_rod] = []
+      @content[:fish]        = []
     end
 
     def food

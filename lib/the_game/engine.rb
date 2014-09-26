@@ -37,6 +37,7 @@ class TheGame
       @people << Person::Woodcutter.new(x: x_center, y: y_center)
       @people << Person::Gatherer.new(x: x_center, y: y_center)
       @people << Person::Gatherer.new(x: x_center, y: y_center)
+      @people << Person::Fisherman.new(x: x_center, y: y_center)
 
       # 5.times do
       #   @people << Person.new(x: x_center, y: y_center)

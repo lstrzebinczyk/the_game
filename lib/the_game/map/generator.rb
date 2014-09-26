@@ -24,6 +24,8 @@ class TheGame
         stash_y = map.width  / 2 + 2
         stash = TheGame::Construction::Stash.new(stash_x, stash_y)
         stash.add(TheGame::Item::Axe.new)
+        stash.add(TheGame::Item::FishingRod.new)
+
         20.times do
           stash.add(TheGame::Item::Firewood.new)
         end
