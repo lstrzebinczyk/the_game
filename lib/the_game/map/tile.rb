@@ -97,6 +97,14 @@ class TheGame
         self.y = y
       end
 
+      def mark_for_cleaning!
+        @mark_for_cleaning = true unless empty?
+      end
+
+      def marked_for_cleaning?
+        @mark_for_cleaning == true
+      end
+
       def description
         @content.description
       end
@@ -109,6 +117,10 @@ class TheGame
         @content = Tree.new
       end
 
+      def empty?
+        @content.is_a? Null
+      end
+
       def set_food
         @content = Food.new
       end
@@ -118,6 +130,7 @@ class TheGame
       end
 
       def clear
+        @mark_for_cleaning = false
         @content = Null.new
       end
 

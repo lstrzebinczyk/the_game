@@ -57,7 +57,11 @@ class TheGame
         row.each_with_index do |tile, column_index|
           setpos(row_index, column_index)
 
-          if tile.color == :blue
+          if tile.marked_for_cleaning?
+            Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
+              addstr(tile.to_s)
+            }
+          elsif tile.color == :blue
             Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
               addstr(tile.to_s)
             }
@@ -88,7 +92,7 @@ class TheGame
       add_string("F", :red)
 
       dormitory = TheGame::Settlement.instance.dormitory
-      if dormitory
+      if dormitory and dormitory.status != :cleaning
         print_dormitory(dormitory)
       end
 

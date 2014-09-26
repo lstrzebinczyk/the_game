@@ -26,24 +26,43 @@ class TheGame
       person.accepted_jobs.each do |job_type|
         if job_type == :survival and !@fireplace.fire_is_ok? and @stash.has?(:firewood)
           return Action::CheckFireplace.create()
-        elsif job_type == :gatherer and need_more_food?
-          return Action::LookForFoodToHarvest.create()
-        elsif job_type == :woodcutting and need_more_wood?
-          return Action::LookForTreeToCut.create()
+        elsif job_type == :gatherer
+          if needs_cleaning?(:gatherer)
+            tile = @dormitory.tile_for_cleaning(:gatherer)
+            return Action::FetchFood.create(tile)
+          elsif need_more_food?
+            return Action::LookForFoodToHarvest.create()
+          end
+        elsif job_type == :woodcutting
+          if needs_cleaning?(:woodcutting)
+            tile = @dormitory.tile_for_cleaning(:woodcutting)
+            return Action::Get.create(:axe, from: @stash, then_action: Action::CutTree.create(tile))
+          elsif need_more_wood?
+            return Action::LookForTreeToCut.create()
+          end
         elsif job_type == :haul
-          if @dormitory and @dormitory.need_wood? and @stash.has?(:firewood)
+          if @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
             return Action::Get.create(:firewood, from: @stash, then_action: Action::Carry.create(:firewood, to: @dormitory))
           elsif @fallen_trees.any?
             return Action::Get.create(:firewood, from: @fallen_trees.first, then_action: Action::Carry.create(:firewood, to: @stash))
           end
-        elsif job_type == :management and @dormitory.nil?
-          return Action::PlanDormitoryBuilding.create
+        elsif job_type == :management
+          if @dormitory.nil?
+            return Action::PlanDormitoryBuilding.create
+          elsif @dormitory and @dormitory.can_start_building?
+            @dormitory.start_building!
+            person.do_stuff
+          end
         elsif job_type == :building and @dormitory and @dormitory.ready_to_build?
           return Action::Construction.create(@dormitory)
         end
       end
 
       nil
+    end
+
+    def needs_cleaning?(job_type)
+      @dormitory and @dormitory.needs_cleaning?(job_type)
     end
 
     def need_more_wood?

@@ -14,6 +14,17 @@ class TheGame
         dormitory_x = settlement.fireplace.x - 5
         dormitory_y = settlement.fireplace.y - 1
         dormitory   = TheGame::Construction::Dormitory.new(dormitory_x, dormitory_y)
+        fields = []
+        [0, 1, 2, 3].each do |row|
+          [0, 1, 2, 3].each do |col|
+            tile = map.fetch(dormitory_x + row, dormitory_y + col)
+            tile.mark_for_cleaning!
+            fields << tile
+          end
+        end
+
+        dormitory.fields = fields
+
         settlement.dormitory = dormitory
         person.do_stuff
       end

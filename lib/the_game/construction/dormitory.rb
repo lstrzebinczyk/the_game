@@ -4,12 +4,13 @@ class TheGame
       include HasPosition
 
       attr_reader :firewood_needed
-      attr_accessor :minutes_left, :status
+      attr_accessor :minutes_left, :status, :fields
+
 
       def initialize(x, y)
         @x = x
         @y = y
-        @status = :plan
+        @status = :cleaning
         @firewood_needed = 60
       end
 
@@ -18,6 +19,38 @@ class TheGame
           "Dormitory construction"
         else
           "Dormitory"
+        end
+      end
+
+      def terrain_clear?
+        fields.all?(&:empty?)
+      end
+
+      def can_start_building?
+        terrain_clear? and @status == :cleaning
+      end
+
+      def start_building!
+        @status = :plan
+      end
+
+      def tile_for_cleaning(job_type)
+        if job_type == :gatherer
+          fields.find do |tile|
+            tile.has_food?
+          end
+        elsif job_type == :woodcutting
+          fields.find do |tile|
+            tile.has_tree?
+          end
+        end
+      end
+
+      def needs_cleaning?(job_type)
+        if job_type == :gatherer
+          fields.any?(&:has_food?)
+        elsif job_type == :woodcutting
+          fields.any?(&:has_tree?)
         end
       end
 
