@@ -8,7 +8,9 @@ class TheGame
       def perform(person, map, time_in_minutes)
         move_around(person, map)
 
-        if person.hungry?
+        if person.thirsty?
+          person.action = Action::LookForSomethingToDrink.create
+        elsif person.hungry?
           person.action = Action::LookForFood.create
         elsif person.sleepy?
           person.action = Action::LookForPlaceToSleep.create

@@ -83,6 +83,10 @@ class TheGame
         def color
           :blue
         end
+
+        def description
+          "river"
+        end
       end
 
       class Food < Content

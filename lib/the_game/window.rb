@@ -251,24 +251,29 @@ class TheGame
       addstr("Alive: #{people.size}")
 
       people.each_with_index do |person, index|
-        setpos(2 + 5 * index, map.width + 2)
+        setpos(2 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(2 + 5 * index, map.width + 2)
+        setpos(2 + 6 * index, map.width + 2)
         addstr("Person (#{person.type}) stats:")
 
-        setpos(3 + 5 * index, map.width + 2)
+        setpos(3 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(3 + 5 * index, map.width + 2)
+        setpos(3 + 6 * index, map.width + 2)
+        addstr("  thirst: #{progress_bar(person.thirst)}")
+
+        setpos(4 + 6 * index, map.width + 2)
+        addstr " " * 50
+        setpos(4 + 6 * index, map.width + 2)
         addstr("  hunger: #{progress_bar(person.hunger)}")
 
-        setpos(4 + 5 * index, map.width + 2)
+        setpos(5 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(4 + 5 * index, map.width + 2)
+        setpos(5 + 6 * index, map.width + 2)
         addstr("  energy: #{progress_bar(person.energy)}")
 
-        setpos(5 + 5 * index, map.width + 2)
+        setpos(6 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(5 + 5 * index, map.width + 2)
+        setpos(6 + 6 * index, map.width + 2)
         addstr("  action: #{person.action.description}")
       end
     end

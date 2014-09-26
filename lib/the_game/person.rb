@@ -2,12 +2,13 @@ class TheGame
   class Person
     include TheGame::HasPosition
 
-    attr_accessor :action,:hunger, :energy, :will_take_jobs
+    attr_accessor :action, :thirst, :hunger, :energy, :will_take_jobs
     attr_reader :inventory
 
     def initialize(attrs = {})
       @hunger = 0.8 + rand / 10
       @energy = 0.3 + rand / 2
+      @thirst = 0.8 + rand / 10
 
       do_stuff
 
@@ -23,11 +24,6 @@ class TheGame
       self.y = attrs[:y]
     end
 
-    # def action=(action)
-    #   binding.pry if action.nil?
-    #   @action = action
-    # end
-
     def do_stuff
       @action = Action::WonderForNoReason.create
     end
@@ -39,10 +35,8 @@ class TheGame
     def update(map, time_in_minutes)
       update_hunger(time_in_minutes)
       update_energy(time_in_minutes)
+      update_thirst(time_in_minutes)
 
-      # if should_die?
-      #   die!
-      # end
       @action.perform(self, map, time_in_minutes)
     end
 
@@ -71,6 +65,15 @@ class TheGame
       end
     end
 
+    def update_thirst(minutes)
+      # assume half a day is full thirst bar
+
+      @thirst -= minutes / (12.0 * 60)
+      if @thirst < 0
+        @thirst = 0
+      end
+    end
+
     def update_energy(minutes)
       # assume that:
       # 8 hours of sleep is enough rest for 16 hours of being awake
@@ -83,6 +86,14 @@ class TheGame
       if @energy < 0
         @energy = 0
       end
+    end
+
+    def thirsty?
+      thirst < 0.5
+    end
+
+    def done_drinking?
+      thirst > 0.8
     end
 
     def hungry?
