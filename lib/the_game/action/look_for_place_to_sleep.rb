@@ -5,7 +5,7 @@ class TheGame
         "going near fireplace to sleep"
       end
 
-      def perform(person, map, time_in_seconds)
+      def perform(person, map, time_in_minutes)
         safe_place_to_sleep = TheGame::Settlement.instance.safe_place_to_sleep
         job = GoTo.create(safe_place_to_sleep).then(Sleep.create(safe_place_to_sleep))
         person.action = job

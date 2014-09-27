@@ -8,7 +8,7 @@ class TheGame
 
       def initialize(food_type)
         @food_type = food_type
-        @seconds_left = 20 * 60
+        @minutes_left = 20
         stash = Settlement.instance.stash
         stash.get(@food_type)
       end
@@ -21,10 +21,10 @@ class TheGame
         "cooking #{@food_type}"
       end
 
-      def perform(person, map, time_in_seconds)
-        @seconds_left -= time_in_seconds
+      def perform(person, map, time_in_minutes)
+        @minutes_left -= time_in_minutes
 
-        if @seconds_left == 0
+        if @minutes_left == 0
           stash = Settlement.instance.stash
           cooked_fish = Item::CookedFish.new
           stash.add(cooked_fish)

@@ -1,12 +1,12 @@
 class TheGame
   class Item
     class CookedFish
-      def seconds_to_eat
+      def minutes_to_eat
         # How long can you eat a fish?
         20
       end
 
-      def hunger_per_second_added
+      def hunger_per_minute_added
         # such fish should well enough to feed for a day
         # so 20 minutes should replenish about 0.5
         # so one minute:
@@ -14,7 +14,7 @@ class TheGame
       end
 
       def alphas
-        seconds_to_eat * hunger_per_second_added
+        minutes_to_eat * hunger_per_minute_added
       end
 
       def type

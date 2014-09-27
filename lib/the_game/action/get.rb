@@ -32,7 +32,7 @@ class TheGame
         end
       end
 
-      def perform(person, map, time_in_seconds)
+      def perform(person, map, time_in_minutes)
         item = @place.get(@item_type)
 
         if item

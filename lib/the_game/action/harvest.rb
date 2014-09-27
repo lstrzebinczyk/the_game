@@ -3,7 +3,7 @@ class TheGame
     class Harvest < Action
       def initialize(tile)
         @tile = tile
-        @seconds_left = 60 * 60
+        @minutes_left = 60
       end
 
       def description
@@ -12,14 +12,14 @@ class TheGame
         "harvesting food at #{x}, #{y}"
       end
 
-      def perform(person, map, time_in_seconds)
-        if @seconds_left == 0
+      def perform(person, map, time_in_minutes)
+        if @minutes_left == 0
           harvested_food = Item::Food.new
           person.inventory.add(harvested_food)
           stash = TheGame::Settlement.instance.stash
           person.action = Action::Carry.create(:food, to: stash)
         else
-          @seconds_left -= time_in_seconds
+          @minutes_left -= time_in_minutes
         end
       end
     end

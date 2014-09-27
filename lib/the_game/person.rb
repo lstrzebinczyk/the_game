@@ -32,12 +32,12 @@ class TheGame
       @inventory.has?(type)
     end
 
-    def update(map, time_in_seconds)
-      update_hunger(time_in_seconds)
-      update_energy(time_in_seconds)
-      update_thirst(time_in_seconds)
+    def update(map, time_in_minutes)
+      update_hunger(time_in_minutes)
+      update_energy(time_in_minutes)
+      update_thirst(time_in_minutes)
 
-      @action.perform(self, map, time_in_seconds)
+      @action.perform(self, map, time_in_minutes)
     end
 
     def should_die?
@@ -52,30 +52,29 @@ class TheGame
       @dead = true
     end
 
-    def update_hunger(seconds)
+    def update_hunger(minutes)
       # assume that 2 meals a day needed
       # an hour meal should add half the bar of hunger
       # so 60 minutes => 0.5
-      # so 1 minute   => 0.5 / 60
-      # so 1 second   => 0.5 / (60 * 60)
+      # so 1 minute   => 0.5/60 (0.00834)
 
 
-      @hunger -= seconds / (24.0 * 60 * 60)
+      @hunger -= minutes / (24.0 * 60)
       if @hunger < 0
         @hunger = 0
       end
     end
 
-    def update_thirst(seconds)
+    def update_thirst(minutes)
       # assume third a day is full thirst bar
 
-      @thirst -= seconds / (8.0 * 60 * 60)
+      @thirst -= minutes / (8.0 * 60)
       if @thirst < 0
         @thirst = 0
       end
     end
 
-    def update_energy(seconds)
+    def update_energy(minutes)
       # assume that:
       # 8 hours of sleep is enough rest for 16 hours of being awake
       # therefore energy goes from 1 to 0 in 16 hours
@@ -83,7 +82,7 @@ class TheGame
       # during one minute energy decreases by 1 / (16*60) => 0.00104167
       # lets call that beta
       # when sleeping energy increases by 3 beta
-      @energy -= seconds / (16.0 * 60 * 60)
+      @energy -= minutes / 960.0
       if @energy < 0
         @energy = 0
       end

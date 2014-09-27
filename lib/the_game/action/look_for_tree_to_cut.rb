@@ -14,7 +14,7 @@ class TheGame
         :woodcutting
       end
 
-      def perform(person, map, time_in_seconds)
+      def perform(person, map, time_in_minutes)
         closest = map.find_closest_to(person) do |tile|
           tile.has_tree?
         end

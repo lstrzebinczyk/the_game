@@ -2,7 +2,7 @@ class TheGame
   class Action
     class CatchFish < Action
       def initialize
-        @seconds_spent_already = 0
+        @minutes_spent_already = 0
       end
 
       def description
@@ -13,14 +13,11 @@ class TheGame
         :fisherman
       end
 
-      def perform(person, map, time_in_seconds)
-        @seconds_spent_already += time_in_seconds
+      def perform(person, map, time_in_minutes)
+        @minutes_spent_already += time_in_minutes
 
         #random chance on catching something
-
-        chance_per_second = 1.0 / 5000
-
-        if rand < (chance_per_second * time_in_seconds)
+        if rand < (0.02 * time_in_minutes)
           catched_fish = Item::Fish.new
           person.inventory.add(catched_fish)
           stash = TheGame::Settlement.instance.stash
@@ -30,7 +27,7 @@ class TheGame
         end
 
         # fuck that and go take care of your stuff
-        if @seconds_spent_already > 90 * 60
+        if @minutes_spent_already > 90
           stash = TheGame::Settlement.instance.stash
           person.action = Action::Carry.create(:fishing_rod, to: stash)
         end

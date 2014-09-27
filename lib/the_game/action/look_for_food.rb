@@ -10,7 +10,7 @@ class TheGame
         "looking for food"
       end
 
-      def perform(person, map, time_in_seconds)
+      def perform(person, map, time_in_minutes)
         check_stash(person, map)
       end
 

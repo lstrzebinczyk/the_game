@@ -17,10 +17,10 @@ class TheGame
         "building #{@building.description}"
       end
 
-      def perform(person, map, time_in_seconds)
-        @building.seconds_left -= time_in_seconds
+      def perform(person, map, time_in_minutes)
+        @building.minutes_left -= time_in_minutes
 
-        if @building.seconds_left == 0
+        if @building.minutes_left == 0
           @building.status = :done
           person.do_stuff
         end

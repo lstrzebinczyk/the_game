@@ -11,16 +11,16 @@ class TheGame
       @time = Time.new(1000, 1, 1, 12, 0, 0)
     end
 
-    def update(time_in_seconds = 1)
+    def update(time_in_minutes = 1)
       remove_dead_people!
 
       @people.each do |person|
-        person.update(@map, time_in_seconds)
+        person.update(@map, time_in_minutes)
       end
 
-      TheGame::Settlement.instance.update(time_in_seconds)
+      TheGame::Settlement.instance.update(time_in_minutes)
 
-      @time += time_in_seconds
+      @time += time_in_minutes * 60
     end
 
     private
