@@ -8,10 +8,6 @@ class TheGame
       def accepted_jobs
         [:management, :survival, :building, :haul]
       end
-
-      def to_s
-        "L"
-      end
     end
   end
 end

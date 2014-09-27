@@ -103,9 +103,5 @@ class TheGame
     def sleepy?
       energy < 0.02
     end
-
-    def to_s
-      "P"
-    end
   end
 end

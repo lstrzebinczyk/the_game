@@ -85,24 +85,6 @@ class TheGame
             }
           elsif tile.content.nil?
             addstr(".")
-          elsif tile.color == :blue
-            Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
-              addstr(tile.to_s)
-            }
-          elsif tile.color == :yellow
-            Curses.attron(color_pair(COLOR_YELLOW)|A_NORMAL) {
-              addstr(tile.to_s)
-            }
-          elsif tile.color == :green
-            Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
-              addstr(tile.to_s)
-            }
-          elsif tile.color == :red
-            Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
-              addstr(tile.to_s)
-            }
-          else
-            addstr(tile.to_s)
           end
         end
       end
@@ -219,7 +201,13 @@ class TheGame
     def render_people
       people.each do |person|
         setpos(person.x, person.y)
-        addstr(person.to_s)
+        if person.is_a? Person::Leader
+          addstr("L")
+        elsif person.is_a? Person::Woodcutter
+          addstr("W")
+        else
+          addstr("P")
+        end
       end
     end
 

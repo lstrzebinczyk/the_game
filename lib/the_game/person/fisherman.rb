@@ -8,10 +8,6 @@ class TheGame
       def accepted_jobs
         [:cooking, :fisherman, :haul]
       end
-
-      def to_s
-        "F"
-      end
     end
   end
 end
