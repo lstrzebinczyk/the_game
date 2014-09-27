@@ -6,7 +6,7 @@ desc "Build"
 task :build do
   # binding.pry
 
-  File.open("the_game.js", "w+") do |out|
+  File.open("assets/javascripts/the_game.js", "w+") do |out|
   #   Dir["lib/**/*.rb"].each do |path|
   #     code = File.open(path).read
   #     out << Opal.compile(code)
