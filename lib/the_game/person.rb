@@ -32,6 +32,18 @@ class TheGame
       @inventory.has?(type)
     end
 
+    def get(type)
+      @inventory.get(type)
+    end
+
+    def can_carry_more?(item_type)
+      if item_type != :firewood
+        raise "I wasn't expecting that"
+      else
+        @inventory.count(item_type) < 5
+      end
+    end
+
     def update(map, time_in_minutes)
       update_hunger(time_in_minutes)
       update_energy(time_in_minutes)

@@ -22,6 +22,14 @@ class TheGame
         end
       end
 
+      def has?(type)
+        if type == :firewood
+          !empty?
+        else
+          false
+        end
+      end
+
       def empty?
         @firewood_left == 0
       end

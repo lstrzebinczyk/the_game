@@ -12,6 +12,10 @@ class TheGame
       def description
         "stash"
       end
+
+      def need?(item_type)
+        true
+      end
     end
   end
 end

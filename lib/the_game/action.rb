@@ -30,12 +30,15 @@ class TheGame
         end
       end
 
+      def description=(description)
+        @description = description
+      end
+
       def description
-        @actions.first.description
+        @description || @actions.first.description
       end
 
       def done?(person)
-        # binding.pry
         raise "#done? called on action chain"
       end
     end

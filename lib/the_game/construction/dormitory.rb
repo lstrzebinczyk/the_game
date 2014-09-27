@@ -70,6 +70,12 @@ class TheGame
         @firewood_needed > 0
       end
 
+      def need?(item_type)
+        if item_type == :firewood
+          need_wood?
+        end
+      end
+
       def sleep_area
         if @status == :done
           # inside the shack

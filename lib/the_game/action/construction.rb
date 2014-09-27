@@ -17,12 +17,15 @@ class TheGame
         "building #{@building.description}"
       end
 
+      def done?(person)
+        @building.minutes_left == 0
+      end
+
       def perform(person, map, time_in_minutes)
         @building.minutes_left -= time_in_minutes
 
         if @building.minutes_left == 0
           @building.status = :done
-          person.do_stuff
         end
       end
     end
