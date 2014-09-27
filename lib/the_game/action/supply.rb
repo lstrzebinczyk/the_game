@@ -2,7 +2,9 @@ class TheGame
   class Action
     class Supply < Action
       class Load < Action
-        def initialize(item_type, from: place)
+        def initialize(item_type, opts)
+          from = opts[:from]
+
           @item_type = item_type
           @from      = from
         end
@@ -20,7 +22,9 @@ class TheGame
       end
 
       class Unload < Action
-        def initialize(item_type, to: place)
+        def initialize(item_type, opts)
+          to = opts[:to]
+
           @item_type = item_type
           @to      = to
         end
@@ -37,7 +41,10 @@ class TheGame
         end
       end
 
-      def self.create(place, with: item_type, from: supplier)
+      def self.create(place, opts)
+        with = opts[:with]
+        from = opts[:from]
+
         action = GoTo.create(from)
           .then(Load.create(with, from: from))
           .then(GoTo.create(place))

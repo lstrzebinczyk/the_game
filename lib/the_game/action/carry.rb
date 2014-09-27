@@ -1,11 +1,14 @@
 class TheGame
   class Action
     class Carry < Action
-      def self.create(item_type, to: place)
+      def self.create(item_type, opts)
+        to = opts[:to]
         GoTo.create(to).then(new(item_type, to: to))
       end
 
-      def initialize(item_type, to: place)
+      def initialize(item_type, opts)
+        to = opts[:to]
+
         @item_type  = item_type
         @place      = to
       end
@@ -32,7 +35,6 @@ class TheGame
           item = person.inventory.get(@item_type)
           @place.add(item)
         end
-        # person.do_stuff
       end
     end
   end

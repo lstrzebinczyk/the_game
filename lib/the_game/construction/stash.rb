@@ -1,3 +1,6 @@
+require 'the_game/container'
+require 'the_game/has_position'
+
 class TheGame
   class Construction
     class Stash < Container

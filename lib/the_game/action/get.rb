@@ -1,12 +1,14 @@
 class TheGame
   class Action
     class Get < Action
-      def self.create(item_type, from: place)
+      def self.create(item_type, opts)
+        from = opts[:from]
         GoTo.create(from)
           .then(new(item_type, from: from))
       end
 
-      def initialize(item_type, from: place)
+      def initialize(item_type, opts)
+        from = opts[:from]
         @item_type  = item_type
         @place      = from
       end
