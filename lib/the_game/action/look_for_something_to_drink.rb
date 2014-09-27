@@ -9,7 +9,7 @@ class TheGame
         #currently you can only get drink at river
 
         closest = map.find_closest_to(person) do |tile|
-          tile.content.is_a? Map::Tile::River
+          tile.terrain == :river
         end
 
         action = Action::GoTo.create(closest).then(Action::DrinkFromRiver.create())

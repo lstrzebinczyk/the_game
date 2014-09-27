@@ -7,10 +7,10 @@ class TheGame
 
         grid = new_grid
         map = Map.new(grid)
+        create_river(map)
         populate_with_trees(map)
         populate_with_food(map)
         create_camp(map)
-        create_river(map)
         map
       end
 
@@ -46,7 +46,7 @@ class TheGame
       def populate_with_food(map)
         map.each_tile do |tile|
           if rand < 0.12
-            tile.set_food
+            tile.set_food unless tile.terrain == :river
           end
         end
       end
@@ -54,7 +54,7 @@ class TheGame
       def populate_with_trees(map)
         map.each_tile do |tile|
           if rand < 0.08
-            tile.content = Nature::Tree.new(tile.x, tile.y)
+            tile.content = Nature::Tree.new(tile.x, tile.y)  unless tile.terrain == :river
           end
         end
       end

@@ -15,24 +15,6 @@ class TheGame
         end
       end
 
-      class River < Content
-        def passable?
-          false
-        end
-
-        def to_s
-          ["~", " "].sample
-        end
-
-        def color
-          :blue
-        end
-
-        def description
-          "river"
-        end
-      end
-
       class Food < Content
         def initialize
           @food_count = 3
@@ -65,7 +47,7 @@ class TheGame
 
       include TheGame::HasPosition
 
-      attr_accessor :content
+      attr_accessor :content, :terrain
 
       def initialize(x, y)
         # @content = Null.new
@@ -104,7 +86,8 @@ class TheGame
       end
 
       def set_river
-        @content = River.new
+        @terrain = :river
+        # @content = River.new
       end
 
       def update
