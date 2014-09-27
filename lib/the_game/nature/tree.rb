@@ -8,6 +8,14 @@ class TheGame
         @y = y
       end
 
+      def cut!
+        @cut = true
+      end
+
+      def cut?
+        @cut
+      end
+
       def description
         "tree"
       end

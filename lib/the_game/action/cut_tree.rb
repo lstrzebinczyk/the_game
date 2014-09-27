@@ -1,12 +1,12 @@
 class TheGame
   class Action
     class CutTree < Action
-      def self.create(tile)
-        GoTo.create(tile).then(new(tile))
+      def self.create(tree)
+        GoTo.create(tree).then(new(tree))
       end
 
-      def initialize(tile)
-        @tile = tile
+      def initialize(tree)
+        @tree = tree
         @minutes_left = 180
       end
 
@@ -15,8 +15,8 @@ class TheGame
       end
 
       def description
-        x = @tile.x
-        y = @tile.y
+        x = @tree.x
+        y = @tree.y
         "cutting tree at #{x}, #{y}"
       end
 
@@ -24,11 +24,8 @@ class TheGame
         @minutes_left -= time_in_minutes
 
         if @minutes_left == 0
-          @tile.clear
+          @tree.cut!
           settlement = Settlement.instance
-          fallen_tree = TheGame::Construction::FallenTree.new(@tile.x, @tile.y)
-          @tile.content = fallen_tree
-          settlement.fallen_trees << fallen_tree
           person.action = Action::Carry.create(:axe, to: settlement.stash)
         end
       end

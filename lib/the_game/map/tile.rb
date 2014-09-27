@@ -1,56 +1,11 @@
 class TheGame
   class Map
     class Tile
-      # class Content
-      #   def has_food?
-      #     false
-      #   end
-
-      #   def passable?
-      #     true
-      #   end
-
-      #   def color
-      #     :white
-      #   end
-      # end
-
-      # class Food < Content
-      #   def initialize
-      #     @food_count = 3
-      #   end
-
-      #   def has_food?
-      #     true
-      #   end
-
-      #   def description
-      #     "berries tile"
-      #   end
-
-      #   def to_s
-      #     "#"
-      #   end
-
-      #   def decrease_food
-      #     @food_count -= 1
-      #   end
-
-      #   def any_food_left?
-      #     @food_count > 0
-      #   end
-
-      #   def color
-      #     :yellow
-      #   end
-      # end
-
       include TheGame::HasPosition
 
       attr_accessor :content, :terrain
 
       def initialize(x, y)
-        # @content = Null.new
         self.x = x
         self.y = y
       end
@@ -68,9 +23,7 @@ class TheGame
       end
 
       def description
-        if @content
-          @content.description
-        end
+        @terrain
       end
 
       def empty?
@@ -79,7 +32,6 @@ class TheGame
 
       def set_river
         @terrain = :river
-        # @content = River.new
       end
 
       def update
@@ -87,40 +39,11 @@ class TheGame
           @content = nil
         elsif @content.is_a? Nature::BerriesBush and @content.empty?
           @content = nil
+        elsif @content.is_a? Nature::Tree and @content.cut?
+          fallen_tree = TheGame::Construction::FallenTree.new(@x, @y)
+          @content = fallen_tree
+          Settlement.instance.fallen_trees << fallen_tree
         end
-      end
-
-      def clear
-        # @mark_for_cleaning = false
-        @content = nil
-      end
-
-      # def get_food
-      #   @content.decrease_food
-      #   unless @content.any_food_left?
-      #     clear
-      #     cleaned!
-      #   end
-      # end
-
-      # def has_food?
-      #   @content.is_a? Food
-      # end
-
-      def to_s
-        @content.to_s
-      end
-
-      def passable?
-        @content.passable?
-      end
-
-      def color
-        @content.color
-      end
-
-      def impassable?
-        !passable?
       end
     end
   end

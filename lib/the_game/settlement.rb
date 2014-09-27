@@ -29,14 +29,14 @@ class TheGame
         elsif job_type == :gatherer
           if needs_cleaning?(:gatherer)
             tile = @dormitory.tile_for_cleaning(:gatherer)
-            return Action::FetchFood.create(tile)
+            return Action::FetchFood.create(tile.content)
           elsif need_more_food?
             return Action::LookForFoodToHarvest.create()
           end
         elsif job_type == :woodcutting
           if needs_cleaning?(:woodcutting)
             tile = @dormitory.tile_for_cleaning(:woodcutting)
-            return Action::Get.create(:axe, from: @stash, then_action: Action::CutTree.create(tile))
+            return Action::Get.create(:axe, from: @stash, then_action: Action::CutTree.create(tile.content))
           elsif need_more_wood?
             return Action::LookForTreeToCut.create()
           end

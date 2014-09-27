@@ -20,7 +20,7 @@ class TheGame
         end
 
         if closest
-          person.action = Action::CutTree.create(closest)
+          person.action = Action::CutTree.create(closest.content)
         end
       end
     end

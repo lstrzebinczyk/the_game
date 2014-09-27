@@ -1,14 +1,14 @@
 class TheGame
   class Action
     class Harvest < Action
-      def initialize(tile)
-        @tile = tile
+      def initialize(food_provider)
+        @food_provider = food_provider
         @minutes_left = 60
       end
 
       def description
-        x = @tile.x
-        y = @tile.y
+        x = @food_provider.x
+        y = @food_provider.y
         "harvesting berries at #{x}, #{y}"
       end
 

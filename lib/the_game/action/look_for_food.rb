@@ -17,7 +17,7 @@ class TheGame
       private
 
       def check_stash(person, map)
-        stash      = TheGame::Settlement.instance.stash
+        stash = TheGame::Settlement.instance.stash
 
         if stash.has?(:cooked_fish)
           cooked_fish = stash.get(:cooked_fish)
