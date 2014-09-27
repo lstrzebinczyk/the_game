@@ -41,7 +41,7 @@ class TheGame
           end
         elsif job_type == :woodcutting
           fields.find do |tile|
-            tile.has_tree?
+            tile.content.is_a? Nature::Tree
           end
         end
       end
@@ -50,7 +50,9 @@ class TheGame
         if job_type == :gatherer
           fields.any?(&:has_food?)
         elsif job_type == :woodcutting
-          fields.any?(&:has_tree?)
+          fields.any? do |tile|
+            tile.content.is_a? Nature::Tree
+          end
         end
       end
 

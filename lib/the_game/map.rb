@@ -13,7 +13,7 @@ class TheGame
     end
 
     def find_closest_to(person)
-      closest = find {|tile| tile.has_food? }
+      closest = find {|tile| yield(tile) }
 
       if closest
         each_tile do |tile|

@@ -54,7 +54,7 @@ class TheGame
       def populate_with_trees(map)
         map.each_tile do |tile|
           if rand < 0.08
-            tile.set_tree
+            tile.content = Nature::Tree.new(tile.x, tile.y)
           end
         end
       end

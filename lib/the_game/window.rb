@@ -59,8 +59,20 @@ class TheGame
 
           if tile.marked_for_cleaning?
             Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
-              addstr(tile.to_s)
+              if tile.content.is_a? Nature::Tree
+                addstr("t")
+              else
+                addstr(tile.to_s)
+              end
             }
+          elsif tile.content.is_a? Nature::Tree
+            Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+              addstr("t")
+            }
+          elsif tile.content.nil?
+            # Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+              addstr(".")
+            # }
           elsif tile.color == :blue
             Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
               addstr(tile.to_s)

@@ -16,7 +16,7 @@ class TheGame
 
       def perform(person, map, time_in_minutes)
         closest = map.find_closest_to(person) do |tile|
-          tile.has_tree?
+          tile.content.is_a? Nature::Tree
         end
 
         if closest

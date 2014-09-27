@@ -15,30 +15,6 @@ class TheGame
         end
       end
 
-      class Tree < Content
-        def to_s
-          "t"
-        end
-
-        def color
-          :green
-        end
-
-        def description
-          "tree"
-        end
-      end
-
-      class Null < Content
-        def to_s
-          "."
-        end
-
-        def description
-
-        end
-      end
-
       class River < Content
         def passable?
           false
@@ -71,7 +47,7 @@ class TheGame
         end
 
         def to_s
-          "b"
+          "#"
         end
 
         def decrease_food
@@ -89,10 +65,10 @@ class TheGame
 
       include TheGame::HasPosition
 
-      attr_reader :content
+      attr_accessor :content
 
       def initialize(x, y)
-        @content = Null.new
+        # @content = Null.new
         self.x = x
         self.y = y
       end
@@ -113,12 +89,8 @@ class TheGame
         @content.get(type)
       end
 
-      def set_tree
-        @content = Tree.new
-      end
-
       def empty?
-        @content.is_a? Null
+        @content.nil?
       end
 
       def set_food
@@ -131,7 +103,7 @@ class TheGame
 
       def clear
         @mark_for_cleaning = false
-        @content = Null.new
+        @content = nil
       end
 
       def get_food
@@ -141,12 +113,8 @@ class TheGame
         end
       end
 
-      def has_tree?
-        @content.is_a? Tree
-      end
-
       def has_food?
-        @content.has_food?
+        @content.is_a? Food
       end
 
       def to_s
