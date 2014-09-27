@@ -4,108 +4,99 @@ class TheGame
   class Settlement
     include Singleton
 
-    attr_accessor :stash_tile, :fire_tile, :people, :constructions
+    attr_accessor :stash
+    attr_accessor :people
     attr_accessor :firewood_needed
+    attr_accessor :fireplace, :dormitory
+    attr_accessor :fallen_trees
 
     def initialize
-      @jobs = []
-      @constructions = []
+      @dormitory = nil
+      @fireplace = nil
+      @stash     = nil
 
-      @firewood_needed = 0
-
-      @minutes_until_next_food_check = Countdown.new(16 * 60)
-      @minutes_until_next_fire_check = Countdown.new(2 * 60)
-      @minutes_until_next_firewood_check = Countdown.new(24 * 60)
-
-      @minutes_left_for_fire = Countdown.new(4 * 60)
-    end
-
-    def setup
-      @jobs << Action::CheckFoodInStash.create
-      @jobs << Action::CheckFirewoodInStash.create
-      @jobs << Action::PlanDormitoryBuilding.create
-    end
-
-    def safe_place_to_sleep
-      #@constructions.first => dormitory
-      if @constructions.first
-        if @constructions.first.status == :done
-          @constructions.first
-        else
-          fire_tile
-        end
-      else
-        fire_tile
-      end
-    end
-
-    def minutes_left_for_fire
-      @minutes_left_for_fire.to_i
-    end
-
-    def add_firewood_to_fire(firewood)
-      @minutes_left_for_fire.add_minutes(-firewood.amount)
-    end
-
-    def fire_is_ok?
-      @minutes_left_for_fire.to_i > 4 * 60
-    end
-
-    def update(minutes)
-      @minutes_until_next_food_check.add_minutes(minutes)
-      @minutes_until_next_fire_check.add_minutes(minutes)
-      @minutes_until_next_firewood_check.add_minutes(minutes)
-      @minutes_left_for_fire.add_minutes(minutes)
-
-      if @minutes_until_next_food_check.ready?
-        @jobs << TheGame::Action::CheckFoodInStash.create
-        @minutes_until_next_food_check.reset!
-      end
-
-      if @minutes_until_next_fire_check.ready?
-        @jobs << TheGame::Action::CheckFireplace.create
-        @minutes_until_next_fire_check.reset!
-      end
-
-      if @minutes_until_next_firewood_check.ready?
-        @jobs << TheGame::Action::CheckFirewoodInStash.create
-        @minutes_until_next_firewood_check.reset!
-      end
-    end
-
-
-    def people_count
-      @people.size
-    end
-
-    def stash
-      stash_tile.content.stash
-    end
-
-    def add_job(job)
-      @jobs << job
-    end
-
-    def remove_gatherer_jobs!
-      @jobs.delete_if{|job| job.type == :gatherer }
+      @fallen_trees = []
     end
 
     # job types:
     # :haul, :management, :woodcutting, :gatherer
     def get_job(person)
-      #Try to get a job you'd prefer
+      #check if fireplace will provide you with a job
 
       person.accepted_jobs.each do |job_type|
-        job = @jobs.find{|job| job.type == job_type }
-        if job
-          index = @jobs.index(job)
-          @jobs.delete_at(index)
-          return job
+        if job_type == :survival and !@fireplace.fire_is_ok? and @stash.has?(:firewood)
+          return Action::CheckFireplace.create()
+        elsif job_type == :gatherer
+          if needs_cleaning?(:gatherer)
+            tile = @dormitory.tile_for_cleaning(:gatherer)
+            return Action::FetchFood.create(tile.content)
+          elsif need_more_food?
+            return Action::LookForFoodToHarvest.create()
+          end
+        elsif job_type == :woodcutting
+          if needs_cleaning?(:woodcutting)
+            tile = @dormitory.tile_for_cleaning(:woodcutting)
+            return Action::Get.create(:axe, from: @stash).then(Action::CutTree.create(tile.content))
+          elsif need_more_wood?
+            return Action::LookForTreeToCut.create()
+          end
+        elsif job_type == :haul
+          if needs_cleaning?(:haul)
+            tile = @dormitory.tile_for_cleaning(:haul)
+            action = Action::Supply.create(@stash, with: :firewood, from: tile.content)
+            return action
+            # return Action::Get.create(:firewood, from: tile.content).then(Action::Carry.create(:firewood, to: @stash))
+          elsif @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
+            action = Action::Supply.create(@dormitory, with: :firewood, from: @stash)
+            return action
+            # return Action::Get.create(:firewood, from: @stash).then(Action::Carry.create(:firewood, to: @dormitory))
+          elsif @fallen_trees.any?
+            action = Action::Supply.create(@stash, with: :firewood, from: @fallen_trees.first)
+            return action
+            # return Action::Get.create(:firewood, from: @fallen_trees.first).then(Action::Carry.create(:firewood, to: @stash))
+          end
+        elsif job_type == :management
+          if @dormitory.nil?
+            return Action::PlanDormitoryBuilding.create
+          elsif @dormitory and @dormitory.can_start_building?
+            @dormitory.start_building!
+            person.do_stuff
+          end
+        elsif job_type == :building and @dormitory and @dormitory.ready_to_build?
+          return Action::Construction.create(@dormitory)
+        elsif job_type == :fisherman
+          return Action::GoFishing.create()
+        elsif job_type == :cooking and @stash.has?(:fish)
+          return Action::Cook.create(:fish)
         end
       end
 
-      #try to get any job
-      @jobs.pop
+      nil
+    end
+
+    def needs_cleaning?(job_type)
+      @dormitory and @dormitory.needs_cleaning?(job_type)
+    end
+
+    def need_more_wood?
+      # we need enough wood for the fireplace to burn for 2 days (2 * 24 * 60 minutes)
+      expected_firewood = 2 * 24
+
+      #if dormitory needs more wood to be built, add it
+      expected_firewood += @dormitory.firewood_needed if @dormitory
+
+      available_firewood = stash.count(:firewood)
+
+      #add cut trees to available firewood
+      @fallen_trees.each do |cut_tree|
+        available_firewood += cut_tree.firewood_left
+      end
+
+      available_firewood < expected_firewood
+    end
+
+    def need_more_food?
+      @stash.food_amount < people_count
     end
 
     def jobs_count
@@ -115,6 +106,28 @@ class TheGame
         woodcutting: @jobs.count{|job| job.type == :woodcutting },
         gatherer: @jobs.count{|job| job.type == :gatherer },
       }
+    end
+
+    def set_position(x, y)
+      @x = x
+      @y = y
+    end
+
+    def setup
+      @fireplace = Construction::Fireplace.new(@x, @y)
+    end
+
+    def safe_place_to_sleep
+      @dormitory.sleep_area || @fireplace.sleep_area
+    end
+
+    def update(minutes)
+      @fireplace.update(minutes)
+      @fallen_trees.delete_if(&:empty?)
+    end
+
+    def people_count
+      @people.size
     end
 
     def food_amount

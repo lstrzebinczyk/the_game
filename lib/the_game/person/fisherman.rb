@@ -1,12 +1,12 @@
 class TheGame
   class Person
-    class Leader < Person
+    class Fisherman < Person
       def type
-        :leader
+        :fisherman
       end
 
       def accepted_jobs
-        [:management, :survival, :building, :haul]
+        [:cooking, :fisherman, :haul]
       end
     end
   end

@@ -18,8 +18,9 @@ class TheGame
         person.update(@map, time_in_minutes)
       end
 
-      @map.update
       TheGame::Settlement.instance.update(time_in_minutes)
+
+      @map.update
 
       @time += time_in_minutes * 60
     end
@@ -38,6 +39,7 @@ class TheGame
       @people << Person::Woodcutter.new(x: x_center, y: y_center)
       @people << Person::Gatherer.new(x: x_center, y: y_center)
       @people << Person::Gatherer.new(x: x_center, y: y_center)
+      @people << Person::Fisherman.new(x: x_center, y: y_center)
 
       # 5.times do
       #   @people << Person.new(x: x_center, y: y_center)

@@ -7,7 +7,7 @@ class TheGame
       end
 
       def description
-        "eating"
+        "eating #{@food.type}"
       end
 
       def perform(person, map, time_in_minutes)

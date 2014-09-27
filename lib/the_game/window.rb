@@ -39,7 +39,7 @@ class TheGame
     def render
       clear if @iteration % 500 == 0
       render_map
-      render_constructions
+      render_settlement
       render_people
       render_people_stats
       render_stash_stats
@@ -57,34 +57,59 @@ class TheGame
         row.each_with_index do |tile, column_index|
           setpos(row_index, column_index)
 
-          if tile.color == :blue
-            Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
-              addstr(tile.to_s)
-            }
-          elsif tile.color == :yellow
-            Curses.attron(color_pair(COLOR_YELLOW)|A_NORMAL) {
-              addstr(tile.to_s)
-            }
-          elsif tile.color == :green
-            Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
-              addstr(tile.to_s)
-            }
-          elsif tile.color == :red
+          if tile.marked_for_cleaning?
             Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
-              addstr(tile.to_s)
+              if tile.content.is_a? Nature::Tree
+                addstr("t")
+              elsif tile.content.is_a? Construction::FallenTree
+                addstr("/")
+              else
+                addstr(tile.to_s)
+              end
             }
-          else
-            addstr(tile.to_s)
+          elsif tile.content.is_a? Nature::Tree
+            Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+              addstr("t")
+            }
+          elsif tile.content.is_a? Construction::FallenTree
+            Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+              addstr("/")
+            }
+          elsif tile.content.is_a? Nature::BerriesBush
+            Curses.attron(color_pair(COLOR_YELLOW)|A_NORMAL) {
+              addstr("#")
+            }
+          elsif tile.terrain == :river
+            Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
+              addstr(["~", " "].sample)
+            }
+          elsif tile.content.nil?
+            addstr(".")
           end
         end
       end
     end
 
-    def render_constructions
-      dormitory = TheGame::Settlement.instance.constructions.first
-      if dormitory
+    def render_settlement
+      #render fireplace
+
+      fireplace = Settlement::instance.fireplace
+      setpos(fireplace.x, fireplace.y)
+      add_string("F", :red)
+
+      dormitory = TheGame::Settlement.instance.dormitory
+      if dormitory and dormitory.status != :cleaning
         print_dormitory(dormitory)
       end
+
+      stash = Settlement::instance.stash
+      setpos(stash.x, stash.y)
+      add_string("S")
+
+      # Settlement.instance.fallen_trees.each do |tree|
+      #   setpos(tree.x, tree.y)
+      #   add_string("/", :green)
+      # end
     end
 
     def print_dormitory(dormitory)
@@ -153,12 +178,20 @@ class TheGame
       add_string("X", color)
     end
 
-    def add_string(string, color)
+    def add_string(string, color = :white)
       if color == :blue
         Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
           addstr(string)
         }
-      elsif color == :white
+      elsif color == :red
+        Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
+          addstr(string)
+        }
+      elsif color == :green
+        Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+          addstr(string)
+        }
+      else
         Curses.attron(color_pair(A_NORMAL)|A_NORMAL) {
           addstr(string)
         }
@@ -168,7 +201,15 @@ class TheGame
     def render_people
       people.each do |person|
         setpos(person.x, person.y)
-        addstr(person.to_s)
+        if person.is_a? Person::Leader
+          addstr("L")
+        elsif person.is_a? Person::Woodcutter
+          addstr("W")
+        elsif person.is_a? Person::Fisherman
+          addstr("F")
+        else
+          addstr("P")
+        end
       end
     end
 
@@ -182,36 +223,28 @@ class TheGame
       setpos(0, map.width + 50)
       addstr("Stash: ")
       setpos(1, map.width + 50)
-      addstr("  food:     #{stash.count(:food)}")
+      addstr("  berries:      #{stash.count(:berries)}")
       setpos(2, map.width + 50)
-      addstr("  firewood: #{stash.count(:firewood)}")
+      addstr("  fish:         #{stash.count(:fish)}")
       setpos(3, map.width + 50)
-      addstr("  axes:     #{stash.count(:axe)}")
+      addstr("  cooked_fish:  #{stash.count(:cooked_fish)}")
+      setpos(4, map.width + 50)
+      addstr("  firewood:     #{stash.count(:firewood)}")
+      setpos(5, map.width + 50)
+      addstr("  axes:         #{stash.count(:axe)}")
+      setpos(6, map.width + 50)
+      addstr("  fishing_rods: #{stash.count(:fishing_rod)}")
     end
 
     def render_settlement_stats
-      setpos(5, map.width + 50)
-      addstr("Jobs: ")
-
-      jobs_count = TheGame::Settlement.instance.jobs_count
-
-      setpos(6, map.width + 50)
-      addstr("  haul:        #{jobs_count[:haul]}")
-      setpos(7, map.width + 50)
-      addstr("  management:  #{jobs_count[:management]}")
-      setpos(8, map.width + 50)
-      addstr("  woodcutting: #{jobs_count[:woodcutting]}")
-      setpos(9, map.width + 50)
-      addstr("  gatherer:    #{jobs_count[:gatherer]}")
-
       setpos(11, map.width + 50)
       addstr("Fire: ")
       setpos(12, map.width + 50)
       addstr " " * 50
       setpos(12, map.width + 50)
-      addstr("  minutes left: #{TheGame::Settlement.instance.minutes_left_for_fire}")
+      addstr("  minutes left: #{TheGame::Settlement.instance.fireplace.minutes_left_for_fire}")
 
-      dormitory = Settlement.instance.constructions.first
+      dormitory = Settlement.instance.dormitory
 
       if dormitory
         setpos(14, map.width + 50)
@@ -237,24 +270,29 @@ class TheGame
       addstr("Alive: #{people.size}")
 
       people.each_with_index do |person, index|
-        setpos(2 + 5 * index, map.width + 2)
+        setpos(2 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(2 + 5 * index, map.width + 2)
+        setpos(2 + 6 * index, map.width + 2)
         addstr("Person (#{person.type}) stats:")
 
-        setpos(3 + 5 * index, map.width + 2)
+        setpos(3 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(3 + 5 * index, map.width + 2)
+        setpos(3 + 6 * index, map.width + 2)
+        addstr("  thirst: #{progress_bar(person.thirst)}")
+
+        setpos(4 + 6 * index, map.width + 2)
+        addstr " " * 50
+        setpos(4 + 6 * index, map.width + 2)
         addstr("  hunger: #{progress_bar(person.hunger)}")
 
-        setpos(4 + 5 * index, map.width + 2)
+        setpos(5 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(4 + 5 * index, map.width + 2)
+        setpos(5 + 6 * index, map.width + 2)
         addstr("  energy: #{progress_bar(person.energy)}")
 
-        setpos(5 + 5 * index, map.width + 2)
+        setpos(6 + 6 * index, map.width + 2)
         addstr " " * 50
-        setpos(5 + 5 * index, map.width + 2)
+        setpos(6 + 6 * index, map.width + 2)
         addstr("  action: #{person.action.description}")
       end
     end

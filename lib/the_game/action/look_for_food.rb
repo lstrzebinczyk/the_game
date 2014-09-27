@@ -2,8 +2,8 @@ class TheGame
   class Action
     class LookForFood < Action
       def self.create
-        stash_tile = TheGame::Settlement.instance.stash_tile
-        GoTo.create(stash_tile).then(new)
+        stash = TheGame::Settlement.instance.stash
+        GoTo.create(stash).then(new)
       end
 
       def description
@@ -14,14 +14,22 @@ class TheGame
         check_stash(person, map)
       end
 
+      def done?(person)
+        false
+      end
+
       private
 
       def check_stash(person, map)
-        stash      = TheGame::Settlement.instance.stash
+        stash = TheGame::Settlement.instance.stash
 
-        if stash.has?(:food)
-          food = stash.get(:food)
-          person.action = Eat.create(food)
+        if stash.has?(:cooked_fish)
+          cooked_fish = stash.get(:cooked_fish)
+          person.action = Eat.create(cooked_fish)
+          return
+        elsif stash.has?(:berries)
+          berries = stash.get(:berries)
+          person.action = Eat.create(berries)
           return
         else
           person.action = Action::LookForFoodToHarvest.create

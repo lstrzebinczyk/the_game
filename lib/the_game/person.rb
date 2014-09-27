@@ -2,12 +2,13 @@ class TheGame
   class Person
     include TheGame::HasPosition
 
-    attr_accessor :action,:hunger, :energy, :will_take_jobs
+    attr_accessor :action, :thirst, :hunger, :energy, :will_take_jobs
     attr_reader :inventory
 
     def initialize(attrs = {})
       @hunger = 0.8 + rand / 10
       @energy = 0.3 + rand / 2
+      @thirst = 0.8 + rand / 10
 
       do_stuff
 
@@ -23,11 +24,6 @@ class TheGame
       self.y = attrs[:y]
     end
 
-    # def action=(action)
-    #   binding.pry if action.nil?
-    #   @action = action
-    # end
-
     def do_stuff
       @action = Action::WonderForNoReason.create
     end
@@ -36,13 +32,23 @@ class TheGame
       @inventory.has?(type)
     end
 
+    def get(type)
+      @inventory.get(type)
+    end
+
+    def can_carry_more?(item_type)
+      if item_type != :firewood
+        raise "I wasn't expecting that"
+      else
+        @inventory.count(item_type) < 5
+      end
+    end
+
     def update(map, time_in_minutes)
       update_hunger(time_in_minutes)
       update_energy(time_in_minutes)
+      update_thirst(time_in_minutes)
 
-      # if should_die?
-      #   die!
-      # end
       @action.perform(self, map, time_in_minutes)
     end
 
@@ -71,6 +77,15 @@ class TheGame
       end
     end
 
+    def update_thirst(minutes)
+      # assume third a day is full thirst bar
+
+      @thirst -= minutes / (8.0 * 60)
+      if @thirst < 0
+        @thirst = 0
+      end
+    end
+
     def update_energy(minutes)
       # assume that:
       # 8 hours of sleep is enough rest for 16 hours of being awake
@@ -85,16 +100,20 @@ class TheGame
       end
     end
 
+    def thirsty?
+      thirst < 0.5
+    end
+
+    def done_drinking?
+      thirst > 0.8
+    end
+
     def hungry?
       hunger < 0.5
     end
 
     def sleepy?
       energy < 0.02
-    end
-
-    def to_s
-      "P"
     end
   end
 end

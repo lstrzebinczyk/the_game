@@ -7,37 +7,30 @@ class TheGame
 
         grid = new_grid
         map = Map.new(grid)
+        create_river(map)
         populate_with_trees(map)
         populate_with_food(map)
         create_camp(map)
-        create_river(map)
         map
       end
 
       private
 
       def create_camp(map)
+        settlement = TheGame::Settlement.instance
+        settlement.set_position(map.height / 2, map.width  / 2)
+
         stash_x = map.height / 2 + 2
         stash_y = map.width  / 2 + 2
-
-        stash = TheGame::Container.new
+        stash = TheGame::Construction::Stash.new(stash_x, stash_y)
         stash.add(TheGame::Item::Axe.new)
+        stash.add(TheGame::Item::FishingRod.new)
+
         20.times do
           stash.add(TheGame::Item::Firewood.new)
         end
 
-        map.fetch(stash_x, stash_y) do |tile|
-          tile.set_stash(stash)
-          TheGame::Settlement.instance.stash_tile = tile
-        end
-
-        fire_x = map.height / 2 + 1
-        fire_y = map.width  / 2 + 2
-
-        map.fetch(fire_x, fire_y) do |tile|
-          tile.set_fire
-          TheGame::Settlement.instance.fire_tile = tile
-        end
+        settlement.stash = stash
 
         TheGame::Settlement.instance.setup
       end
@@ -53,7 +46,7 @@ class TheGame
       def populate_with_food(map)
         map.each_tile do |tile|
           if rand < 0.12
-            tile.set_food
+            tile.content = Nature::BerriesBush.new(tile.x, tile.y) unless tile.terrain == :river
           end
         end
       end
@@ -61,7 +54,7 @@ class TheGame
       def populate_with_trees(map)
         map.each_tile do |tile|
           if rand < 0.08
-            tile.set_tree
+            tile.content = Nature::Tree.new(tile.x, tile.y)  unless tile.terrain == :river
           end
         end
       end

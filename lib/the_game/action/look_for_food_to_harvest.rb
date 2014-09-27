@@ -11,11 +11,11 @@ class TheGame
 
       def perform(person, map, time_in_minutes)
         closest = map.find_closest_to(person) do |tile|
-          tile.has_food?
+          tile.content.is_a? Nature::BerriesBush
         end
 
         if closest
-          person.action = Action::FetchFood.create(closest)
+          person.action = Action::FetchFood.create(closest.content)
         end
       end
     end

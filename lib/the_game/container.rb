@@ -2,17 +2,12 @@ class TheGame
   class Container
     def initialize
       @content = {}
-      @content[:food]     = []
-      @content[:axe]      = []
-      @content[:firewood] = []
-    end
-
-    def food
-      @content[:food]
-    end
-
-    def axes
-      @content[:axe]
+      @content[:berries]     = []
+      @content[:axe]         = []
+      @content[:firewood]    = []
+      @content[:fishing_rod] = []
+      @content[:fish]        = []
+      @content[:cooked_fish] = []
     end
 
     def add(item)
@@ -31,16 +26,12 @@ class TheGame
       @content[type].size
     end
 
-    def any_axes?
-      axes_count > 0
-    end
-
     def firewood_amount
       @content[:firewood].map{|wood| wood.amount }.inject(0, &:+)
     end
 
     def food_amount
-      @content[:food].map{|food| food.alphas }.inject(0, &:+)
+      @content[:berries].map{|food| food.alphas }.inject(0, &:+) + @content[:cooked_fish].map{|food| food.alphas }.inject(0, &:+)
     end
   end
 end

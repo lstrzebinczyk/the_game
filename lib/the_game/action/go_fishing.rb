@@ -1,18 +1,18 @@
 class TheGame
   class Action
-    class LookForTreeToCut < Action
+    class GoFishing
       def self.create
         stash = TheGame::Settlement.instance.stash
-        Action::Get.create(:axe, from: stash)
+        Action::Get.create(:fishing_rod, from: stash)
           .then(new)
       end
 
       def description
-        "looking for tree to cut"
+        "going fishing"
       end
 
       def type
-        :woodcutting
+        :fisherman
       end
 
       def done?(person)
@@ -21,12 +21,10 @@ class TheGame
 
       def perform(person, map, time_in_minutes)
         closest = map.find_closest_to(person) do |tile|
-          tile.content.is_a? Nature::Tree
+          tile.terrain == :river
         end
 
-        if closest
-          person.action = Action::CutTree.create(closest.content)
-        end
+        person.action = Action::GoTo.create(closest).then(Action::CatchFish.create())
       end
     end
   end

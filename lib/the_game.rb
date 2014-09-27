@@ -20,7 +20,8 @@ class TheGame
       while true
         @engine.update
         @window.render
-        sleep(0.01)
+        sleep(0.033)
+        # sleep 0.1
       end
     ensure
       @window.close

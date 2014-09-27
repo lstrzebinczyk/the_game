@@ -1,5 +1,24 @@
 class TheGame
   module HasPosition
+    class Position
+      # This class is used to return a position, which is related to parent position
+      # like, a place near the fireplace
+      # or a place inside the dormitory (so we avoid people sleeping inside the walls)
+
+
+      attr_reader :x, :y
+
+      def initialize(x, y, parent)
+        @x = x
+        @y = y
+        @parent = parent
+      end
+
+      def method_missing(meth, *args, &block)
+        @parent.send(meth, *args, &block)
+      end
+    end
+
     def x=(x)
       @x = x.to_f
     end
@@ -22,6 +41,10 @@ class TheGame
 
     def distance_to(object)
       Math.sqrt((x - object.x) ** 2 + (y - object.y) ** 2)
+    end
+
+    def position(x, y, parent)
+      Position.new(x, y, parent)
     end
 
     def go_to(object)
