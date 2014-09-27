@@ -209,7 +209,7 @@ class TheGame
       setpos(0, map.width + 50)
       addstr("Stash: ")
       setpos(1, map.width + 50)
-      addstr("  food:         #{stash.count(:food)}")
+      addstr("  berries:      #{stash.count(:berries)}")
       setpos(2, map.width + 50)
       addstr("  fish:         #{stash.count(:fish)}")
       setpos(3, map.width + 50)

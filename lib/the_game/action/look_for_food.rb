@@ -23,9 +23,9 @@ class TheGame
           cooked_fish = stash.get(:cooked_fish)
           person.action = Eat.create(cooked_fish)
           return
-        elsif stash.has?(:food)
-          food = stash.get(:food)
-          person.action = Eat.create(food)
+        elsif stash.has?(:berries)
+          berries = stash.get(:berries)
+          person.action = Eat.create(berries)
           return
         else
           person.action = Action::LookForFoodToHarvest.create

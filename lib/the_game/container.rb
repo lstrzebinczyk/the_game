@@ -2,7 +2,7 @@ class TheGame
   class Container
     def initialize
       @content = {}
-      @content[:food]        = []
+      @content[:berries]     = []
       @content[:axe]         = []
       @content[:firewood]    = []
       @content[:fishing_rod] = []
@@ -31,7 +31,7 @@ class TheGame
     end
 
     def food_amount
-      @content[:food].map{|food| food.alphas }.inject(0, &:+) + @content[:cooked_fish].map{|food| food.alphas }.inject(0, &:+)
+      @content[:berries].map{|food| food.alphas }.inject(0, &:+) + @content[:cooked_fish].map{|food| food.alphas }.inject(0, &:+)
     end
   end
 end

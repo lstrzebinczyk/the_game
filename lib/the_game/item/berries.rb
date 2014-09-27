@@ -1,6 +1,6 @@
 class TheGame
   class Item
-    class Food
+    class Berries
       def minutes_to_eat
         # How long can you eat a bunch of berries?
         10
@@ -18,7 +18,7 @@ class TheGame
       end
 
       def type
-        :food
+        :berries
       end
     end
   end

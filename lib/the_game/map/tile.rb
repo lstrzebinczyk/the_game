@@ -67,11 +67,11 @@ class TheGame
         end
 
         def description
-          "food tile"
+          "berries tile"
         end
 
         def to_s
-          "f"
+          "b"
         end
 
         def decrease_food

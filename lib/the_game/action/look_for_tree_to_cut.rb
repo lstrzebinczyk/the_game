@@ -7,7 +7,7 @@ class TheGame
       end
 
       def description
-        "looking for food"
+        "looking for tree to cut"
       end
 
       def type
