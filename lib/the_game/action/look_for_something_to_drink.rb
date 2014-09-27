@@ -5,7 +5,7 @@ class TheGame
         "looking for something to drink"
       end
 
-      def perform(person, map, time_in_minutes)
+      def perform(person, map, time_in_seconds)
         #currently you can only get drink at river
 
         closest = map.find_closest_to(person) do |tile|

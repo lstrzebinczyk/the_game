@@ -18,7 +18,7 @@ class TheGame
         :survival
       end
 
-      def perform(person, map, time_in_minutes)
+      def perform(person, map, time_in_seconds)
         settlement = TheGame::Settlement.instance
 
         if @fireplace.fire_is_ok?

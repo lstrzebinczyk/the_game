@@ -7,7 +7,7 @@ class TheGame
 
       def initialize(tile)
         @tile = tile
-        @minutes_left = 180
+        @seconds_left = 180 * 60
       end
 
       def type
@@ -20,10 +20,10 @@ class TheGame
         "cutting tree at #{x}, #{y}"
       end
 
-      def perform(person, map, time_in_minutes)
-        @minutes_left -= time_in_minutes
+      def perform(person, map, time_in_seconds)
+        @seconds_left -= time_in_seconds
 
-        if @minutes_left == 0
+        if @seconds_left == 0
           @tile.clear
           settlement = Settlement.instance
           settlement.fallen_trees << TheGame::Construction::FallenTree.new(@tile.x, @tile.y)

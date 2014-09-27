@@ -9,7 +9,7 @@ class TheGame
         :management
       end
 
-      def perform(person, map, time_in_minutes)
+      def perform(person, map, time_in_seconds)
         settlement = Settlement.instance
         dormitory_x = settlement.fireplace.x - 5
         dormitory_y = settlement.fireplace.y - 1

@@ -18,11 +18,7 @@ class TheGame
       @fallen_trees = []
     end
 
-    # job types:
-    # :haul, :management, :woodcutting, :gatherer
     def get_job(person)
-      #check if fireplace will provide you with a job
-
       person.accepted_jobs.each do |job_type|
         if job_type == :survival and !@fireplace.fire_is_ok? and @stash.has?(:firewood)
           return Action::CheckFireplace.create()

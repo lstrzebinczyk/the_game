@@ -76,17 +76,18 @@ class TheGame
           @firewood_needed -= 1
           if @firewood_needed == 0
             @status = :building
-            @minutes_left = 120
+            @seconds_left = 120 * 60
           end
         end
       end
 
-      def energy_per_minute_when_sleeping
+      def energy_per_second_when_sleeping
         # this will be ok for a sleep in sort-of-good conditions
         # 3 * 0.00104167
 
         # sleeping on floor is way less refreshing
-        2.6 * 0.00104167
+        # 2.6 * 0.00104167 this is per minute
+        2.6 * 0.00104167 / 60
       end
     end
   end

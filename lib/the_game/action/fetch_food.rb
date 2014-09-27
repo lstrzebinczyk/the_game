@@ -15,7 +15,7 @@ class TheGame
         "fetching food at #{x}, #{y}"
       end
 
-      def perform(person, map, time_in_minutes)
+      def perform(person, map, time_in_seconds)
         if @food_tile.has_food?
           @food_tile.get_food
           person.action = Action::Harvest.create(@food_tile)
