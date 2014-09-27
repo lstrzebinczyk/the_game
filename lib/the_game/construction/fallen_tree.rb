@@ -15,8 +15,10 @@ class TheGame
 
       def get(type)
         if type == :firewood
-          @firewood_left -= 1
-          TheGame::Item::Firewood.new
+          unless empty?
+            @firewood_left -= 1
+            TheGame::Item::Firewood.new
+          end
         end
       end
 

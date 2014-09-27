@@ -61,6 +61,8 @@ class TheGame
             Curses.attron(color_pair(COLOR_RED)|A_NORMAL) {
               if tile.content.is_a? Nature::Tree
                 addstr("t")
+              elsif tile.content.is_a? Construction::FallenTree
+                addstr("/")
               else
                 addstr(tile.to_s)
               end
@@ -68,6 +70,10 @@ class TheGame
           elsif tile.content.is_a? Nature::Tree
             Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
               addstr("t")
+            }
+          elsif tile.content.is_a? Construction::FallenTree
+            Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
+              addstr("/")
             }
           elsif tile.content.nil?
             # Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
@@ -112,10 +118,10 @@ class TheGame
       setpos(stash.x, stash.y)
       add_string("S")
 
-      Settlement.instance.fallen_trees.each do |tree|
-        setpos(tree.x, tree.y)
-        add_string("/", :green)
-      end
+      # Settlement.instance.fallen_trees.each do |tree|
+      #   setpos(tree.x, tree.y)
+      #   add_string("/", :green)
+      # end
     end
 
     def print_dormitory(dormitory)

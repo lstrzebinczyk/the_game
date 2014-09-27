@@ -20,6 +20,8 @@ class TheGame
 
       TheGame::Settlement.instance.update(time_in_minutes)
 
+      @map.update
+
       @time += time_in_minutes * 60
     end
 

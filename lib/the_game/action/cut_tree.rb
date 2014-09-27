@@ -26,7 +26,9 @@ class TheGame
         if @minutes_left == 0
           @tile.clear
           settlement = Settlement.instance
-          settlement.fallen_trees << TheGame::Construction::FallenTree.new(@tile.x, @tile.y)
+          fallen_tree = TheGame::Construction::FallenTree.new(@tile.x, @tile.y)
+          @tile.content = fallen_tree
+          settlement.fallen_trees << fallen_tree
           person.action = Action::Carry.create(:axe, to: settlement.stash)
         end
       end

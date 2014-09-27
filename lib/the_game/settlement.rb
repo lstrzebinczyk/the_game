@@ -41,7 +41,10 @@ class TheGame
             return Action::LookForTreeToCut.create()
           end
         elsif job_type == :haul
-          if @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
+          if needs_cleaning?(:haul)
+            tile = @dormitory.tile_for_cleaning(:haul)
+            return Action::Get.create(:firewood, from: tile.content, then_action: Action::Carry.create(:firewood, to: @stash))
+          elsif @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
             return Action::Get.create(:firewood, from: @stash, then_action: Action::Carry.create(:firewood, to: @dormitory))
           elsif @fallen_trees.any?
             return Action::Get.create(:firewood, from: @fallen_trees.first, then_action: Action::Carry.create(:firewood, to: @stash))

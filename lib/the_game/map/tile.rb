@@ -77,12 +77,18 @@ class TheGame
         @mark_for_cleaning = true unless empty?
       end
 
+      def cleaned!
+        @mark_for_cleaning = false
+      end
+
       def marked_for_cleaning?
         @mark_for_cleaning == true
       end
 
       def description
-        @content.description
+        if @content
+          @content.description
+        end
       end
 
       def get(type)
@@ -101,8 +107,15 @@ class TheGame
         @content = River.new
       end
 
+      def update
+        if @content.is_a? Construction::FallenTree and @content.empty?
+          @content = nil
+        end
+
+      end
+
       def clear
-        @mark_for_cleaning = false
+        # @mark_for_cleaning = false
         @content = nil
       end
 
@@ -110,6 +123,7 @@ class TheGame
         @content.decrease_food
         unless @content.any_food_left?
           clear
+          cleaned!
         end
       end
 
