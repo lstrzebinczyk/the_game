@@ -18,6 +18,10 @@ class TheGame
         :haul
       end
 
+      def done?(person)
+        true
+      end
+
       def perform(person, map, time_in_minutes)
         if @item_type.is_a? Array
           @item_type.each do |type|
@@ -28,7 +32,7 @@ class TheGame
           item = person.inventory.get(@item_type)
           @place.add(item)
         end
-        person.do_stuff
+        # person.do_stuff
       end
     end
   end

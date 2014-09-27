@@ -5,12 +5,12 @@ class TheGame
         "drinking water from river"
       end
 
+      def done?(person)
+        person.done_drinking?
+      end
+
       def perform(person, map, time_in_minutes)
-        if person.done_drinking?
-          person.do_stuff
-        else
-          person.thirst += 0.05
-        end
+        person.thirst += 0.05
       end
     end
   end

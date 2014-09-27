@@ -205,6 +205,8 @@ class TheGame
           addstr("L")
         elsif person.is_a? Person::Woodcutter
           addstr("W")
+        elsif person.is_a? Person::Fisherman
+          addstr("F")
         else
           addstr("P")
         end

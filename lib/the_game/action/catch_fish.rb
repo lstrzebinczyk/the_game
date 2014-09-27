@@ -13,6 +13,10 @@ class TheGame
         :fisherman
       end
 
+      def done?(person)
+        false
+      end
+
       def perform(person, map, time_in_minutes)
         @minutes_spent_already += time_in_minutes
 

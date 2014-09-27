@@ -18,21 +18,21 @@ class TheGame
         :survival
       end
 
+      def done?(person)
+        @fireplace.fire_is_ok?
+      end
+
       def perform(person, map, time_in_minutes)
         settlement = TheGame::Settlement.instance
 
-        if @fireplace.fire_is_ok?
-          person.do_stuff
-        else
-          # Ignore the fact that person needs to walk between stash and fire for now
-          # assume person can throw 1 piece of firewood per minute
+        # Ignore the fact that person needs to walk between stash and fire for now
+        # assume person can throw 1 piece of firewood per minute
 
-          firewood = settlement.stash.get(:firewood)
-          if firewood
-            @fireplace.add_firewood_to_fire(firewood)
-          else
-            person.do_stuff
-          end
+        firewood = settlement.stash.get(:firewood)
+        if firewood
+          @fireplace.add_firewood_to_fire(firewood)
+        else
+          person.do_stuff
         end
       end
     end

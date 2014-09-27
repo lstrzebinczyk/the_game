@@ -3,7 +3,8 @@ class TheGame
     class GoFishing
       def self.create
         stash = TheGame::Settlement.instance.stash
-        Action::Get.create(:fishing_rod, from: stash, then_action: new)
+        Action::Get.create(:fishing_rod, from: stash)
+          .then(new)
       end
 
       def description
@@ -12,6 +13,10 @@ class TheGame
 
       def type
         :fisherman
+      end
+
+      def done?(person)
+        false
       end
 
       def perform(person, map, time_in_minutes)

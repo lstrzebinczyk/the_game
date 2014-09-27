@@ -14,6 +14,10 @@ class TheGame
         check_stash(person, map)
       end
 
+      def done?(person)
+        false
+      end
+
       private
 
       def check_stash(person, map)

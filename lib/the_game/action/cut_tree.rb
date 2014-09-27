@@ -20,6 +20,10 @@ class TheGame
         "cutting tree at #{x}, #{y}"
       end
 
+      def done?(person)
+        false
+      end
+
       def perform(person, map, time_in_minutes)
         @minutes_left -= time_in_minutes
 

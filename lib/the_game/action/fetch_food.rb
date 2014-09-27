@@ -15,6 +15,10 @@ class TheGame
         "fetching food at #{x}, #{y}"
       end
 
+      def done?(person)
+        false
+      end
+
       def perform(person, map, time_in_minutes)
         if @food_provider.has?(:berries)
           @food_provider.get(:berries)

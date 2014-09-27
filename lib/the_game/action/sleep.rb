@@ -11,12 +11,12 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        if @minutes_left == 0
-          person.do_stuff
-        else
-          person.energy += @place.energy_per_minute_when_sleeping * time_in_minutes
-          @minutes_left -= time_in_minutes
-        end
+        person.energy += @place.energy_per_minute_when_sleeping * time_in_minutes
+        @minutes_left -= time_in_minutes
+      end
+
+      def done?(person)
+        @minutes_left == 0
       end
     end
   end
