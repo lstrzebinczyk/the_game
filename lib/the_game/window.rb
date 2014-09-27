@@ -75,6 +75,10 @@ class TheGame
             Curses.attron(color_pair(COLOR_GREEN)|A_NORMAL) {
               addstr("/")
             }
+          elsif tile.content.is_a? Nature::BerriesBush
+            Curses.attron(color_pair(COLOR_YELLOW)|A_NORMAL) {
+              addstr("#")
+            }
           elsif tile.terrain == :river
             Curses.attron(color_pair(COLOR_BLUE)|A_NORMAL) {
               addstr(["~", " "].sample)

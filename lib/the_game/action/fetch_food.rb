@@ -16,8 +16,8 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        if @food_tile.has_food?
-          @food_tile.get_food
+        if @food_tile.content.has?(:berries)
+          @food_tile.content.get(:berries)
           person.action = Action::Harvest.create(@food_tile)
         else
           person.action = Action::LookForFoodToHarvest.create

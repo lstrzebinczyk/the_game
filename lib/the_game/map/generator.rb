@@ -46,7 +46,7 @@ class TheGame
       def populate_with_food(map)
         map.each_tile do |tile|
           if rand < 0.12
-            tile.set_food unless tile.terrain == :river
+            tile.content = Nature::BerriesBush.new(tile.x, tile.y) unless tile.terrain == :river
           end
         end
       end

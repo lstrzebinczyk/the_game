@@ -37,7 +37,7 @@ class TheGame
       def tile_for_cleaning(job_type)
         if job_type == :gatherer
           fields.find do |tile|
-            tile.has_food?
+            tile.content.is_a? Nature::BerriesBush
           end
         elsif job_type == :woodcutting
           fields.find do |tile|
@@ -52,7 +52,9 @@ class TheGame
 
       def needs_cleaning?(job_type)
         if job_type == :gatherer
-          fields.any?(&:has_food?)
+          fields.any? do |tile|
+            tile.content.is_a? Nature::BerriesBush
+          end
         elsif job_type == :woodcutting
           fields.any? do |tile|
             tile.content.is_a? Nature::Tree
