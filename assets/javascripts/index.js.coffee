@@ -148,6 +148,17 @@ class @RenderingFireplace
 
 new RenderingFireplace(settlement.$fireplace())
 
+class @RenderingStash
+  constructor: (@mapStash) ->
+    @text = new PIXI.Text("S", {font: "25px", fill: "white"})
+    @text.position.x = @mapStash.$y() * tileSize
+    @text.position.y = @mapStash.$x() * tileSize
+    stage.addChild(@text)
+    updatable.push(@)
+
+  update: =>
+
+new RenderingStash(settlement.$stash())
 
 #SETUP RENDERING PEOPLE
 class RenderingPerson

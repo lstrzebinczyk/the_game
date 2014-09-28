@@ -176,6 +176,28 @@
 
   new RenderingFireplace(settlement.$fireplace());
 
+  this.RenderingStash = (function() {
+    function RenderingStash(mapStash) {
+      this.mapStash = mapStash;
+      this.update = __bind(this.update, this);
+      this.text = new PIXI.Text("S", {
+        font: "25px",
+        fill: "white"
+      });
+      this.text.position.x = this.mapStash.$y() * tileSize;
+      this.text.position.y = this.mapStash.$x() * tileSize;
+      stage.addChild(this.text);
+      updatable.push(this);
+    }
+
+    RenderingStash.prototype.update = function() {};
+
+    return RenderingStash;
+
+  })();
+
+  new RenderingStash(settlement.$stash());
+
   RenderingPerson = (function() {
     function RenderingPerson(person) {
       var content;
