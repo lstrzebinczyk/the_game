@@ -123,7 +123,9 @@ height = engine.map.$height()
 # create a renderer instance.
 renderer = PIXI.autoDetectRenderer(width*tileSize, height*tileSize)
 
-document.body.appendChild(renderer.view)
+# document.body.appendChild(renderer.view)
+$("#view").append(renderer.view)
+
 requestAnimFrame( animate )
 
 updatable = []

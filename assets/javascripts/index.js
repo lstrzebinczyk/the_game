@@ -116,7 +116,7 @@
 
   renderer = PIXI.autoDetectRenderer(width * tileSize, height * tileSize);
 
-  document.body.appendChild(renderer.view);
+  $("#view").append(renderer.view);
 
   requestAnimFrame(animate);
 
