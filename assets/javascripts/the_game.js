@@ -11739,6 +11739,8 @@ if (tile == null) tile = nil;
       var def = self._proto, $scope = self._scope;
 
       def.content = nil;
+      $opal.cdecl($scope, 'ITEM_TYPES', ["berries", "fish", "cooked_fish", "firewood", "axe", "fishing_rod"]);
+
       def.$initialize = function() {
         var self = this;
 
@@ -11749,6 +11751,12 @@ if (tile == null) tile = nil;
         self.content['$[]=']("fishing_rod", []);
         self.content['$[]=']("fish", []);
         return self.content['$[]=']("cooked_fish", []);
+      };
+
+      def.$item_types = function() {
+        var $a, self = this;
+
+        return (($a = $scope.ITEM_TYPES) == null ? $opal.cm('ITEM_TYPES') : $a);
       };
 
       def.$add = function(item) {

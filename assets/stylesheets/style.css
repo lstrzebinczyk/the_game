@@ -1,6 +1,14 @@
+#stash{
+  background: blue;
+  float: right;
+  height: 100%;
+  width: 300px;
+}
+
 #menu{
   background: red;
   float: right;
   height: 100%;
   width: 300px;
 }
+

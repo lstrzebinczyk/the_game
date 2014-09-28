@@ -1,5 +1,7 @@
 class TheGame
   class Container
+    ITEM_TYPES = [:berries, :fish, :cooked_fish, :firewood, :axe, :fishing_rod]
+
     def initialize
       @content = {}
       @content[:berries]     = []
@@ -8,6 +10,10 @@ class TheGame
       @content[:fishing_rod] = []
       @content[:fish]        = []
       @content[:cooked_fish] = []
+    end
+
+    def item_types
+      ITEM_TYPES
     end
 
     def add(item)

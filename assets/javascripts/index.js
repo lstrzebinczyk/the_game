@@ -21,6 +21,21 @@
     return _results;
   };
 
+  this.render_stash_stats = function() {
+    var element, stash, template, type, _i, _len, _ref;
+    element = $("#stash");
+    element.empty();
+    stash = Opal.TheGame.Settlement.$instance().$stash();
+    template = "<div>";
+    _ref = stash.$item_types();
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      type = _ref[_i];
+      template += "<div>" + type + ": " + (stash.$count(type));
+    }
+    template += "</div>";
+    return element.append(template);
+  };
+
   this.engine = Opal.TheGame.Engine.$new();
 
   $("#start").click((function(_this) {
@@ -67,6 +82,7 @@
     engine.$update();
     render_people_stats();
     render_turns_per_second();
+    render_stash_stats();
     render_time();
     return updateRenderObjects();
   };

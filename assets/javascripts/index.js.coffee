@@ -22,6 +22,30 @@
 
     element.append(template)
 
+@render_stash_stats = ->
+  element = $("#stash")
+  element.empty()
+
+  stash = Opal.TheGame.Settlement.$instance().$stash()
+
+  template = "<div>"
+  for type in stash.$item_types()
+    template += "<div>#{type}: #{stash.$count(type)}"
+  template += "</div>"
+
+  element.append(template)
+
+  # template = """
+  # <div>
+  #   <div>type: #{type}</div>
+  #   <div>thirst: #{thirst}</div>
+  #   <div>hunger: #{hunger}</div>
+  #   <div>energy: #{energy}</div>
+  #   <div>action_description: #{action_description}</div>
+  #   <br>
+  # </div>
+  # """
+
 @engine = Opal.TheGame.Engine.$new()
 
 $("#start").click =>
@@ -59,6 +83,7 @@ render_people_stats()
   engine.$update()
   render_people_stats()
   render_turns_per_second()
+  render_stash_stats()
   render_time()
   updateRenderObjects()
 
