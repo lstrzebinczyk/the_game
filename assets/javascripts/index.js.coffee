@@ -9,12 +9,16 @@
     energy = person.$energy()
     action_description = person.$action().$description()
 
+    # WOOT
+    progress = (value) ->
+      "<progress value='#{value}'></progress>"
+
     template = """
     <div>
       <div>type: #{type}</div>
-      <div>thirst: #{thirst}</div>
-      <div>hunger: #{hunger}</div>
-      <div>energy: #{energy}</div>
+      <div>thirst: #{progress(thirst)}</div>
+      <div>hunger: #{progress(hunger)}</div>
+      <div>energy: #{progress(energy)}</div>
       <div>action_description: #{action_description}</div>
       <br>
     </div>
@@ -55,7 +59,7 @@ $("#start").click =>
     @playing = false
     $("#start").text("Start!")
   else
-    @gameLoop = setInterval(updateWorld, 16)
+    @gameLoop = setInterval(updateWorld, 1000/30)
     @playing = true
     $("#start").text("Stop!")
 
@@ -88,7 +92,7 @@ render_people_stats()
   updateRenderObjects()
 
 
-@gameLoop = setInterval(updateWorld, 16)
+@gameLoop = setInterval(updateWorld, 1000/30)
 @playing = true
 
 interactive = true

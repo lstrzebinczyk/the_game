@@ -3,7 +3,7 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.render_people_stats = function() {
-    var action_description, element, energy, hunger, person, template, thirst, type, _i, _len, _ref, _results;
+    var action_description, element, energy, hunger, person, progress, template, thirst, type, _i, _len, _ref, _results;
     element = $("#people");
     element.empty();
     _ref = this.engine.$people();
@@ -15,7 +15,10 @@
       hunger = person.$hunger();
       energy = person.$energy();
       action_description = person.$action().$description();
-      template = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: " + thirst + "</div>\n  <div>hunger: " + hunger + "</div>\n  <div>energy: " + energy + "</div>\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
+      progress = function(value) {
+        return "<progress value='" + value + "'></progress>";
+      };
+      template = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: " + (progress(thirst)) + "</div>\n  <div>hunger: " + (progress(hunger)) + "</div>\n  <div>energy: " + (progress(energy)) + "</div>\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
       _results.push(element.append(template));
     }
     return _results;
@@ -45,7 +48,7 @@
         _this.playing = false;
         return $("#start").text("Start!");
       } else {
-        _this.gameLoop = setInterval(updateWorld, 16);
+        _this.gameLoop = setInterval(updateWorld, 1000 / 30);
         _this.playing = true;
         return $("#start").text("Stop!");
       }
@@ -87,7 +90,7 @@
     return updateRenderObjects();
   };
 
-  this.gameLoop = setInterval(updateWorld, 16);
+  this.gameLoop = setInterval(updateWorld, 1000 / 30);
 
   this.playing = true;
 
