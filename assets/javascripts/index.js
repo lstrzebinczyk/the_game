@@ -57,10 +57,17 @@
     };
   })(this);
 
+  this.render_time = function() {
+    var time;
+    time = engine.$time().$strftime("%T");
+    return $("#time").text(time);
+  };
+
   this.updateWorld = function() {
     engine.$update();
     render_people_stats();
     render_turns_per_second();
+    render_time();
     return updateRenderObjects();
   };
 

@@ -51,10 +51,15 @@ render_people_stats()
   tps = parseInt(1000.0 / ms)
   $("#turns_count").text(tps)
 
+@render_time = ->
+  time = engine.$time().$strftime("%T")
+  $("#time").text(time)
+
 @updateWorld = ->
   engine.$update()
   render_people_stats()
   render_turns_per_second()
+  render_time()
   updateRenderObjects()
 
 
