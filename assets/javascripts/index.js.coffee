@@ -24,8 +24,17 @@
 
 @engine = Opal.TheGame.Engine.$new()
 
-$("#start").click ->
-  @engine = Opal.TheGame.Engine.$new()
+$("#start").click =>
+  # @engine = Opal.TheGame.Engine.$new()
+  if playing
+    clearInterval(gameLoop)
+    @playing = false
+    $("#start").text("Start!")
+  else
+    @gameLoop = setInterval(updateWorld, 33)
+    @playing = true
+    $("#start").text("Stop!")
+
 
 $("#progress").click ->
   engine.$update()
@@ -33,8 +42,212 @@ $("#progress").click ->
 
 render_people_stats()
 
+@updateWorld = ->
+  engine.$update()
+  render_people_stats()
+  updateRenderObjects()
 
 
+@gameLoop = setInterval(updateWorld, 33)
+@playing = true
+
+# init black stage
+stage = new PIXI.Stage('000')
+
+# map size
+width  = engine.map.$width()
+height = engine.map.$height()
+
+@tileSize = 16
+
+# create a renderer instance.
+renderer = PIXI.autoDetectRenderer(width*tileSize, height*tileSize)
+
+document.body.appendChild(renderer.view)
+requestAnimFrame( animate )
+
+updatable = []
+
+
+# SETUP RENDERING MAP TILES
+class @RenderingTile
+  constructor: (@mapTile) ->
+    @_setData()
+    @text = new PIXI.Text(@content, {font: "25px", fill: @color})
+    @text.position.x = @mapTile.$y() * tileSize
+    @text.position.y = @mapTile.$x() * tileSize
+    stage.addChild(@text)
+    updatable.push(@)
+
+  update: =>
+    @_setData()
+    @text.setText(@content)
+    @text.setStyle({font: "25px", fill: @color})
+
+  _setData: =>
+    if @mapTile["$marked_for_cleaning?"]()
+      # console.log(@mapTile)
+      if @mapTile.$content().constructor.name == "$Tree"
+        @content = "t"
+        @color   = "red"
+      else if @mapTile.$content().constructor.name == "$FallenTree"
+        @content = "/"
+        @color   = "red"
+      else if @mapTile.$content().constructor.name == "$BerriesBush"
+        @content = "#"
+        @color   = "red"
+    else
+      if @mapTile.$content().constructor.name == "$Tree"
+        @content = "t"
+        @color = "green"
+      else if @mapTile.$content().constructor.name == "$FallenTree"
+        @content = "/"
+        @color = "green"
+      else if @mapTile.$content().constructor.name == "$BerriesBush"
+        @content = "#"
+        @color = "yellow"
+      else if @mapTile.$terrain() == "river"
+        @content = "~"
+        @color   = "blue"
+      else
+        @content = "."
+        @color   = "white"
+
+for row in engine.$map().$grid()
+  for tile in row
+    new RenderingTile(tile)
+
+# SETUP RENDERING SETTLEMENT
+settlement = Opal.TheGame.Settlement.$instance()
+
+class @RenderingFireplace
+  constructor: (@mapFireplace) ->
+    @text = new PIXI.Text("F", {font: "25px", fill: "red"})
+    @text.position.x = @mapFireplace.$y() * tileSize
+    @text.position.y = @mapFireplace.$x() * tileSize
+    stage.addChild(@text)
+    updatable.push(@)
+
+  update: =>
+
+new RenderingFireplace(settlement.$fireplace())
+
+#SETUP RENDERING PEOPLE
+class RenderingPerson
+  constructor: (@person) ->
+    if @person.$type() == "woodcutter"
+      content = "W"
+    else if @person.$type() == "leader"
+      content = "L"
+    else if @person.$type() == "gatherer"
+      content = "G"
+    else if @person.$type() == "fisherman"
+      content = "F"
+
+    @text = new PIXI.Text(content, {font: "25px", fill: "white"})
+    @text.position.x = @person.$y() * tileSize
+    @text.position.y = @person.$x() * tileSize
+
+    stage.addChild(@text)
+    updatable.push(@)
+
+  update: =>
+    @text.position.x = @person.$y() * tileSize
+    @text.position.y = @person.$x() * tileSize
+
+for person in engine.$people()
+  new RenderingPerson(person)
+
+@updateRenderObjects = ->
+  for object in updatable
+    object.update()
+
+# class Test
+
+#   test = new Test()
+
+#   stage.addChild(test)
+
+`
+    function animate() {
+
+        requestAnimFrame( animate );
+
+        // just for fun, lets rotate mr rabbit a little
+        // bunny.rotation += 0.1;
+
+
+        // render the stage
+        renderer.render(stage);
+    }
+`
+
+
+    # var stage = new PIXI.Stage(000);
+
+
+    # width  = engine.map.$width()
+    # height = engine.map.$height()
+
+    # // add the renderer view element to the DOM
+    # document.body.appendChild(renderer.view);
+
+    # requestAnimFrame( animate );
+
+    # // create a texture from an image path
+    # // var texture = PIXI.Texture.fromImage("bunny.png");
+    # // create a new Sprite using the texture
+    # // var bunny = new PIXI.Sprite(texture);
+
+    # // center the sprites anchor point
+    # // bunny.anchor.x = 0.5;
+    # // bunny.anchor.y = 0.5;
+
+    # // move the sprite t the center of the screen
+    # // bunny.position.x = 200;
+    # // bunny.position.y = 150;
+
+    # // stage.addChild(bunny);
+
+    # var textSample = new PIXI.Text(".", {font: "35px Snippet", fill: "white", align: "left"});
+
+    # map = engine.$map()
+
+    # for(i = 0; i < width; i++){
+    #   for(j = 0; j < height; j++){
+
+    #   }
+    # }
+
+
+
+
+
+
+
+
+
+
+
+# for tile in @engine.$map()
+
+
+# stage = new PIXI.Stage(0x66FF99)
+# renderer = PIXI.autoDetectRenderer(400, 300)
+# document.body.appendChild(renderer.view);
+# requestAnimFrame( animate )
+
+# `
+# function animate() {
+#   requestAnimFrame( animate );
+#   renderer.render(stage);
+# }
+# `
+
+# animate = ->
+#   requestAnimFrame( animate )
+#   renderer.render(stage)
+#   null
 
     # def render_people_stats
     #   setpos(0, map.width + 2)

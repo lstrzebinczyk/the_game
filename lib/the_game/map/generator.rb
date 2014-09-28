@@ -1,7 +1,7 @@
 class TheGame
   class Map
     class Generator
-      def generate(width = 120, height = 30)
+      def generate(width = 60, height = 30)
         @width  = width
         @height = height
 

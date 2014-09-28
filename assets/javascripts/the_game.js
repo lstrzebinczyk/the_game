@@ -12737,7 +12737,7 @@ if (tile == null) tile = nil;
           var $a, self = this, grid = nil, map = nil;
 
           if (width == null) {
-            width = 120
+            width = 60
           }
           if (height == null) {
             height = 30
