@@ -98,30 +98,57 @@ render_people_stats()
 interactive = true
 
 # init black stage
-stage = new PIXI.Stage('000', interactive)
+@stage = new PIXI.Stage('000', interactive)
 
-stage.mousedown = (mousedata) ->
-  mouse_x = mousedata.global.x
-  mouse_y = mousedata.global.y
+@x_offset = 0
+@y_offset = 0
+@change_offset = false
 
-  map_x = parseInt(mouse_x / tileSize)
-  map_y = parseInt(mouse_y / tileSize)
+@width  = engine.map.$width()
+@height = engine.map.$height()
 
-  tile = engine.$map().$fetch(map_y, map_x)
-  console.log tile
-  # console.log map_x
-  # console.log map_y
 
-  # console.log mousedata
-
-# map size
-width  = engine.map.$width()
-height = engine.map.$height()
+@renderedWidth  = 60
+@renderedHeight = 30
 
 @tileSize = 16
 
+@maxXOffset = (@renderedWidth  - @width ) * @tileSize
+@maxYOffset = (@renderedHeight - @height) * @tileSize
+
+stage.mousemove = (data) =>
+  if @change_offset
+    x = data.originalEvent.movementX
+    y = data.originalEvent.movementY
+    @x_offset += x
+    @y_offset += y
+    @x_offset = 0 if @x_offset > 0
+    @y_offset = 0 if @y_offset > 0
+    @x_offset = @maxXOffset if @x_offset < @maxXOffset
+    @y_offset = @maxYOffset if @y_offset < @maxYOffset
+
+stage.mouseup = =>
+  @change_offset = false
+
+
+
+# stage.mousemove = (mousedata) ->
+#   console.log mousedata
+
+stage.mousedown = =>
+  @change_offset = true
+
+#   map_x = parseInt(mouse_x / tileSize)
+#   map_y = parseInt(mouse_y / tileSize)
+
+#   tile = engine.$map().$fetch(map_y, map_x)
+#   console.log tile
+
+
+# map size
+
 # create a renderer instance.
-renderer = PIXI.autoDetectRenderer(width*tileSize, height*tileSize)
+renderer = PIXI.autoDetectRenderer(renderedWidth*tileSize, renderedHeight*tileSize)
 
 # document.body.appendChild(renderer.view)
 $("#view").append(renderer.view)
@@ -142,11 +169,32 @@ class @RenderingTile
     updatable.push(@)
 
   update: =>
-    unless @mapTile["$updated?"]()
-      @_setData()
-      @text.setText(@content)
-      @text.setStyle({font: "25px", fill: @color})
-      @mapTile["$updated!"]()
+    if @_isWithinView()
+      if @text
+        @text.position.x = @mapTile.$y() * tileSize + window.x_offset
+        @text.position.y = @mapTile.$x() * tileSize + window.y_offset
+
+        unless @mapTile["$updated?"]()
+          @_setData()
+          @text.setText(@content)
+          @text.setStyle({font: "25px", fill: @color})
+          @mapTile["$updated!"]()
+      else
+        @_setData()
+        @text = new PIXI.Text(@content, {font: "25px", fill: @color})
+        @text.position.x = @mapTile.$y() * tileSize + window.x_offset
+        @text.position.y = @mapTile.$x() * tileSize + window.y_offset
+        stage.addChild(@text)
+    else
+      if @text
+        stage.removeChild(@text)
+        @text = null
+
+  _isWithinView: =>
+    @mapTile.$y() * tileSize >= - window.x_offset and
+    @mapTile.$y() * tileSize < - window.x_offset + renderedWidth*tileSize and
+    @mapTile.$x() * tileSize >= - window.y_offset and
+    @mapTile.$x() * tileSize < - window.y_offset + renderedHeight*tileSize
 
   _setData: =>
     if @mapTile["$marked_for_cleaning?"]()

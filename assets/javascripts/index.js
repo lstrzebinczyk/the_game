@@ -1,5 +1,5 @@
 (function() {
-  var RenderingDormitory, RenderingPerson, height, interactive, person, renderer, row, settlement, stage, tile, updatable, width, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
+  var RenderingDormitory, RenderingPerson, interactive, person, renderer, row, settlement, tile, updatable, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.render_people_stats = function() {
@@ -96,25 +96,65 @@
 
   interactive = true;
 
-  stage = new PIXI.Stage('000', interactive);
+  this.stage = new PIXI.Stage('000', interactive);
 
-  stage.mousedown = function(mousedata) {
-    var map_x, map_y, mouse_x, mouse_y, tile;
-    mouse_x = mousedata.global.x;
-    mouse_y = mousedata.global.y;
-    map_x = parseInt(mouse_x / tileSize);
-    map_y = parseInt(mouse_y / tileSize);
-    tile = engine.$map().$fetch(map_y, map_x);
-    return console.log(tile);
-  };
+  this.x_offset = 0;
 
-  width = engine.map.$width();
+  this.y_offset = 0;
 
-  height = engine.map.$height();
+  this.change_offset = false;
+
+  this.width = engine.map.$width();
+
+  this.height = engine.map.$height();
+
+  this.renderedWidth = 60;
+
+  this.renderedHeight = 30;
 
   this.tileSize = 16;
 
-  renderer = PIXI.autoDetectRenderer(width * tileSize, height * tileSize);
+  this.maxXOffset = (this.renderedWidth - this.width) * this.tileSize;
+
+  this.maxYOffset = (this.renderedHeight - this.height) * this.tileSize;
+
+  stage.mousemove = (function(_this) {
+    return function(data) {
+      var x, y;
+      if (_this.change_offset) {
+        x = data.originalEvent.movementX;
+        y = data.originalEvent.movementY;
+        _this.x_offset += x;
+        _this.y_offset += y;
+        if (_this.x_offset > 0) {
+          _this.x_offset = 0;
+        }
+        if (_this.y_offset > 0) {
+          _this.y_offset = 0;
+        }
+        if (_this.x_offset < _this.maxXOffset) {
+          _this.x_offset = _this.maxXOffset;
+        }
+        if (_this.y_offset < _this.maxYOffset) {
+          return _this.y_offset = _this.maxYOffset;
+        }
+      }
+    };
+  })(this);
+
+  stage.mouseup = (function(_this) {
+    return function() {
+      return _this.change_offset = false;
+    };
+  })(this);
+
+  stage.mousedown = (function(_this) {
+    return function() {
+      return _this.change_offset = true;
+    };
+  })(this);
+
+  renderer = PIXI.autoDetectRenderer(renderedWidth * tileSize, renderedHeight * tileSize);
 
   $("#view").append(renderer.view);
 
@@ -126,6 +166,7 @@
     function RenderingTile(mapTile) {
       this.mapTile = mapTile;
       this._setData = __bind(this._setData, this);
+      this._isWithinView = __bind(this._isWithinView, this);
       this.update = __bind(this.update, this);
       this._setData();
       this.text = new PIXI.Text(this.content, {
@@ -139,15 +180,39 @@
     }
 
     RenderingTile.prototype.update = function() {
-      if (!this.mapTile["$updated?"]()) {
-        this._setData();
-        this.text.setText(this.content);
-        this.text.setStyle({
-          font: "25px",
-          fill: this.color
-        });
-        return this.mapTile["$updated!"]();
+      if (this._isWithinView()) {
+        if (this.text) {
+          this.text.position.x = this.mapTile.$y() * tileSize + window.x_offset;
+          this.text.position.y = this.mapTile.$x() * tileSize + window.y_offset;
+          if (!this.mapTile["$updated?"]()) {
+            this._setData();
+            this.text.setText(this.content);
+            this.text.setStyle({
+              font: "25px",
+              fill: this.color
+            });
+            return this.mapTile["$updated!"]();
+          }
+        } else {
+          this._setData();
+          this.text = new PIXI.Text(this.content, {
+            font: "25px",
+            fill: this.color
+          });
+          this.text.position.x = this.mapTile.$y() * tileSize + window.x_offset;
+          this.text.position.y = this.mapTile.$x() * tileSize + window.y_offset;
+          return stage.addChild(this.text);
+        }
+      } else {
+        if (this.text) {
+          stage.removeChild(this.text);
+          return this.text = null;
+        }
       }
+    };
+
+    RenderingTile.prototype._isWithinView = function() {
+      return this.mapTile.$y() * tileSize >= -window.x_offset && this.mapTile.$y() * tileSize < -window.x_offset + renderedWidth * tileSize && this.mapTile.$x() * tileSize >= -window.y_offset && this.mapTile.$x() * tileSize < -window.y_offset + renderedHeight * tileSize;
     };
 
     RenderingTile.prototype._setData = function() {
