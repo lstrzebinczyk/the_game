@@ -12841,7 +12841,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$empty?', '$==', '$nil?', '$is_a?', '$marked_for_cleaning?', '$cleaned!', '$need_update!', '$cut?', '$new', '$<<', '$fallen_trees', '$instance']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$empty?', '$need_update!', '$==', '$nil?', '$is_a?', '$marked_for_cleaning?', '$cleaned!', '$cut?', '$new', '$<<', '$fallen_trees', '$instance']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12878,7 +12878,8 @@ if (column_index == null) column_index = nil;
           if ((($a = self['$empty?']()) !== nil && (!$a._isBoolean || $a == true))) {
             return nil
             } else {
-            return self.mark_for_cleaning = true
+            self.mark_for_cleaning = true;
+            return self['$need_update!']();
           };
         };
 

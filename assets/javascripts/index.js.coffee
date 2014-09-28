@@ -31,7 +31,7 @@ $("#start").click =>
     @playing = false
     $("#start").text("Start!")
   else
-    @gameLoop = setInterval(updateWorld, 1)
+    @gameLoop = setInterval(updateWorld, 16)
     @playing = true
     $("#start").text("Stop!")
 
@@ -63,7 +63,7 @@ render_people_stats()
   updateRenderObjects()
 
 
-@gameLoop = setInterval(updateWorld, 1)
+@gameLoop = setInterval(updateWorld, 16)
 @playing = true
 
 interactive = true

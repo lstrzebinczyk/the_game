@@ -30,7 +30,7 @@
         _this.playing = false;
         return $("#start").text("Start!");
       } else {
-        _this.gameLoop = setInterval(updateWorld, 1);
+        _this.gameLoop = setInterval(updateWorld, 16);
         _this.playing = true;
         return $("#start").text("Stop!");
       }
@@ -71,7 +71,7 @@
     return updateRenderObjects();
   };
 
-  this.gameLoop = setInterval(updateWorld, 1);
+  this.gameLoop = setInterval(updateWorld, 16);
 
   this.playing = true;
 

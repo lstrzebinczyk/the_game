@@ -11,7 +11,10 @@ class TheGame
       end
 
       def mark_for_cleaning!
-        @mark_for_cleaning = true unless empty?
+        unless empty?
+          @mark_for_cleaning = true
+          need_update!
+        end
       end
 
       def cleaned!
