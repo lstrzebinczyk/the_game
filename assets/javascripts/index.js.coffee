@@ -42,9 +42,19 @@ $("#progress").click ->
 
 render_people_stats()
 
+@now = new Date
+
+@render_turns_per_second = =>
+  new_now = new Date()
+  ms = new_now - @now
+  @now = new_now
+  tps = parseInt(1000.0 / ms)
+  $("#turns_count").text(tps)
+
 @updateWorld = ->
   engine.$update()
   render_people_stats()
+  render_turns_per_second()
   updateRenderObjects()
 
 

@@ -44,9 +44,23 @@
 
   render_people_stats();
 
+  this.now = new Date;
+
+  this.render_turns_per_second = (function(_this) {
+    return function() {
+      var ms, new_now, tps;
+      new_now = new Date();
+      ms = new_now - _this.now;
+      _this.now = new_now;
+      tps = parseInt(1000.0 / ms);
+      return $("#turns_count").text(tps);
+    };
+  })(this);
+
   this.updateWorld = function() {
     engine.$update();
     render_people_stats();
+    render_turns_per_second();
     return updateRenderObjects();
   };
 
