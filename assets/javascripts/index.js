@@ -1,5 +1,5 @@
 (function() {
-  var RenderingPerson, height, interactive, person, renderer, row, settlement, stage, tile, updatable, width, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
+  var RenderingDormitory, RenderingPerson, height, interactive, person, renderer, row, settlement, stage, tile, updatable, width, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.render_people_stats = function() {
@@ -30,7 +30,7 @@
         _this.playing = false;
         return $("#start").text("Start!");
       } else {
-        _this.gameLoop = setInterval(updateWorld, 33);
+        _this.gameLoop = setInterval(updateWorld, 1);
         _this.playing = true;
         return $("#start").text("Stop!");
       }
@@ -50,7 +50,7 @@
     return updateRenderObjects();
   };
 
-  this.gameLoop = setInterval(updateWorld, 33);
+  this.gameLoop = setInterval(updateWorld, 1);
 
   this.playing = true;
 
@@ -215,15 +215,51 @@
     new RenderingPerson(person);
   }
 
-  this.updateRenderObjects = function() {
-    var object, _l, _len3, _results;
-    _results = [];
-    for (_l = 0, _len3 = updatable.length; _l < _len3; _l++) {
-      object = updatable[_l];
-      _results.push(object.update());
+  RenderingDormitory = (function() {
+    function RenderingDormitory(dormitory) {
+      this.dormitory = dormitory;
+      this.update = __bind(this.update, this);
+      this.x = this.dormitory.$y() * tileSize;
+      this.y = this.dormitory.$x() * tileSize;
+      this.x_width = 4 * tileSize;
+      this.y_width = 4 * tileSize;
+      this.rectangle = new PIXI.Graphics();
+      this.rectangle.beginFill(0x0000FF, 0.3);
+      this.rectangle.drawRect(this.x, this.y, this.x_width, this.y_width);
+      this.rectangle.endFill();
+      stage.addChild(this.rectangle);
+      updatable.push(this);
     }
-    return _results;
-  };
+
+    RenderingDormitory.prototype.update = function() {
+      if (this.dormitory.$status() === "done") {
+        this.rectangle.beginFill(0x6F1C1C, 0.3);
+        this.rectangle.drawRect(this.x, this.y, this.x_width, this.y_width);
+        return this.rectangle.endFill();
+      }
+    };
+
+    return RenderingDormitory;
+
+  })();
+
+  this.updateRenderObjects = (function(_this) {
+    return function() {
+      var dormitory, object, _l, _len3, _results;
+      if (!settlement.$dormitory()["$nil?"]()) {
+        if (!_this.renderingDormitory) {
+          dormitory = settlement.$dormitory();
+          _this.renderingDormitory = new RenderingDormitory(dormitory);
+        }
+      }
+      _results = [];
+      for (_l = 0, _len3 = updatable.length; _l < _len3; _l++) {
+        object = updatable[_l];
+        _results.push(object.update());
+      }
+      return _results;
+    };
+  })(this);
 
   
     function animate() {

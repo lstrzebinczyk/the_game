@@ -31,7 +31,7 @@ $("#start").click =>
     @playing = false
     $("#start").text("Start!")
   else
-    @gameLoop = setInterval(updateWorld, 33)
+    @gameLoop = setInterval(updateWorld, 1)
     @playing = true
     $("#start").text("Stop!")
 
@@ -48,7 +48,7 @@ render_people_stats()
   updateRenderObjects()
 
 
-@gameLoop = setInterval(updateWorld, 33)
+@gameLoop = setInterval(updateWorld, 1)
 @playing = true
 
 interactive = true
@@ -148,6 +148,7 @@ class @RenderingFireplace
 
 new RenderingFireplace(settlement.$fireplace())
 
+
 #SETUP RENDERING PEOPLE
 class RenderingPerson
   constructor: (@person) ->
@@ -174,7 +175,34 @@ class RenderingPerson
 for person in engine.$people()
   new RenderingPerson(person)
 
-@updateRenderObjects = ->
+class RenderingDormitory
+  constructor: (@dormitory) ->
+    @x = @dormitory.$y() * tileSize
+    @y = @dormitory.$x() * tileSize
+    @x_width = 4 * tileSize
+    @y_width = 4 * tileSize
+
+    @rectangle = new PIXI.Graphics()
+    @rectangle.beginFill(0x0000FF, 0.3)
+    @rectangle.drawRect(@x, @y, @x_width, @y_width)
+    @rectangle.endFill()
+
+    stage.addChild(@rectangle)
+    updatable.push(@)
+
+  update: =>
+    if @dormitory.$status() == "done"
+      @rectangle.beginFill(0x6F1C1C, 0.3)
+      @rectangle.drawRect(@x, @y, @x_width, @y_width)
+      @rectangle.endFill()
+
+
+@updateRenderObjects = =>
+  unless settlement.$dormitory()["$nil?"]()
+    unless @renderingDormitory
+      dormitory = settlement.$dormitory()
+      @renderingDormitory = new RenderingDormitory(dormitory)
+
   for object in updatable
     object.update()
 
