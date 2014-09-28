@@ -1,3 +1,5 @@
+
+
 class TheGame
   module HasPosition
     class Position
