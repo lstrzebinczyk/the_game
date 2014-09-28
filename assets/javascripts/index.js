@@ -120,12 +120,15 @@
     }
 
     RenderingTile.prototype.update = function() {
-      this._setData();
-      this.text.setText(this.content);
-      return this.text.setStyle({
-        font: "25px",
-        fill: this.color
-      });
+      if (!this.mapTile["$updated?"]()) {
+        this._setData();
+        this.text.setText(this.content);
+        this.text.setStyle({
+          font: "25px",
+          fill: this.color
+        });
+        return this.mapTile["$updated!"]();
+      }
     };
 
     RenderingTile.prototype._setData = function() {
