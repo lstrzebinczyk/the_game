@@ -1,5 +1,5 @@
 (function() {
-  var RenderingPerson, height, person, renderer, row, settlement, stage, tile, updatable, width, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
+  var RenderingPerson, height, interactive, person, renderer, row, settlement, stage, tile, updatable, width, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.render_people_stats = function() {
@@ -54,7 +54,19 @@
 
   this.playing = true;
 
-  stage = new PIXI.Stage('000');
+  interactive = true;
+
+  stage = new PIXI.Stage('000', interactive);
+
+  stage.mousedown = function(mousedata) {
+    var map_x, map_y, mouse_x, mouse_y, tile;
+    mouse_x = mousedata.global.x;
+    mouse_y = mousedata.global.y;
+    map_x = parseInt(mouse_x / tileSize);
+    map_y = parseInt(mouse_y / tileSize);
+    tile = engine.$map().$fetch(map_y, map_x);
+    return console.log(tile);
+  };
 
   width = engine.map.$width();
 

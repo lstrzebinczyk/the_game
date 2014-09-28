@@ -51,8 +51,24 @@ render_people_stats()
 @gameLoop = setInterval(updateWorld, 33)
 @playing = true
 
+interactive = true
+
 # init black stage
-stage = new PIXI.Stage('000')
+stage = new PIXI.Stage('000', interactive)
+
+stage.mousedown = (mousedata) ->
+  mouse_x = mousedata.global.x
+  mouse_y = mousedata.global.y
+
+  map_x = parseInt(mouse_x / tileSize)
+  map_y = parseInt(mouse_y / tileSize)
+
+  tile = engine.$map().$fetch(map_y, map_x)
+  console.log tile
+  # console.log map_x
+  # console.log map_y
+
+  # console.log mousedata
 
 # map size
 width  = engine.map.$width()

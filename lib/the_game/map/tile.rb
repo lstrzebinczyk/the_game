@@ -37,8 +37,10 @@ class TheGame
       def update
         if @content.is_a? Construction::FallenTree and @content.empty?
           @content = nil
+          cleaned! if marked_for_cleaning?
         elsif @content.is_a? Nature::BerriesBush and @content.empty?
           @content = nil
+          cleaned! if marked_for_cleaning?
         elsif @content.is_a? Nature::Tree and @content.cut?
           fallen_tree = TheGame::Construction::FallenTree.new(@x, @y)
           @content = fallen_tree
