@@ -1,3 +1,5 @@
+#= require renderables/test
+
 @render_people_stats = ->
   element = $("#people")
   element.empty()
@@ -38,6 +40,23 @@
   template += "</div>"
 
   element.append(template)
+
+@render_buildings_stats = ->
+  element = $("#buildings")
+  element.empty()
+
+  dormitory = Opal.TheGame.Settlement.$instance().$dormitory()
+  unless dormitory["$nil?"]()
+    template = "<div>"
+    template += "<div>DORMITORY:</div>"
+    template += "<div>status: #{dormitory.$status()}</div>"
+    if dormitory.$status() == "plan"
+      template += "<div>firewood needed: #{dormitory.$firewood_needed()}</div>"
+    if dormitory.$status() == "building"
+      template += "<div>construction left: #{dormitory.$minutes_left()}</div>"
+
+
+    element.append(template)
 
   # template = """
   # <div>
@@ -87,6 +106,7 @@ render_people_stats()
   render_turns_per_second()
   render_stash_stats()
   render_time()
+  render_buildings_stats()
   updateRenderObjects()
   renderer.render(stage)
 

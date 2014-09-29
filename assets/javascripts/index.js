@@ -41,6 +41,25 @@
     return element.append(template);
   };
 
+  this.render_buildings_stats = function() {
+    var dormitory, element, template;
+    element = $("#buildings");
+    element.empty();
+    dormitory = Opal.TheGame.Settlement.$instance().$dormitory();
+    if (!dormitory["$nil?"]()) {
+      template = "<div>";
+      template += "<div>DORMITORY:</div>";
+      template += "<div>status: " + (dormitory.$status()) + "</div>";
+      if (dormitory.$status() === "plan") {
+        template += "<div>firewood needed: " + (dormitory.$firewood_needed()) + "</div>";
+      }
+      if (dormitory.$status() === "building") {
+        template += "<div>construction left: " + (dormitory.$minutes_left()) + "</div>";
+      }
+      return element.append(template);
+    }
+  };
+
   this.engine = Opal.TheGame.Engine.$new();
 
   $("#start").click((function(_this) {
@@ -88,6 +107,7 @@
     render_turns_per_second();
     render_stash_stats();
     render_time();
+    render_buildings_stats();
     updateRenderObjects();
     return renderer.render(stage);
   };
