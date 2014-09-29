@@ -61,14 +61,18 @@
 
   this.now = new Date;
 
+  this.iterations = 0;
+
   this.render_turns_per_second = (function(_this) {
     return function() {
-      var ms, new_now, tps;
+      var new_now;
+      _this.iterations += 1;
       new_now = new Date();
-      ms = new_now - _this.now;
-      _this.now = new_now;
-      tps = parseInt(1000.0 / ms);
-      return $("#turns_count").text(tps);
+      if (new_now - _this.now > 1000) {
+        _this.now = new_now;
+        $("#turns_count").text(_this.iterations);
+        return _this.iterations = 0;
+      }
     };
   })(this);
 

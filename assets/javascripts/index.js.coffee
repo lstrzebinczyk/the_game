@@ -67,13 +67,15 @@ $("#start").click =>
 render_people_stats()
 
 @now = new Date
+@iterations = 0
 
 @render_turns_per_second = =>
+  @iterations += 1
   new_now = new Date()
-  ms = new_now - @now
-  @now = new_now
-  tps = parseInt(1000.0 / ms)
-  $("#turns_count").text(tps)
+  if new_now - @now > 1000
+    @now = new_now
+    $("#turns_count").text(@iterations)
+    @iterations = 0
 
 @render_time = ->
   time = engine.$time().$strftime("%T")
