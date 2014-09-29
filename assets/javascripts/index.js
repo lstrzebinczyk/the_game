@@ -57,11 +57,6 @@
     };
   })(this));
 
-  $("#progress").click(function() {
-    engine.$update();
-    return render_people_stats();
-  });
-
   render_people_stats();
 
   this.now = new Date;

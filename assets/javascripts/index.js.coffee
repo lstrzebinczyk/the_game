@@ -64,10 +64,6 @@ $("#start").click =>
     $("#start").text("Stop!")
 
 
-$("#progress").click ->
-  engine.$update()
-  render_people_stats()
-
 render_people_stats()
 
 @now = new Date
