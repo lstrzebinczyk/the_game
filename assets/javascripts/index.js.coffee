@@ -126,7 +126,14 @@ stage.mousemove = (data) =>
     @x_offset = @maxXOffset if @x_offset < @maxXOffset
     @y_offset = @maxYOffset if @y_offset < @maxYOffset
 
+  unless @playing
+    updateRenderObjects()
+    renderer.render(stage)
+
 stage.mouseup = =>
+  @change_offset = false
+
+stage.mouseupoutside = =>
   @change_offset = false
 
 stage.mousedown = =>

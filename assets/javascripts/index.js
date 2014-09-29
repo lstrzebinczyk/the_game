@@ -138,13 +138,23 @@
           _this.x_offset = _this.maxXOffset;
         }
         if (_this.y_offset < _this.maxYOffset) {
-          return _this.y_offset = _this.maxYOffset;
+          _this.y_offset = _this.maxYOffset;
         }
+      }
+      if (!_this.playing) {
+        updateRenderObjects();
+        return renderer.render(stage);
       }
     };
   })(this);
 
   stage.mouseup = (function(_this) {
+    return function() {
+      return _this.change_offset = false;
+    };
+  })(this);
+
+  stage.mouseupoutside = (function(_this) {
     return function() {
       return _this.change_offset = false;
     };
