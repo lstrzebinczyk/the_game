@@ -90,6 +90,7 @@ render_people_stats()
   render_stash_stats()
   render_time()
   updateRenderObjects()
+  renderer.render(stage)
 
 
 @gameLoop = setInterval(updateWorld, 1000/30)
@@ -108,8 +109,8 @@ interactive = true
 @height = engine.map.$height()
 
 
-@renderedWidth  = 60
-@renderedHeight = 30
+@renderedWidth  = 14 * 4
+@renderedHeight = 14 * 3
 
 @tileSize = 16
 
@@ -130,22 +131,8 @@ stage.mousemove = (data) =>
 stage.mouseup = =>
   @change_offset = false
 
-
-
-# stage.mousemove = (mousedata) ->
-#   console.log mousedata
-
 stage.mousedown = =>
   @change_offset = true
-
-#   map_x = parseInt(mouse_x / tileSize)
-#   map_y = parseInt(mouse_y / tileSize)
-
-#   tile = engine.$map().$fetch(map_y, map_x)
-#   console.log tile
-
-
-# map size
 
 # create a renderer instance.
 renderer = PIXI.autoDetectRenderer(renderedWidth*tileSize, renderedHeight*tileSize)
@@ -153,76 +140,91 @@ renderer = PIXI.autoDetectRenderer(renderedWidth*tileSize, renderedHeight*tileSi
 # document.body.appendChild(renderer.view)
 $("#view").append(renderer.view)
 
-requestAnimFrame( animate )
+# requestAnimFrame( animate )
 
 updatable = []
 
+class @Renderable
+  constructor: (@object) ->
+    @createContent()
 
-# SETUP RENDERING MAP TILES
-class @RenderingTile
-  constructor: (@mapTile) ->
-    @_setData()
-    @text = new PIXI.Text(@content, {font: "25px", fill: @color})
-    @text.position.x = @mapTile.$y() * tileSize
-    @text.position.y = @mapTile.$x() * tileSize
-    stage.addChild(@text)
+    # cache these so that you don't have to ask window for them
+    @renderedWidth = renderedWidth
+    @renderedHeight = renderedHeight
+
+
+    stage.addChild(@content)
     updatable.push(@)
 
   update: =>
-    if @_isWithinView()
-      if @text
-        @text.position.x = @mapTile.$y() * tileSize + window.x_offset
-        @text.position.y = @mapTile.$x() * tileSize + window.y_offset
-
-        unless @mapTile["$updated?"]()
-          @_setData()
-          @text.setText(@content)
-          @text.setStyle({font: "25px", fill: @color})
-          @mapTile["$updated!"]()
+    if @isWithinView()
+      if @content
+        @updateSelf()
+        @updateContentPosition()
       else
-        @_setData()
-        @text = new PIXI.Text(@content, {font: "25px", fill: @color})
-        @text.position.x = @mapTile.$y() * tileSize + window.x_offset
-        @text.position.y = @mapTile.$x() * tileSize + window.y_offset
-        stage.addChild(@text)
+        @createContent()
+        stage.addChild(@content)
+        @updateContentPosition()
     else
-      if @text
-        stage.removeChild(@text)
-        @text = null
+      if @content
+        @removeContent()
 
-  _isWithinView: =>
-    @mapTile.$y() * tileSize >= - window.x_offset and
-    @mapTile.$y() * tileSize < - window.x_offset + renderedWidth*tileSize and
-    @mapTile.$x() * tileSize >= - window.y_offset and
-    @mapTile.$x() * tileSize < - window.y_offset + renderedHeight*tileSize
+  updateSelf: ->
 
-  _setData: =>
-    if @mapTile["$marked_for_cleaning?"]()
-      if @mapTile.$content().constructor.name == "$Tree"
-        @content = "t"
-        @color   = "red"
-      else if @mapTile.$content().constructor.name == "$FallenTree"
-        @content = "/"
-        @color   = "red"
-      else if @mapTile.$content().constructor.name == "$BerriesBush"
-        @content = "#"
-        @color   = "red"
+  isWithinView: =>
+    @object.$y() * tileSize >= - window.x_offset and
+    @object.$y() * tileSize < - window.x_offset + @renderedWidth*tileSize and
+    @object.$x() * tileSize >= - window.y_offset and
+    @object.$x() * tileSize < - window.y_offset + @renderedHeight*tileSize
+
+  removeContent: =>
+    stage.removeChild(@content)
+    @content = null
+
+  updateContentPosition: =>
+    @content.position.x = @object.$y() * tileSize + window.x_offset
+    @content.position.y = @object.$x() * tileSize + window.y_offset
+
+class @RenderingTile extends Renderable
+  createContent: =>
+    @setData()
+    @content = new PIXI.Text(@contentString, {font: "25px", fill: @contentColor})
+    @updateContentPosition()
+
+  updateSelf: =>
+    unless @object["$updated?"]()
+      @removeContent()
+      @createContent()
+      stage.addChild(@content)
+      @object["$updated!"]()
+
+  setData: =>
+    if @object["$marked_for_cleaning?"]()
+      if @object.$content().constructor.name == "$Tree"
+        @contentString = "t"
+        @contentColor   = "red"
+      else if @object.$content().constructor.name == "$FallenTree"
+        @contentString = "/"
+        @contentColor   = "red"
+      else if @object.$content().constructor.name == "$BerriesBush"
+        @contentString = "#"
+        @contentColor   = "red"
     else
-      if @mapTile.$content().constructor.name == "$Tree"
-        @content = "t"
-        @color = "green"
-      else if @mapTile.$content().constructor.name == "$FallenTree"
-        @content = "/"
-        @color = "green"
-      else if @mapTile.$content().constructor.name == "$BerriesBush"
-        @content = "#"
-        @color = "yellow"
-      else if @mapTile.$terrain() == "river"
-        @content = "~"
-        @color   = "blue"
+      if @object.$content().constructor.name == "$Tree"
+        @contentString = "t"
+        @contentColor = "green"
+      else if @object.$content().constructor.name == "$FallenTree"
+        @contentString = "/"
+        @contentColor = "green"
+      else if @object.$content().constructor.name == "$BerriesBush"
+        @contentString = "#"
+        @contentColor = "yellow"
+      else if @object.$terrain() == "river"
+        @contentString = "~"
+        @contentColor   = "blue"
       else
-        @content = "."
-        @color   = "white"
+        @contentString = "."
+        @contentColor   = "white"
 
 for row in engine.$map().$grid()
   for tile in row
@@ -231,77 +233,54 @@ for row in engine.$map().$grid()
 # SETUP RENDERING SETTLEMENT
 settlement = Opal.TheGame.Settlement.$instance()
 
-class @RenderingFireplace
-  constructor: (@mapFireplace) ->
-    @text = new PIXI.Text("F", {font: "25px", fill: "red"})
-    @text.position.x = @mapFireplace.$y() * tileSize
-    @text.position.y = @mapFireplace.$x() * tileSize
-    stage.addChild(@text)
-    updatable.push(@)
-
-  update: =>
+class @RenderingFireplace extends Renderable
+  createContent: =>
+    @content = new PIXI.Text("F", {font: "25px", fill: "red"})
 
 new RenderingFireplace(settlement.$fireplace())
 
-class @RenderingStash
-  constructor: (@mapStash) ->
-    @text = new PIXI.Text("S", {font: "25px", fill: "white"})
-    @text.position.x = @mapStash.$y() * tileSize
-    @text.position.y = @mapStash.$x() * tileSize
-    stage.addChild(@text)
-    updatable.push(@)
-
-  update: =>
+class @RenderingStash extends Renderable
+  createContent: =>
+    @content = new PIXI.Text("S", {font: "25px", fill: "white"})
 
 new RenderingStash(settlement.$stash())
 
-#SETUP RENDERING PEOPLE
-class RenderingPerson
-  constructor: (@person) ->
-    if @person.$type() == "woodcutter"
+class RenderingPerson extends Renderable
+  createContent: =>
+    if @object.$type() == "woodcutter"
       content = "W"
-    else if @person.$type() == "leader"
+    else if @object.$type() == "leader"
       content = "L"
-    else if @person.$type() == "gatherer"
+    else if @object.$type() == "gatherer"
       content = "G"
-    else if @person.$type() == "fisherman"
+    else if @object.$type() == "fisherman"
       content = "F"
 
-    @text = new PIXI.Text(content, {font: "25px", fill: "white"})
-    @text.position.x = @person.$y() * tileSize
-    @text.position.y = @person.$x() * tileSize
-
-    stage.addChild(@text)
-    updatable.push(@)
-
-  update: =>
-    @text.position.x = @person.$y() * tileSize
-    @text.position.y = @person.$x() * tileSize
+    @content = new PIXI.Text(content, {font: "25px", fill: "white"})
 
 for person in engine.$people()
   new RenderingPerson(person)
 
-class RenderingDormitory
-  constructor: (@dormitory) ->
-    @x = @dormitory.$y() * tileSize
-    @y = @dormitory.$x() * tileSize
-    @x_width = 4 * tileSize
-    @y_width = 4 * tileSize
+class RenderingDormitory extends Renderable
+  createContent: =>
+    @color = 0x0000FF unless @color
+    @content = new PIXI.Graphics()
+    @draw()
 
-    @rectangle = new PIXI.Graphics()
-    @rectangle.beginFill(0x0000FF, 0.3)
-    @rectangle.drawRect(@x, @y, @x_width, @y_width)
-    @rectangle.endFill()
+  draw: =>
+    # console.log @tileSize
+    @content.beginFill(@color, 0.3)
+    @content.drawRect(0, 0, 4 * tileSize, 4 * tileSize)
+    @content.endFill()
 
-    stage.addChild(@rectangle)
-    updatable.push(@)
+  updateSelf: =>
+    if @object.$status() == "done"
+      @color = 0x6F1C1C
+      @draw()
 
-  update: =>
-    if @dormitory.$status() == "done"
-      @rectangle.beginFill(0x6F1C1C, 0.3)
-      @rectangle.drawRect(@x, @y, @x_width, @y_width)
-      @rectangle.endFill()
-
+  # updateContentPosition: =>
+  #   @content.position.x = @object.$y() * @tileSize + window.x_offset
+  #   @content.position.y = @object.$x() * @tileSize + window.y_offset
 
 @updateRenderObjects = =>
   unless settlement.$dormitory()["$nil?"]()
@@ -312,16 +291,16 @@ class RenderingDormitory
   for object in updatable
     object.update()
 
-`
-    function animate() {
+# `
+#     function animate() {
 
-        requestAnimFrame( animate );
+#         requestAnimFrame( animate );
 
-        // just for fun, lets rotate mr rabbit a little
-        // bunny.rotation += 0.1;
+#         // just for fun, lets rotate mr rabbit a little
+#         // bunny.rotation += 0.1;
 
 
-        // render the stage
-        renderer.render(stage);
-    }
-`
+#         // render the stage
+#         renderer.render(stage);
+#     }
+# `

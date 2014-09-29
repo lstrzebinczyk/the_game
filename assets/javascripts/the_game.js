@@ -12721,7 +12721,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$new_grid', '$new', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$set_position', '$/', '$height', '$width', '$+', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$content=', '$y', '$<<']);
+  $opal.add_stubs(['$*', '$new_grid', '$new', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$set_position', '$/', '$height', '$width', '$+', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$content=', '$y', '$<<']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12741,17 +12741,11 @@ if (tile == null) tile = nil;
         var def = self._proto, $scope = self._scope;
 
         def.height = nil;
-        def.$generate = function(width, height) {
+        def.$generate = function() {
           var $a, self = this, grid = nil, map = nil;
 
-          if (width == null) {
-            width = 100
-          }
-          if (height == null) {
-            height = 100
-          }
-          self.width = width;
-          self.height = height;
+          self.width = (16)['$*'](4);
+          self.height = (16)['$*'](3);
           grid = self.$new_grid();
           map = (($a = $scope.Map) == null ? $opal.cm('Map') : $a).$new(grid);
           self.$create_river(map);

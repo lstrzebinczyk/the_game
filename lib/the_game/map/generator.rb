@@ -1,9 +1,12 @@
 class TheGame
   class Map
     class Generator
-      def generate(width = 100, height = 100)
-        @width  = width
-        @height = height
+      def generate
+        @width  = 16 * 4
+        @height = 16 * 3
+
+        # @width  = 90
+        # @height = 90
 
         grid = new_grid
         map = Map.new(grid)

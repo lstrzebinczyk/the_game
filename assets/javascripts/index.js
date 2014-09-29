@@ -1,6 +1,8 @@
 (function() {
   var RenderingDormitory, RenderingPerson, interactive, person, renderer, row, settlement, tile, updatable, _i, _j, _k, _len, _len1, _len2, _ref, _ref1,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.render_people_stats = function() {
     var action_description, element, energy, hunger, person, progress, template, thirst, type, _i, _len, _ref, _results;
@@ -87,7 +89,8 @@
     render_turns_per_second();
     render_stash_stats();
     render_time();
-    return updateRenderObjects();
+    updateRenderObjects();
+    return renderer.render(stage);
   };
 
   this.gameLoop = setInterval(updateWorld, 1000 / 30);
@@ -108,9 +111,9 @@
 
   this.height = engine.map.$height();
 
-  this.renderedWidth = 60;
+  this.renderedWidth = 14 * 4;
 
-  this.renderedHeight = 30;
+  this.renderedHeight = 14 * 3;
 
   this.tileSize = 16;
 
@@ -158,98 +161,122 @@
 
   $("#view").append(renderer.view);
 
-  requestAnimFrame(animate);
-
   updatable = [];
 
-  this.RenderingTile = (function() {
-    function RenderingTile(mapTile) {
-      this.mapTile = mapTile;
-      this._setData = __bind(this._setData, this);
-      this._isWithinView = __bind(this._isWithinView, this);
+  this.Renderable = (function() {
+    function Renderable(object) {
+      this.object = object;
+      this.updateContentPosition = __bind(this.updateContentPosition, this);
+      this.removeContent = __bind(this.removeContent, this);
+      this.isWithinView = __bind(this.isWithinView, this);
       this.update = __bind(this.update, this);
-      this._setData();
-      this.text = new PIXI.Text(this.content, {
-        font: "25px",
-        fill: this.color
-      });
-      this.text.position.x = this.mapTile.$y() * tileSize;
-      this.text.position.y = this.mapTile.$x() * tileSize;
-      stage.addChild(this.text);
+      this.createContent();
+      this.renderedWidth = renderedWidth;
+      this.renderedHeight = renderedHeight;
+      stage.addChild(this.content);
       updatable.push(this);
     }
 
-    RenderingTile.prototype.update = function() {
-      if (this._isWithinView()) {
-        if (this.text) {
-          this.text.position.x = this.mapTile.$y() * tileSize + window.x_offset;
-          this.text.position.y = this.mapTile.$x() * tileSize + window.y_offset;
-          if (!this.mapTile["$updated?"]()) {
-            this._setData();
-            this.text.setText(this.content);
-            this.text.setStyle({
-              font: "25px",
-              fill: this.color
-            });
-            return this.mapTile["$updated!"]();
-          }
+    Renderable.prototype.update = function() {
+      if (this.isWithinView()) {
+        if (this.content) {
+          this.updateSelf();
+          return this.updateContentPosition();
         } else {
-          this._setData();
-          this.text = new PIXI.Text(this.content, {
-            font: "25px",
-            fill: this.color
-          });
-          this.text.position.x = this.mapTile.$y() * tileSize + window.x_offset;
-          this.text.position.y = this.mapTile.$x() * tileSize + window.y_offset;
-          return stage.addChild(this.text);
+          this.createContent();
+          stage.addChild(this.content);
+          return this.updateContentPosition();
         }
       } else {
-        if (this.text) {
-          stage.removeChild(this.text);
-          return this.text = null;
+        if (this.content) {
+          return this.removeContent();
         }
       }
     };
 
-    RenderingTile.prototype._isWithinView = function() {
-      return this.mapTile.$y() * tileSize >= -window.x_offset && this.mapTile.$y() * tileSize < -window.x_offset + renderedWidth * tileSize && this.mapTile.$x() * tileSize >= -window.y_offset && this.mapTile.$x() * tileSize < -window.y_offset + renderedHeight * tileSize;
+    Renderable.prototype.updateSelf = function() {};
+
+    Renderable.prototype.isWithinView = function() {
+      return this.object.$y() * tileSize >= -window.x_offset && this.object.$y() * tileSize < -window.x_offset + this.renderedWidth * tileSize && this.object.$x() * tileSize >= -window.y_offset && this.object.$x() * tileSize < -window.y_offset + this.renderedHeight * tileSize;
     };
 
-    RenderingTile.prototype._setData = function() {
-      if (this.mapTile["$marked_for_cleaning?"]()) {
-        if (this.mapTile.$content().constructor.name === "$Tree") {
-          this.content = "t";
-          return this.color = "red";
-        } else if (this.mapTile.$content().constructor.name === "$FallenTree") {
-          this.content = "/";
-          return this.color = "red";
-        } else if (this.mapTile.$content().constructor.name === "$BerriesBush") {
-          this.content = "#";
-          return this.color = "red";
+    Renderable.prototype.removeContent = function() {
+      stage.removeChild(this.content);
+      return this.content = null;
+    };
+
+    Renderable.prototype.updateContentPosition = function() {
+      this.content.position.x = this.object.$y() * tileSize + window.x_offset;
+      return this.content.position.y = this.object.$x() * tileSize + window.y_offset;
+    };
+
+    return Renderable;
+
+  })();
+
+  this.RenderingTile = (function(_super) {
+    __extends(RenderingTile, _super);
+
+    function RenderingTile() {
+      this.setData = __bind(this.setData, this);
+      this.updateSelf = __bind(this.updateSelf, this);
+      this.createContent = __bind(this.createContent, this);
+      return RenderingTile.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingTile.prototype.createContent = function() {
+      this.setData();
+      this.content = new PIXI.Text(this.contentString, {
+        font: "25px",
+        fill: this.contentColor
+      });
+      return this.updateContentPosition();
+    };
+
+    RenderingTile.prototype.updateSelf = function() {
+      if (!this.object["$updated?"]()) {
+        this.removeContent();
+        this.createContent();
+        stage.addChild(this.content);
+        return this.object["$updated!"]();
+      }
+    };
+
+    RenderingTile.prototype.setData = function() {
+      if (this.object["$marked_for_cleaning?"]()) {
+        if (this.object.$content().constructor.name === "$Tree") {
+          this.contentString = "t";
+          return this.contentColor = "red";
+        } else if (this.object.$content().constructor.name === "$FallenTree") {
+          this.contentString = "/";
+          return this.contentColor = "red";
+        } else if (this.object.$content().constructor.name === "$BerriesBush") {
+          this.contentString = "#";
+          return this.contentColor = "red";
         }
       } else {
-        if (this.mapTile.$content().constructor.name === "$Tree") {
-          this.content = "t";
-          return this.color = "green";
-        } else if (this.mapTile.$content().constructor.name === "$FallenTree") {
-          this.content = "/";
-          return this.color = "green";
-        } else if (this.mapTile.$content().constructor.name === "$BerriesBush") {
-          this.content = "#";
-          return this.color = "yellow";
-        } else if (this.mapTile.$terrain() === "river") {
-          this.content = "~";
-          return this.color = "blue";
+        if (this.object.$content().constructor.name === "$Tree") {
+          this.contentString = "t";
+          return this.contentColor = "green";
+        } else if (this.object.$content().constructor.name === "$FallenTree") {
+          this.contentString = "/";
+          return this.contentColor = "green";
+        } else if (this.object.$content().constructor.name === "$BerriesBush") {
+          this.contentString = "#";
+          return this.contentColor = "yellow";
+        } else if (this.object.$terrain() === "river") {
+          this.contentString = "~";
+          return this.contentColor = "blue";
         } else {
-          this.content = ".";
-          return this.color = "white";
+          this.contentString = ".";
+          return this.contentColor = "white";
         }
       }
     };
 
     return RenderingTile;
 
-  })();
+  })(Renderable);
 
   _ref = engine.$map().$grid();
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -262,82 +289,76 @@
 
   settlement = Opal.TheGame.Settlement.$instance();
 
-  this.RenderingFireplace = (function() {
-    function RenderingFireplace(mapFireplace) {
-      this.mapFireplace = mapFireplace;
-      this.update = __bind(this.update, this);
-      this.text = new PIXI.Text("F", {
+  this.RenderingFireplace = (function(_super) {
+    __extends(RenderingFireplace, _super);
+
+    function RenderingFireplace() {
+      this.createContent = __bind(this.createContent, this);
+      return RenderingFireplace.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingFireplace.prototype.createContent = function() {
+      return this.content = new PIXI.Text("F", {
         font: "25px",
         fill: "red"
       });
-      this.text.position.x = this.mapFireplace.$y() * tileSize;
-      this.text.position.y = this.mapFireplace.$x() * tileSize;
-      stage.addChild(this.text);
-      updatable.push(this);
-    }
-
-    RenderingFireplace.prototype.update = function() {};
+    };
 
     return RenderingFireplace;
 
-  })();
+  })(Renderable);
 
   new RenderingFireplace(settlement.$fireplace());
 
-  this.RenderingStash = (function() {
-    function RenderingStash(mapStash) {
-      this.mapStash = mapStash;
-      this.update = __bind(this.update, this);
-      this.text = new PIXI.Text("S", {
+  this.RenderingStash = (function(_super) {
+    __extends(RenderingStash, _super);
+
+    function RenderingStash() {
+      this.createContent = __bind(this.createContent, this);
+      return RenderingStash.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingStash.prototype.createContent = function() {
+      return this.content = new PIXI.Text("S", {
         font: "25px",
         fill: "white"
       });
-      this.text.position.x = this.mapStash.$y() * tileSize;
-      this.text.position.y = this.mapStash.$x() * tileSize;
-      stage.addChild(this.text);
-      updatable.push(this);
-    }
-
-    RenderingStash.prototype.update = function() {};
+    };
 
     return RenderingStash;
 
-  })();
+  })(Renderable);
 
   new RenderingStash(settlement.$stash());
 
-  RenderingPerson = (function() {
-    function RenderingPerson(person) {
+  RenderingPerson = (function(_super) {
+    __extends(RenderingPerson, _super);
+
+    function RenderingPerson() {
+      this.createContent = __bind(this.createContent, this);
+      return RenderingPerson.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingPerson.prototype.createContent = function() {
       var content;
-      this.person = person;
-      this.update = __bind(this.update, this);
-      if (this.person.$type() === "woodcutter") {
+      if (this.object.$type() === "woodcutter") {
         content = "W";
-      } else if (this.person.$type() === "leader") {
+      } else if (this.object.$type() === "leader") {
         content = "L";
-      } else if (this.person.$type() === "gatherer") {
+      } else if (this.object.$type() === "gatherer") {
         content = "G";
-      } else if (this.person.$type() === "fisherman") {
+      } else if (this.object.$type() === "fisherman") {
         content = "F";
       }
-      this.text = new PIXI.Text(content, {
+      return this.content = new PIXI.Text(content, {
         font: "25px",
         fill: "white"
       });
-      this.text.position.x = this.person.$y() * tileSize;
-      this.text.position.y = this.person.$x() * tileSize;
-      stage.addChild(this.text);
-      updatable.push(this);
-    }
-
-    RenderingPerson.prototype.update = function() {
-      this.text.position.x = this.person.$y() * tileSize;
-      return this.text.position.y = this.person.$x() * tileSize;
     };
 
     return RenderingPerson;
 
-  })();
+  })(Renderable);
 
   _ref1 = engine.$people();
   for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
@@ -345,33 +366,40 @@
     new RenderingPerson(person);
   }
 
-  RenderingDormitory = (function() {
-    function RenderingDormitory(dormitory) {
-      this.dormitory = dormitory;
-      this.update = __bind(this.update, this);
-      this.x = this.dormitory.$y() * tileSize;
-      this.y = this.dormitory.$x() * tileSize;
-      this.x_width = 4 * tileSize;
-      this.y_width = 4 * tileSize;
-      this.rectangle = new PIXI.Graphics();
-      this.rectangle.beginFill(0x0000FF, 0.3);
-      this.rectangle.drawRect(this.x, this.y, this.x_width, this.y_width);
-      this.rectangle.endFill();
-      stage.addChild(this.rectangle);
-      updatable.push(this);
+  RenderingDormitory = (function(_super) {
+    __extends(RenderingDormitory, _super);
+
+    function RenderingDormitory() {
+      this.updateSelf = __bind(this.updateSelf, this);
+      this.draw = __bind(this.draw, this);
+      this.createContent = __bind(this.createContent, this);
+      return RenderingDormitory.__super__.constructor.apply(this, arguments);
     }
 
-    RenderingDormitory.prototype.update = function() {
-      if (this.dormitory.$status() === "done") {
-        this.rectangle.beginFill(0x6F1C1C, 0.3);
-        this.rectangle.drawRect(this.x, this.y, this.x_width, this.y_width);
-        return this.rectangle.endFill();
+    RenderingDormitory.prototype.createContent = function() {
+      if (!this.color) {
+        this.color = 0x0000FF;
+      }
+      this.content = new PIXI.Graphics();
+      return this.draw();
+    };
+
+    RenderingDormitory.prototype.draw = function() {
+      this.content.beginFill(this.color, 0.3);
+      this.content.drawRect(0, 0, 4 * tileSize, 4 * tileSize);
+      return this.content.endFill();
+    };
+
+    RenderingDormitory.prototype.updateSelf = function() {
+      if (this.object.$status() === "done") {
+        this.color = 0x6F1C1C;
+        return this.draw();
       }
     };
 
     return RenderingDormitory;
 
-  })();
+  })(Renderable);
 
   this.updateRenderObjects = (function(_this) {
     return function() {
@@ -390,19 +418,5 @@
       return _results;
     };
   })(this);
-
-  
-    function animate() {
-
-        requestAnimFrame( animate );
-
-        // just for fun, lets rotate mr rabbit a little
-        // bunny.rotation += 0.1;
-
-
-        // render the stage
-        renderer.render(stage);
-    }
-;
 
 }).call(this);
