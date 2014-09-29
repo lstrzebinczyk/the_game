@@ -1,13 +1,6 @@
-# require 'require_all'
-# require "curses"
-
-# require_all "lib"
-
 # $:.unshift File.dirname(__FILE__)
 
 require 'opal'
-
-# binding.pry
 
 # Dir[File.dirname(__FILE__) + '/lib/**/*.rb'].each do |file|
 #   require File.basename(file, File.extname(file))
@@ -77,33 +70,5 @@ require 'the_game/settlement'
 require 'the_game/construction'
 require 'the_game/container'
 
-
-
 class TheGame
-  # def setup
-  #   @engine = Engine.new
-  #   @window = Window.new(@engine)
-  # end
-
-  # def window
-  #   @window
-  # end
-
-  # def start
-  #   @window.init
-  #   begin
-  #     while true
-  #       @engine.update
-  #       @window.render
-  #       sleep(0.033)
-  #       # sleep 0.1
-  #     end
-  #   ensure
-  #     @window.close
-  #   end
-  # end
-
-  # def map
-  #   @engine.map
-  # end
 end
