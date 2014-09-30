@@ -1,4 +1,8 @@
-The Game
+#The Game
+
+Disclaimer: I know nothing about developing games, nor do I know what I am doing in this code. Most of the code is a mess, where I only expect a nice structure to emerge at some point.
+
+I would be more than happy to discuss code structure or architecture.
 
 ## Guard
 
