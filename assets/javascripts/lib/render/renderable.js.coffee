@@ -1,39 +1,36 @@
-# class @Renderable
-#   constructor: (@object) ->
-#     @createContent()
+class @Renderable
+  constructor: (@object, @gameWindow) ->
+    @createContent()
 
-#     # cache these so that you don't have to ask window for them
-#     @renderedWidth = renderedWidth
-#     @renderedHeight = renderedHeight
+    @renderedWidth  = @gameWindow.renderedWidth
+    @renderedHeight = @gameWindow.renderedHeight
 
-#     window.stage.addChild(@content)
-#     window.updatable.push(@)
+    @gameWindow.addChild(@)
 
-#   update: =>
-#     if @isWithinView()
-#       if @content
-#         @updateSelf()
-#         @updateContentPosition()
-#       else
-#         @createContent()
-#         stage.addChild(@content)
-#         @updateContentPosition()
-#     else
-#       if @content
-#         @removeContent()
+  update: =>
+    if @isWithinView()
+      if @content
+        @updateSelf()
+        @updateContentPosition()
+      else
+        @createContent()
+        @gameWindow.stage.addChild(@content)
+        @updateContentPosition()
+    else
+      if @content
+        @removeContent()
 
-#   updateSelf: ->
+  updateSelf: ->
 
-#   isWithinView: =>
-#     @object.$y() * tileSize >= - window.x_offset and
-#     @object.$y() * tileSize < - window.x_offset + @renderedWidth*tileSize and
-#     @object.$x() * tileSize >= - window.y_offset and
-#     @object.$x() * tileSize < - window.y_offset + @renderedHeight*tileSize
+  isWithinView: =>
+    @object.$y() * @gameWindow.tileSize >= - @gameWindow.x_offset and
+    @object.$y() * @gameWindow.tileSize < - @gameWindow.x_offset + @renderedWidth*@gameWindow.tileSize and
+    @object.$x() * @gameWindow.tileSize >= - @gameWindow.y_offset and
+    @object.$x() * @gameWindow.tileSize < - @gameWindow.y_offset + @renderedHeight*@gameWindow.tileSize
 
-#   removeContent: =>
-#     stage.removeChild(@content)
-#     @content = null
+  removeContent: =>
+    @gameWindow.removeChild(@)
 
-#   updateContentPosition: =>
-#     @content.position.x = @object.$y() * tileSize + window.x_offset
-#     @content.position.y = @object.$x() * tileSize + window.y_offset
+  updateContentPosition: =>
+    @content.position.x = @object.$y() * @gameWindow.tileSize + @gameWindow.x_offset
+    @content.position.y = @object.$x() * @gameWindow.tileSize + @gameWindow.y_offset

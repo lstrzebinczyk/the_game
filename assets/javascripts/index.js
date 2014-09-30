@@ -1,15 +1,5 @@
 (function() {
-
-
-}).call(this);
-(function() {
-
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine = (function() {
     function GameEngine() {
@@ -74,24 +64,9 @@
 
   })();
 
-  this.GameEngine.Stash = (function() {
-    function Stash() {
-      this.count = __bind(this.count, this);
-      this.itemTypes = __bind(this.itemTypes, this);
-      this.stash = Opal.TheGame.Settlement.$instance().$stash();
-    }
-
-    Stash.prototype.itemTypes = function() {
-      return this.stash.$item_types();
-    };
-
-    Stash.prototype.count = function(type) {
-      return this.stash.$count(type);
-    };
-
-    return Stash;
-
-  })();
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine.Dormitory = (function() {
     function Dormitory() {
@@ -127,101 +102,86 @@
 
   })();
 
-  this.GameMenu = (function() {
-    function GameMenu(engine) {
-      this.engine = engine;
-      this.renderTurnsPerSecond = __bind(this.renderTurnsPerSecond, this);
-      this.renderPeopleStats = __bind(this.renderPeopleStats, this);
-      this.renderStashStats = __bind(this.renderStashStats, this);
-      this.renderBuildingsStats = __bind(this.renderBuildingsStats, this);
-      this.renderTime = __bind(this.renderTime, this);
-      this.update = __bind(this.update, this);
-      this.peopleStatsWindow = $("#people");
-      this.stashStatsWindow = $("#stash");
-      this.buildingStatsWindow = $("#buildings");
-      this.timeWindow = $("#time");
-      this.timeSinceLastCountUpdate = new Date();
-      this.iterationsSinceLastCountUpdate = 0;
-      this.turnsPerSecondWindow = $("#turns_count");
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  this.GameEngine.Stash = (function() {
+    function Stash() {
+      this.count = __bind(this.count, this);
+      this.itemTypes = __bind(this.itemTypes, this);
+      this.stash = Opal.TheGame.Settlement.$instance().$stash();
     }
 
-    GameMenu.prototype.update = function() {
-      this.renderTime();
-      this.renderBuildingsStats();
-      this.renderStashStats();
-      this.renderPeopleStats();
-      return this.renderTurnsPerSecond();
+    Stash.prototype.itemTypes = function() {
+      return this.stash.$item_types();
     };
 
-    GameMenu.prototype.renderTime = function() {
-      return this.timeWindow.text(this.engine.time());
+    Stash.prototype.count = function(type) {
+      return this.stash.$count(type);
     };
 
-    GameMenu.prototype.renderBuildingsStats = function() {
-      var template;
-      this.buildingStatsWindow.empty();
-      if (!this.engine.dormitory.isNil()) {
-        template = "<div>";
-        template += "<div>DORMITORY:</div>";
-        template += "<div>status: " + (this.engine.dormitory.status()) + "</div>";
-        if (this.engine.dormitory.status() === "plan") {
-          template += "<div>firewood needed: " + (this.engine.dormitory.firewoodNeeded()) + "</div>";
-        }
-        if (this.engine.dormitory.status() === "building") {
-          template += "<div>construction left: " + (this.engine.dormitory.minutesLeft()) + "</div>";
-        }
-        return this.buildingStatsWindow.append(template);
-      }
-    };
-
-    GameMenu.prototype.renderStashStats = function() {
-      var template, type, _i, _len, _ref;
-      this.stashStatsWindow.empty();
-      template = "<div>";
-      _ref = this.engine.stash.itemTypes();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        type = _ref[_i];
-        template += "<div>" + type + ": " + (this.engine.stash.count(type));
-      }
-      template += "</div>";
-      return this.stashStatsWindow.append(template);
-    };
-
-    GameMenu.prototype.renderPeopleStats = function() {
-      var action_description, energy, hunger, person, progress, template, thirst, type, _i, _len, _ref, _results;
-      this.peopleStatsWindow.empty();
-      _ref = this.engine.people();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        person = _ref[_i];
-        type = person.$type();
-        thirst = person.$thirst();
-        hunger = person.$hunger();
-        energy = person.$energy();
-        action_description = person.$action().$description();
-        progress = function(value) {
-          return "<progress value='" + value + "'></progress>";
-        };
-        template = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: " + (progress(thirst)) + "</div>\n  <div>hunger: " + (progress(hunger)) + "</div>\n  <div>energy: " + (progress(energy)) + "</div>\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
-        _results.push(this.peopleStatsWindow.append(template));
-      }
-      return _results;
-    };
-
-    GameMenu.prototype.renderTurnsPerSecond = function() {
-      var possibleNewTime;
-      this.iterationsSinceLastCountUpdate += 1;
-      possibleNewTime = new Date();
-      if (possibleNewTime - this.timeSinceLastCountUpdate > 1000) {
-        this.timeSinceLastCountUpdate = possibleNewTime;
-        this.turnsPerSecondWindow.text(this.iterationsSinceLastCountUpdate);
-        return this.iterationsSinceLastCountUpdate = 0;
-      }
-    };
-
-    return GameMenu;
+    return Stash;
 
   })();
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  this.GameLoop = (function() {
+    function GameLoop() {
+      this.stopGame = __bind(this.stopGame, this);
+      this.startGame = __bind(this.startGame, this);
+      this.update = __bind(this.update, this);
+      this.setup = __bind(this.setup, this);
+      this.gameEngine = new GameEngine();
+      this.gameMenu = new GameMenu(this.gameEngine);
+      this.gameWindow = new GameWindow(this.gameEngine);
+      this.startButton = $("#start");
+    }
+
+    GameLoop.prototype.setup = function() {
+      this.startButton.click((function(_this) {
+        return function() {
+          if (_this.playing) {
+            return _this.stopGame();
+          } else {
+            return _this.startGame();
+          }
+        };
+      })(this));
+      return this.gameWindow.setup();
+    };
+
+    GameLoop.prototype.update = function() {
+      this.gameEngine.update();
+      this.gameMenu.update();
+      this.gameWindow.update();
+      return this.gameWindow.render();
+    };
+
+    GameLoop.prototype.startGame = function() {
+      this.gameLoop = setInterval(this.update, 1000 / 30);
+      this.playing = true;
+      this.gameWindow.playing = true;
+      return this.startButton.text("Stop!");
+    };
+
+    GameLoop.prototype.stopGame = function() {
+      clearInterval(this.gameLoop);
+      this.playing = false;
+      this.gameWindow.playing = false;
+      return this.startButton.text("Start!");
+    };
+
+    return GameLoop;
+
+  })();
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameWindow = (function() {
     function GameWindow(engine) {
@@ -342,60 +302,109 @@
 
   })();
 
-  this.GameLoop = (function() {
-    function GameLoop() {
-      this.stopGame = __bind(this.stopGame, this);
-      this.startGame = __bind(this.startGame, this);
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  this.GameMenu = (function() {
+    function GameMenu(engine) {
+      this.engine = engine;
+      this.renderTurnsPerSecond = __bind(this.renderTurnsPerSecond, this);
+      this.renderPeopleStats = __bind(this.renderPeopleStats, this);
+      this.renderStashStats = __bind(this.renderStashStats, this);
+      this.renderBuildingsStats = __bind(this.renderBuildingsStats, this);
+      this.renderTime = __bind(this.renderTime, this);
       this.update = __bind(this.update, this);
-      this.setup = __bind(this.setup, this);
-      this.gameEngine = new GameEngine();
-      this.gameMenu = new GameMenu(this.gameEngine);
-      this.gameWindow = new GameWindow(this.gameEngine);
-      this.startButton = $("#start");
+      this.peopleStatsWindow = $("#people");
+      this.stashStatsWindow = $("#stash");
+      this.buildingStatsWindow = $("#buildings");
+      this.timeWindow = $("#time");
+      this.timeSinceLastCountUpdate = new Date();
+      this.iterationsSinceLastCountUpdate = 0;
+      this.turnsPerSecondWindow = $("#turns_count");
     }
 
-    GameLoop.prototype.setup = function() {
-      this.startButton.click((function(_this) {
-        return function() {
-          if (_this.playing) {
-            return _this.stopGame();
-          } else {
-            return _this.startGame();
-          }
+    GameMenu.prototype.update = function() {
+      this.renderTime();
+      this.renderBuildingsStats();
+      this.renderStashStats();
+      this.renderPeopleStats();
+      return this.renderTurnsPerSecond();
+    };
+
+    GameMenu.prototype.renderTime = function() {
+      return this.timeWindow.text(this.engine.time());
+    };
+
+    GameMenu.prototype.renderBuildingsStats = function() {
+      var template;
+      this.buildingStatsWindow.empty();
+      if (!this.engine.dormitory.isNil()) {
+        template = "<div>";
+        template += "<div>DORMITORY:</div>";
+        template += "<div>status: " + (this.engine.dormitory.status()) + "</div>";
+        if (this.engine.dormitory.status() === "plan") {
+          template += "<div>firewood needed: " + (this.engine.dormitory.firewoodNeeded()) + "</div>";
+        }
+        if (this.engine.dormitory.status() === "building") {
+          template += "<div>construction left: " + (this.engine.dormitory.minutesLeft()) + "</div>";
+        }
+        return this.buildingStatsWindow.append(template);
+      }
+    };
+
+    GameMenu.prototype.renderStashStats = function() {
+      var template, type, _i, _len, _ref;
+      this.stashStatsWindow.empty();
+      template = "<div>";
+      _ref = this.engine.stash.itemTypes();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        type = _ref[_i];
+        template += "<div>" + type + ": " + (this.engine.stash.count(type));
+      }
+      template += "</div>";
+      return this.stashStatsWindow.append(template);
+    };
+
+    GameMenu.prototype.renderPeopleStats = function() {
+      var action_description, energy, hunger, person, progress, template, thirst, type, _i, _len, _ref, _results;
+      this.peopleStatsWindow.empty();
+      _ref = this.engine.people();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        person = _ref[_i];
+        type = person.$type();
+        thirst = person.$thirst();
+        hunger = person.$hunger();
+        energy = person.$energy();
+        action_description = person.$action().$description();
+        progress = function(value) {
+          return "<progress value='" + value + "'></progress>";
         };
-      })(this));
-      return this.gameWindow.setup();
+        template = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: " + (progress(thirst)) + "</div>\n  <div>hunger: " + (progress(hunger)) + "</div>\n  <div>energy: " + (progress(energy)) + "</div>\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
+        _results.push(this.peopleStatsWindow.append(template));
+      }
+      return _results;
     };
 
-    GameLoop.prototype.update = function() {
-      this.gameEngine.update();
-      this.gameMenu.update();
-      this.gameWindow.update();
-      return this.gameWindow.render();
+    GameMenu.prototype.renderTurnsPerSecond = function() {
+      var possibleNewTime;
+      this.iterationsSinceLastCountUpdate += 1;
+      possibleNewTime = new Date();
+      if (possibleNewTime - this.timeSinceLastCountUpdate > 1000) {
+        this.timeSinceLastCountUpdate = possibleNewTime;
+        this.turnsPerSecondWindow.text(this.iterationsSinceLastCountUpdate);
+        return this.iterationsSinceLastCountUpdate = 0;
+      }
     };
 
-    GameLoop.prototype.startGame = function() {
-      this.gameLoop = setInterval(this.update, 1000 / 30);
-      this.playing = true;
-      return this.startButton.text("Stop!");
-    };
-
-    GameLoop.prototype.stopGame = function() {
-      clearInterval(this.gameLoop);
-      this.playing = false;
-      return this.startButton.text("Start!");
-    };
-
-    return GameLoop;
+    return GameMenu;
 
   })();
 
-  jQuery(function() {
-    var gameLoop;
-    gameLoop = new GameLoop();
-    gameLoop.setup();
-    return gameLoop.startGame();
-  });
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.Renderable = (function() {
     function Renderable(object, gameWindow) {
@@ -446,6 +455,138 @@
     return Renderable;
 
   })();
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.RenderingDormitory = (function(_super) {
+    __extends(RenderingDormitory, _super);
+
+    function RenderingDormitory() {
+      this.updateSelf = __bind(this.updateSelf, this);
+      this.draw = __bind(this.draw, this);
+      this.createContent = __bind(this.createContent, this);
+      return RenderingDormitory.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingDormitory.prototype.createContent = function() {
+      if (!this.color) {
+        this.color = 0x0000FF;
+      }
+      this.content = new PIXI.Graphics();
+      return this.draw();
+    };
+
+    RenderingDormitory.prototype.draw = function() {
+      this.content.beginFill(this.color, 0.3);
+      this.content.drawRect(0, 0, 4 * this.gameWindow.tileSize, 4 * this.gameWindow.tileSize);
+      return this.content.endFill();
+    };
+
+    RenderingDormitory.prototype.updateSelf = function() {
+      if (this.object.$status() === "done") {
+        this.color = 0x6F1C1C;
+        return this.draw();
+      }
+    };
+
+    return RenderingDormitory;
+
+  })(Renderable);
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.RenderingFireplace = (function(_super) {
+    __extends(RenderingFireplace, _super);
+
+    function RenderingFireplace() {
+      this.createContent = __bind(this.createContent, this);
+      return RenderingFireplace.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingFireplace.prototype.createContent = function() {
+      return this.content = new PIXI.Text("F", {
+        font: "25px",
+        fill: "red"
+      });
+    };
+
+    return RenderingFireplace;
+
+  })(Renderable);
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.RenderingPerson = (function(_super) {
+    __extends(RenderingPerson, _super);
+
+    function RenderingPerson() {
+      this.createContent = __bind(this.createContent, this);
+      return RenderingPerson.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingPerson.prototype.createContent = function() {
+      var content;
+      if (this.object.$type() === "woodcutter") {
+        content = "W";
+      } else if (this.object.$type() === "leader") {
+        content = "L";
+      } else if (this.object.$type() === "gatherer") {
+        content = "G";
+      } else if (this.object.$type() === "fisherman") {
+        content = "F";
+      }
+      return this.content = new PIXI.Text(content, {
+        font: "25px",
+        fill: "white"
+      });
+    };
+
+    return RenderingPerson;
+
+  })(Renderable);
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  this.RenderingStash = (function(_super) {
+    __extends(RenderingStash, _super);
+
+    function RenderingStash() {
+      this.createContent = __bind(this.createContent, this);
+      return RenderingStash.__super__.constructor.apply(this, arguments);
+    }
+
+    RenderingStash.prototype.createContent = function() {
+      return this.content = new PIXI.Text("S", {
+        font: "25px",
+        fill: "white"
+      });
+    };
+
+    return RenderingStash;
+
+  })(Renderable);
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.RenderingTile = (function(_super) {
     __extends(RenderingTile, _super);
@@ -511,106 +652,13 @@
 
   })(Renderable);
 
-  this.RenderingFireplace = (function(_super) {
-    __extends(RenderingFireplace, _super);
-
-    function RenderingFireplace() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingFireplace.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingFireplace.prototype.createContent = function() {
-      return this.content = new PIXI.Text("F", {
-        font: "25px",
-        fill: "red"
-      });
-    };
-
-    return RenderingFireplace;
-
-  })(Renderable);
-
-  this.RenderingStash = (function(_super) {
-    __extends(RenderingStash, _super);
-
-    function RenderingStash() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingStash.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingStash.prototype.createContent = function() {
-      return this.content = new PIXI.Text("S", {
-        font: "25px",
-        fill: "white"
-      });
-    };
-
-    return RenderingStash;
-
-  })(Renderable);
-
-  this.RenderingPerson = (function(_super) {
-    __extends(RenderingPerson, _super);
-
-    function RenderingPerson() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingPerson.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingPerson.prototype.createContent = function() {
-      var content;
-      if (this.object.$type() === "woodcutter") {
-        content = "W";
-      } else if (this.object.$type() === "leader") {
-        content = "L";
-      } else if (this.object.$type() === "gatherer") {
-        content = "G";
-      } else if (this.object.$type() === "fisherman") {
-        content = "F";
-      }
-      return this.content = new PIXI.Text(content, {
-        font: "25px",
-        fill: "white"
-      });
-    };
-
-    return RenderingPerson;
-
-  })(Renderable);
-
-  this.RenderingDormitory = (function(_super) {
-    __extends(RenderingDormitory, _super);
-
-    function RenderingDormitory() {
-      this.updateSelf = __bind(this.updateSelf, this);
-      this.draw = __bind(this.draw, this);
-      this.createContent = __bind(this.createContent, this);
-      return RenderingDormitory.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingDormitory.prototype.createContent = function() {
-      if (!this.color) {
-        this.color = 0x0000FF;
-      }
-      this.content = new PIXI.Graphics();
-      return this.draw();
-    };
-
-    RenderingDormitory.prototype.draw = function() {
-      this.content.beginFill(this.color, 0.3);
-      this.content.drawRect(0, 0, 4 * this.gameWindow.tileSize, 4 * this.gameWindow.tileSize);
-      return this.content.endFill();
-    };
-
-    RenderingDormitory.prototype.updateSelf = function() {
-      if (this.object.$status() === "done") {
-        this.color = 0x6F1C1C;
-        return this.draw();
-      }
-    };
-
-    return RenderingDormitory;
-
-  })(Renderable);
+}).call(this);
+(function() {
+  jQuery(function() {
+    var gameLoop;
+    gameLoop = new GameLoop();
+    gameLoop.setup();
+    return gameLoop.startGame();
+  });
 
 }).call(this);
