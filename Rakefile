@@ -16,9 +16,13 @@ end
 desc "build coffee"
 task :build_coffee do
   # binding.pry
+  env = Sprockets::Environment.new
+  env.append_path "assets/javascripts"
+  # binding.pry
 
   File.open("assets/javascripts/index.js", "w+") do |out|
-    out << CoffeeScript.compile(File.read("assets/javascripts/index.js.coffee"))
+    out << env["index.js.coffee"]
+  #   out << CoffeeScript.compile(File.read("assets/javascripts/index.js.coffee"))
   end
   #   Dir["lib/**/*.rb"].each do |path|
   #     code = File.open(path).read

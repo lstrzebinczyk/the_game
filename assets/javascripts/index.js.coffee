@@ -1,185 +1,276 @@
-#= require renderables/test
+# window.TheGame = {}
 
-@render_people_stats = ->
-  element = $("#people")
-  element.empty()
+##= require_tree ./lib
 
-  for person in @engine.$people()
-    type   = person.$type()
-    thirst = person.$thirst()
-    hunger = person.$hunger()
-    energy = person.$energy()
-    action_description = person.$action().$description()
+class @GameEngine
+  constructor: ->
+    @engine    = Opal.TheGame.Engine.$new()
+    @stash     = new GameEngine.Stash()
+    @dormitory = new GameEngine.Dormitory()
 
-    # WOOT
-    progress = (value) ->
-      "<progress value='#{value}'></progress>"
+  people: =>
+    @engine.$people()
 
-    template = """
-    <div>
-      <div>type: #{type}</div>
-      <div>thirst: #{progress(thirst)}</div>
-      <div>hunger: #{progress(hunger)}</div>
-      <div>energy: #{progress(energy)}</div>
-      <div>action_description: #{action_description}</div>
-      <br>
-    </div>
-    """
+  mapWidth: =>
+    @engine.map.$width()
 
-    element.append(template)
+  mapHeight: =>
+    @engine.map.$height()
 
-@render_stash_stats = ->
-  element = $("#stash")
-  element.empty()
+  time: =>
+    @engine.$time().$strftime("%T")
 
-  stash = Opal.TheGame.Settlement.$instance().$stash()
+  update: =>
+    @engine.$update()
 
-  template = "<div>"
-  for type in stash.$item_types()
-    template += "<div>#{type}: #{stash.$count(type)}"
-  template += "</div>"
+  fireplace: =>
+    settlement = Opal.TheGame.Settlement.$instance()
+    settlement.$fireplace()
 
-  element.append(template)
+  eachTile: (block) =>
+    for row in @engine.$map().$grid()
+      for tile in row
+        block(tile)
+        # new RenderingTile(tile, self)
 
-@render_buildings_stats = ->
-  element = $("#buildings")
-  element.empty()
+class @GameEngine.Stash
+  constructor: ->
+    @stash = Opal.TheGame.Settlement.$instance().$stash()
 
-  dormitory = Opal.TheGame.Settlement.$instance().$dormitory()
-  unless dormitory["$nil?"]()
+  itemTypes: =>
+    @stash.$item_types()
+
+  count: (type) =>
+    @stash.$count(type)
+
+class @GameEngine.Dormitory
+  constructor: ->
+    @settlement = Opal.TheGame.Settlement.$instance()
+    # @dormitory = Opal.TheGame.Settlement.$instance().$dormitory()
+
+  isNil: =>
+    @settlement.$dormitory()["$nil?"]()
+
+  status: =>
+    @settlement.$dormitory().$status()
+
+  firewoodNeeded: =>
+    @settlement.$dormitory().$firewood_needed()
+
+  minutesLeft: =>
+    @settlement.$dormitory().$minutes_left()
+
+  dormitory: =>
+    Opal.TheGame.Settlement.$instance().$dormitory()
+
+class @GameMenu
+  constructor: (@engine) ->
+    @peopleStatsWindow    = $("#people")
+    @stashStatsWindow     = $("#stash")
+    @buildingStatsWindow  = $("#buildings")
+    @timeWindow           = $("#time")
+
+    @timeSinceLastCountUpdate      = new Date()
+    @iterationsSinceLastCountUpdate = 0
+    @turnsPerSecondWindow = $("#turns_count")
+
+  update: =>
+    @renderTime()
+    @renderBuildingsStats()
+    @renderStashStats()
+    @renderPeopleStats()
+    @renderTurnsPerSecond()
+
+  renderTime: =>
+    @timeWindow.text(@engine.time())
+
+  renderBuildingsStats: =>
+    @buildingStatsWindow.empty()
+    unless @engine.dormitory.isNil()
+      template = "<div>"
+      template += "<div>DORMITORY:</div>"
+      template += "<div>status: #{@engine.dormitory.status()}</div>"
+      if @engine.dormitory.status() == "plan"
+        template += "<div>firewood needed: #{@engine.dormitory.firewoodNeeded()}</div>"
+      if @engine.dormitory.status() == "building"
+        template += "<div>construction left: #{@engine.dormitory.minutesLeft()}</div>"
+
+      @buildingStatsWindow.append(template)
+
+  renderStashStats: =>
+    @stashStatsWindow.empty()
+
     template = "<div>"
-    template += "<div>DORMITORY:</div>"
-    template += "<div>status: #{dormitory.$status()}</div>"
-    if dormitory.$status() == "plan"
-      template += "<div>firewood needed: #{dormitory.$firewood_needed()}</div>"
-    if dormitory.$status() == "building"
-      template += "<div>construction left: #{dormitory.$minutes_left()}</div>"
+    for type in @engine.stash.itemTypes()
+      template += "<div>#{type}: #{@engine.stash.count(type)}"
+    template += "</div>"
 
+    @stashStatsWindow.append(template)
 
-    element.append(template)
+  renderPeopleStats: =>
+    @peopleStatsWindow.empty()
+    for person in @engine.people()
+      type   = person.$type()
+      thirst = person.$thirst()
+      hunger = person.$hunger()
+      energy = person.$energy()
+      action_description = person.$action().$description()
 
-  # template = """
-  # <div>
-  #   <div>type: #{type}</div>
-  #   <div>thirst: #{thirst}</div>
-  #   <div>hunger: #{hunger}</div>
-  #   <div>energy: #{energy}</div>
-  #   <div>action_description: #{action_description}</div>
-  #   <br>
-  # </div>
-  # """
+      progress = (value) ->
+        "<progress value='#{value}'></progress>"
 
-@engine = Opal.TheGame.Engine.$new()
+      template = """
+      <div>
+        <div>type: #{type}</div>
+        <div>thirst: #{progress(thirst)}</div>
+        <div>hunger: #{progress(hunger)}</div>
+        <div>energy: #{progress(energy)}</div>
+        <div>action_description: #{action_description}</div>
+        <br>
+      </div>
+      """
 
-$("#start").click =>
-  # @engine = Opal.TheGame.Engine.$new()
-  if playing
-    clearInterval(gameLoop)
-    @playing = false
-    $("#start").text("Start!")
-  else
-    @gameLoop = setInterval(updateWorld, 1000/30)
+      @peopleStatsWindow.append(template)
+
+  renderTurnsPerSecond: =>
+    @iterationsSinceLastCountUpdate += 1
+    possibleNewTime = new Date()
+    if possibleNewTime - @timeSinceLastCountUpdate > 1000
+      @timeSinceLastCountUpdate = possibleNewTime
+      @turnsPerSecondWindow.text(@iterationsSinceLastCountUpdate)
+      @iterationsSinceLastCountUpdate = 0
+
+class @GameWindow
+  constructor: (@engine) ->
+    interactive = true
+    @stage = new PIXI.Stage('000', interactive)
+
     @playing = true
-    $("#start").text("Stop!")
+    @x_offset = 0
+    @y_offset = 0
+    @change_offset = false
+
+    @width  = @engine.mapWidth()
+    @height = @engine.mapHeight()
+
+    @renderedWidth  = 14 * 4
+    @renderedHeight = 14 * 3
+
+    @tileSize = 16
+
+    @maxXOffset = (@renderedWidth  - @width ) * @tileSize
+    @maxYOffset = (@renderedHeight - @height) * @tileSize
+
+    @renderer = PIXI.autoDetectRenderer(@renderedWidth*@tileSize, @renderedHeight*@tileSize)
+
+    @updatable = []
+
+  update: =>
+    unless @engine.dormitory.isNil()
+      unless @renderingDormitory
+        @renderingDormitory = new RenderingDormitory(@engine.dormitory.dormitory(), @)
+
+    for object in @updatable
+      object.update()
+
+  render: =>
+    @renderer.render(@stage)
+
+  addChild: (child) =>
+    @stage.addChild(child.content)
+    @updatable.push(child)
+
+  removeChild: (child) =>
+    @stage.removeChild(child.content)
+    child.content = null
+
+  setup: =>
+    $("#view").append(@renderer.view)
+
+    @engine.eachTile (tile) =>
+      new RenderingTile(tile, @)
+
+    new RenderingFireplace(@engine.fireplace(), @)
+    new RenderingStash(@engine.stash.stash, @)
+
+    for person in @engine.people()
+      new RenderingPerson(person, @)
+
+    # for row in @engine.$map().$grid()
+    #   for tile in row
+
+    @stage.mousemove = (data) =>
+      if @change_offset
+        x = data.originalEvent.movementX
+        y = data.originalEvent.movementY
+        @x_offset += x
+        @y_offset += y
+        @x_offset = 0 if @x_offset > 0
+        @y_offset = 0 if @y_offset > 0
+        @x_offset = @maxXOffset if @x_offset < @maxXOffset
+        @y_offset = @maxYOffset if @y_offset < @maxYOffset
+
+      unless @playing
+        @update()
+        @render()
+
+    @stage.mouseup = =>
+      @change_offset = false
+
+    @stage.mouseupoutside = =>
+      @change_offset = false
+
+    @stage.mousedown = =>
+      @change_offset = true
 
 
-render_people_stats()
+class @GameLoop
+  constructor: ->
+    @gameEngine = new GameEngine()
+    @gameMenu   = new GameMenu(@gameEngine)
+    @gameWindow = new GameWindow(@gameEngine)
 
-@now = new Date
-@iterations = 0
+    @startButton = $("#start")
 
-@render_turns_per_second = =>
-  @iterations += 1
-  new_now = new Date()
-  if new_now - @now > 1000
-    @now = new_now
-    $("#turns_count").text(@iterations)
-    @iterations = 0
+  setup: =>
+    @startButton.click =>
+      if @playing
+        @stopGame()
+      else
+        @startGame()
 
-@render_time = ->
-  time = engine.$time().$strftime("%T")
-  $("#time").text(time)
+    @gameWindow.setup()
 
-@updateWorld = ->
-  engine.$update()
-  render_people_stats()
-  render_turns_per_second()
-  render_stash_stats()
-  render_time()
-  render_buildings_stats()
-  updateRenderObjects()
-  renderer.render(stage)
+  update: =>
+    @gameEngine.update()
+    @gameMenu.update()
+    @gameWindow.update()
+    @gameWindow.render()
 
+  startGame: =>
+    @gameLoop = setInterval(@update, 1000/30)
+    @playing = true
+    @startButton.text("Stop!")
 
-@gameLoop = setInterval(updateWorld, 1000/30)
-@playing = true
+  stopGame: =>
+    clearInterval(@gameLoop)
+    @playing = false
+    @startButton.text("Start!")
 
-interactive = true
-
-# init black stage
-@stage = new PIXI.Stage('000', interactive)
-
-@x_offset = 0
-@y_offset = 0
-@change_offset = false
-
-@width  = engine.map.$width()
-@height = engine.map.$height()
-
-
-@renderedWidth  = 14 * 4
-@renderedHeight = 14 * 3
-
-@tileSize = 16
-
-@maxXOffset = (@renderedWidth  - @width ) * @tileSize
-@maxYOffset = (@renderedHeight - @height) * @tileSize
-
-stage.mousemove = (data) =>
-  if @change_offset
-    x = data.originalEvent.movementX
-    y = data.originalEvent.movementY
-    @x_offset += x
-    @y_offset += y
-    @x_offset = 0 if @x_offset > 0
-    @y_offset = 0 if @y_offset > 0
-    @x_offset = @maxXOffset if @x_offset < @maxXOffset
-    @y_offset = @maxYOffset if @y_offset < @maxYOffset
-
-  unless @playing
-    updateRenderObjects()
-    renderer.render(stage)
-
-stage.mouseup = =>
-  @change_offset = false
-
-stage.mouseupoutside = =>
-  @change_offset = false
-
-stage.mousedown = =>
-  @change_offset = true
-
-# create a renderer instance.
-renderer = PIXI.autoDetectRenderer(renderedWidth*tileSize, renderedHeight*tileSize)
-
-# document.body.appendChild(renderer.view)
-$("#view").append(renderer.view)
-
-# requestAnimFrame( animate )
-
-updatable = []
+jQuery ->
+  gameLoop = new GameLoop()
+  gameLoop.setup()
+  gameLoop.startGame()
 
 class @Renderable
-  constructor: (@object) ->
+  constructor: (@object, @gameWindow) ->
     @createContent()
 
     # cache these so that you don't have to ask window for them
-    @renderedWidth = renderedWidth
-    @renderedHeight = renderedHeight
+    @renderedWidth  = @gameWindow.renderedWidth
+    @renderedHeight = @gameWindow.renderedHeight
 
-
-    stage.addChild(@content)
-    updatable.push(@)
+    @gameWindow.addChild(@)
 
   update: =>
     if @isWithinView()
@@ -188,7 +279,7 @@ class @Renderable
         @updateContentPosition()
       else
         @createContent()
-        stage.addChild(@content)
+        @gameWindow.stage.addChild(@content)
         @updateContentPosition()
     else
       if @content
@@ -197,18 +288,17 @@ class @Renderable
   updateSelf: ->
 
   isWithinView: =>
-    @object.$y() * tileSize >= - window.x_offset and
-    @object.$y() * tileSize < - window.x_offset + @renderedWidth*tileSize and
-    @object.$x() * tileSize >= - window.y_offset and
-    @object.$x() * tileSize < - window.y_offset + @renderedHeight*tileSize
+    @object.$y() * @gameWindow.tileSize >= - @gameWindow.x_offset and
+    @object.$y() * @gameWindow.tileSize < - @gameWindow.x_offset + @renderedWidth*@gameWindow.tileSize and
+    @object.$x() * @gameWindow.tileSize >= - @gameWindow.y_offset and
+    @object.$x() * @gameWindow.tileSize < - @gameWindow.y_offset + @renderedHeight*@gameWindow.tileSize
 
   removeContent: =>
-    stage.removeChild(@content)
-    @content = null
+    @gameWindow.removeChild(@)
 
   updateContentPosition: =>
-    @content.position.x = @object.$y() * tileSize + window.x_offset
-    @content.position.y = @object.$x() * tileSize + window.y_offset
+    @content.position.x = @object.$y() * @gameWindow.tileSize + @gameWindow.x_offset
+    @content.position.y = @object.$x() * @gameWindow.tileSize + @gameWindow.y_offset
 
 class @RenderingTile extends Renderable
   createContent: =>
@@ -220,7 +310,7 @@ class @RenderingTile extends Renderable
     unless @object["$updated?"]()
       @removeContent()
       @createContent()
-      stage.addChild(@content)
+      @gameWindow.stage.addChild(@content)
       @object["$updated!"]()
 
   setData: =>
@@ -251,26 +341,15 @@ class @RenderingTile extends Renderable
         @contentString = "."
         @contentColor   = "white"
 
-for row in engine.$map().$grid()
-  for tile in row
-    new RenderingTile(tile)
-
-# SETUP RENDERING SETTLEMENT
-settlement = Opal.TheGame.Settlement.$instance()
-
 class @RenderingFireplace extends Renderable
   createContent: =>
     @content = new PIXI.Text("F", {font: "25px", fill: "red"})
-
-new RenderingFireplace(settlement.$fireplace())
 
 class @RenderingStash extends Renderable
   createContent: =>
     @content = new PIXI.Text("S", {font: "25px", fill: "white"})
 
-new RenderingStash(settlement.$stash())
-
-class RenderingPerson extends Renderable
+class @RenderingPerson extends Renderable
   createContent: =>
     if @object.$type() == "woodcutter"
       content = "W"
@@ -283,49 +362,18 @@ class RenderingPerson extends Renderable
 
     @content = new PIXI.Text(content, {font: "25px", fill: "white"})
 
-for person in engine.$people()
-  new RenderingPerson(person)
-
-class RenderingDormitory extends Renderable
+class @RenderingDormitory extends Renderable
   createContent: =>
     @color = 0x0000FF unless @color
     @content = new PIXI.Graphics()
     @draw()
 
   draw: =>
-    # console.log @tileSize
     @content.beginFill(@color, 0.3)
-    @content.drawRect(0, 0, 4 * tileSize, 4 * tileSize)
+    @content.drawRect(0, 0, 4 * @gameWindow.tileSize, 4 * @gameWindow.tileSize)
     @content.endFill()
 
   updateSelf: =>
     if @object.$status() == "done"
       @color = 0x6F1C1C
       @draw()
-
-  # updateContentPosition: =>
-  #   @content.position.x = @object.$y() * @tileSize + window.x_offset
-  #   @content.position.y = @object.$x() * @tileSize + window.y_offset
-
-@updateRenderObjects = =>
-  unless settlement.$dormitory()["$nil?"]()
-    unless @renderingDormitory
-      dormitory = settlement.$dormitory()
-      @renderingDormitory = new RenderingDormitory(dormitory)
-
-  for object in updatable
-    object.update()
-
-# `
-#     function animate() {
-
-#         requestAnimFrame( animate );
-
-#         // just for fun, lets rotate mr rabbit a little
-#         // bunny.rotation += 0.1;
-
-
-#         // render the stage
-#         renderer.render(stage);
-#     }
-# `
