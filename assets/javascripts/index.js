@@ -3,6 +3,7 @@
 
   this.GameEngine = (function() {
     function GameEngine() {
+      this.findTile = __bind(this.findTile, this);
       this.eachPerson = __bind(this.eachPerson, this);
       this.eachTile = __bind(this.eachTile, this);
       this.update = __bind(this.update, this);
@@ -67,6 +68,10 @@
         _results.push(block(person));
       }
       return _results;
+    };
+
+    GameEngine.prototype.findTile = function(x, y) {
+      return this.engine.$map().$fetch(x, y);
     };
 
     return GameEngine;
@@ -442,8 +447,15 @@
         };
       })(this);
       return this.stage.mousedown = (function(_this) {
-        return function() {
-          return _this.change_offset = true;
+        return function(mouseData) {
+          var map_x, map_y, mouse_x, mouse_y, tile;
+          _this.change_offset = true;
+          mouse_x = mouseData.global.x;
+          mouse_y = mouseData.global.y;
+          map_x = parseInt(mouse_x / _this.tileSize);
+          map_y = parseInt(mouse_y / _this.tileSize);
+          tile = _this.engine.findTile(map_y, map_x);
+          return console.log(tile);
         };
       })(this);
     };
