@@ -36,6 +36,16 @@ class TheGame
       @inventory.get(type)
     end
 
+    def eat(food)
+      #assume this will be called as many times, as many minutes the person will eat
+      @hunger += food.hunger_per_minute_added
+    end
+
+    def drink(food)
+      #assume this will be called as many times, as many minutes the person will drink
+      @thirst += food.thirst_per_minute_added
+    end
+
     def can_carry_more?(item_type)
       if item_type != :firewood
         raise "I wasn't expecting that"
