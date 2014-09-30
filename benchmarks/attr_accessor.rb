@@ -15,56 +15,48 @@ class Definer
 end
 
 time_begin = Time.now
-iterations = 0
 accessor = Accessor.new
 
-while Time.now - time_begin < 2
+10000000.times do
   accessor.field
-  iterations += 1
 end
 
-accessor_read = iterations
+accessor_read = Time.now - time_begin
 
-p "Accessor#field: #{iterations}"
+p "Accessor#field: #{accessor_read}"
 
 time_begin = Time.now
-iterations = 0
 accessor = Accessor.new
 
-while Time.now - time_begin < 2
+10000000.times do
   accessor.field = nil
-  iterations += 1
 end
 
-accessor_write = iterations
+accessor_write = Time.now - time_begin
 
-p "Accessor#field=: #{iterations}"
+p "Accessor#field=: #{accessor_write}"
 
 time_begin = Time.now
-iterations = 0
 definer = Definer.new
 
-while Time.now - time_begin < 2
+10000000.times do
   definer.field
-  iterations += 1
 end
 
-definer_read = iterations
+accessor_read = Time.now - time_begin
 
-p "Definer#field: #{iterations}"
+p "Definer#field: #{accessor_read}"
 
 time_begin = Time.now
-iterations = 0
 definer = Definer.new
 
-while Time.now - time_begin < 2
+10000000.times do
   definer.field = nil
-  iterations += 1
 end
 
-definer_write = iterations
+definer_write = Time.now - time_begin
 
-p "Definer#field=: #{iterations}"
+p "Definer#field=: #{definer_write}"
 
-p "Definer write is #{definer_write.to_f / accessor_write} times faster"
-p "Definer read is #{definer_read.to_f / accessor_read} times faster"
+# p "Definer write is #{definer_write.to_f / accessor_write} times faster"
+# p "Definer read is #{definer_read.to_f / accessor_read} times faster"
