@@ -11810,7 +11810,7 @@ if (food == null) food = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $module = $opal.module;
 
-  $opal.add_stubs(['$attr_reader', '$send', '$to_proc', '$to_f', '$to_i', '$<', '$distance_to', '$sqrt', '$+', '$**', '$-', '$x', '$y', '$new', '$x=', '$>', '$y=']);
+  $opal.add_stubs(['$attr_accessor', '$send', '$to_proc', '$<', '$distance_to', '$sqrt', '$+', '$**', '$-', '$x', '$y', '$new', '$x=', '$>', '$y=']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -11829,7 +11829,7 @@ if (food == null) food = nil;
         var def = self._proto, $scope = self._scope, TMP_1;
 
         def.parent = nil;
-        self.$attr_reader("x", "y");
+        self.$attr_accessor("x", "y");
 
         def.$initialize = function(x, y, parent) {
           var self = this;
@@ -11848,31 +11848,7 @@ if (food == null) food = nil;
         }, nil) && 'method_missing';
       })(self, null);
 
-      def['$x='] = function(x) {
-        var self = this;
-
-        return self.x = x.$to_f();
-      };
-
-      def['$y='] = function(y) {
-        var self = this;
-
-        return self.y = y.$to_f();
-      };
-
-      def.$x = function() {
-        var self = this;
-        if (self.x == null) self.x = nil;
-
-        return self.x.$to_i();
-      };
-
-      def.$y = function() {
-        var self = this;
-        if (self.y == null) self.y = nil;
-
-        return self.y.$to_i();
-      };
+      self.$attr_accessor("x", "y");
 
       def.$close_enough_to = function(object) {
         var self = this;
@@ -11907,7 +11883,7 @@ if (food == null) food = nil;
           return nil
         };
       };
-            ;$opal.donate(self, ["$x=", "$y=", "$x", "$y", "$close_enough_to", "$distance_to", "$position", "$go_to"]);
+            ;$opal.donate(self, ["$close_enough_to", "$distance_to", "$position", "$go_to"]);
     })(self)
   })(self, null)
 })(Opal);

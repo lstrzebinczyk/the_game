@@ -289,7 +289,7 @@
       this.gameMenu = new GameMenu(this.gameEngine);
       this.gameWindow = new GameWindow(this.gameEngine);
       this.startButton = $("#start");
-      this.expectedTurnsPerSecond = 30;
+      this.expectedTurnsPerSecond = 120;
     }
 
     GameLoop.prototype.setup = function() {

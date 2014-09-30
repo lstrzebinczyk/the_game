@@ -1,5 +1,3 @@
-
-
 class TheGame
   module HasPosition
     class Position
@@ -8,7 +6,7 @@ class TheGame
       # or a place inside the dormitory (so we avoid people sleeping inside the walls)
 
 
-      attr_reader :x, :y
+      attr_accessor :x, :y
 
       def initialize(x, y, parent)
         @x = x
@@ -21,21 +19,7 @@ class TheGame
       end
     end
 
-    def x=(x)
-      @x = x.to_f
-    end
-
-    def y=(y)
-      @y = y.to_f
-    end
-
-    def x
-      @x.to_i
-    end
-
-    def y
-      @y.to_i
-    end
+    attr_accessor :x, :y
 
     def close_enough_to(object)
       distance_to(object) < 2.0
