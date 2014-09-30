@@ -14777,7 +14777,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
 
-  $opal.add_stubs(['$[]', '$==', '$type', '$content', '$add', '$inventory', '$content=', '$then', '$create', '$description=', '$description']);
+  $opal.add_stubs(['$[]', '$==', '$type', '$content', '$add', '$inventory', '$content=', '$marked_for_cleaning?', '$cleaned!', '$then', '$create', '$description=', '$description']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -14818,12 +14818,17 @@ if (tile == null) tile = nil;
           };
 
           return (def.$perform = function(person, map, time_in_minutes) {
-            var self = this, content = nil;
+            var $a, self = this, content = nil;
 
             if (self.from.$content().$type()['$=='](self.item_type)) {
               content = self.from.$content();
               person.$inventory().$add(content);
-              return self.from['$content='](nil);
+              self.from['$content='](nil);
+              if ((($a = self.from['$marked_for_cleaning?']()) !== nil && (!$a._isBoolean || $a == true))) {
+                return self.from['$cleaned!']()
+                } else {
+                return nil
+              };
               } else {
               return nil
             };
