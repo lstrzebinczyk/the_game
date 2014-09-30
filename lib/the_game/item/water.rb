@@ -2,8 +2,8 @@ class TheGame
   class Item
     class Water
       def thirst_per_minute_added
-        # no reason. just guessing the right value
-        0.05
+        # one water unit is 0.1 ml. 2 liters per day are needed.
+        0.0139
       end
 
       def type

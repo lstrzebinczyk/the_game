@@ -12762,7 +12762,7 @@ if (tile == null) tile = nil;
         def.$thirst_per_minute_added = function() {
           var self = this;
 
-          return 0.05;
+          return 0.0139;
         };
 
         return (def.$type = function() {
@@ -13255,7 +13255,7 @@ if (action == null) action = nil;
       def.$update_thirst = function(minutes) {
         var self = this;
 
-        self.thirst = self.thirst['$-'](minutes['$/'](((8.0)['$*'](60))));
+        self.thirst = self.thirst['$-'](minutes['$/'](((24.0)['$*'](60))));
         if (self.thirst['$<'](0)) {
           return self.thirst = 0
           } else {
@@ -13277,7 +13277,7 @@ if (action == null) action = nil;
       def['$thirsty?'] = function() {
         var self = this;
 
-        return self.$thirst()['$<'](0.5);
+        return self.$thirst()['$<'](0.65);
       };
 
       def['$done_drinking?'] = function() {
@@ -13295,7 +13295,7 @@ if (action == null) action = nil;
       return (def['$sleepy?'] = function() {
         var self = this;
 
-        return self.$energy()['$<'](0.02);
+        return self.$energy()['$<'](0.1);
       }, nil) && 'sleepy?';
     })(self, null)
   })(self, null)

@@ -89,8 +89,9 @@ class TheGame
 
     def update_thirst(minutes)
       # assume third a day is full thirst bar
+      # full bar is 2 liters per day
 
-      @thirst -= minutes / (8.0 * 60)
+      @thirst -= minutes / (24.0 * 60)
       if @thirst < 0
         @thirst = 0
       end
@@ -111,7 +112,7 @@ class TheGame
     end
 
     def thirsty?
-      thirst < 0.5
+      thirst < 0.65
     end
 
     def done_drinking?
@@ -123,7 +124,7 @@ class TheGame
     end
 
     def sleepy?
-      energy < 0.02
+      energy < 0.1
     end
   end
 end
