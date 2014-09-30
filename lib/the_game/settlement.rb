@@ -17,11 +17,7 @@ class TheGame
       @stuff_to_bring = []
     end
 
-    # job types:
-    # :haul, :management, :woodcutting, :gatherer
     def get_job(person)
-      #check if fireplace will provide you with a job
-
       person.accepted_jobs.each do |job_type|
         if job_type == :survival and !@fireplace.fire_is_ok? and @stash.has?(:firewood)
           return Action::CheckFireplace.create()
@@ -48,19 +44,12 @@ class TheGame
             tile = @dormitory.tile_for_cleaning(:haul)
             action = Action::Supply.create(@stash, with: :firewood, from: tile.content)
             return action
-            # return Action::Get.create(:firewood, from: tile.content).then(Action::Carry.create(:firewood, to: @stash))
           elsif @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
             action = Action::Supply.create(@dormitory, with: :firewood, from: @stash)
             return action
           elsif @stuff_to_bring.any?
             stuff = @stuff_to_bring.first
             return Action::MoveContent.create(:log, from: stuff, to: @stash)
-
-            # return Action::Get.create(:firewood, from: @stash).then(Action::Carry.create(:firewood, to: @dormitory))
-          # elsif @fallen_trees.any?
-          #   action = Action::Supply.create(@stash, with: :firewood, from: @fallen_trees.first)
-          #   return action
-          #   # return Action::Get.create(:firewood, from: @fallen_trees.first).then(Action::Carry.create(:firewood, to: @stash))
           end
         elsif job_type == :management
           if @dormitory.nil?

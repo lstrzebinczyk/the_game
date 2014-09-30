@@ -7,13 +7,6 @@ class TheGame
       ITEM_TYPES.each do |type|
         @content[type] = []
       end
-
-      # @content[:berries]     = []
-      # @content[:axe]         = []
-      # @content[:firewood]    = []
-      # @content[:fishing_rod] = []
-      # @content[:fish]        = []
-      # @content[:cooked_fish] = []
     end
 
     def item_types
