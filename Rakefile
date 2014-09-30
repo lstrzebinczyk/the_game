@@ -22,3 +22,13 @@ task :build_coffee do
     out << env["index.js.coffee"]
   end
 end
+
+desc "build benchmarks"
+task :build_benchmarks do
+  File.open("benchmarks/attr_accessor.js", "w+") do |out|
+    env = Opal::Environment.new
+    env.append_path "benchmarks"
+
+    out << env["attr_accessor"].to_s
+  end
+end
