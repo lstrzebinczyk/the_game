@@ -27,7 +27,7 @@ class @GameWindow
   update: =>
     unless @engine.dormitory.isNil()
       unless @renderingDormitory
-        @renderingDormitory = new RenderingDormitory(@engine.dormitory.dormitory(), @)
+        @renderingDormitory = new RenderingDormitory(@engine.dormitory, @)
 
     for object in @updatable
       object.update()

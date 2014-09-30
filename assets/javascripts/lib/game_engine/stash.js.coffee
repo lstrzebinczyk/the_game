@@ -8,9 +8,9 @@ class @GameEngine.Stash
   count: (type) =>
     @stash.$count(type)
 
-  $x: =>
+  x: =>
     @stash.$x()
 
-  $y: =>
+  y: =>
     @stash.$y()
 

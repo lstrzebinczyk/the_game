@@ -13,24 +13,11 @@ class TheGame
       def mark_for_cleaning!
         unless empty?
           @mark_for_cleaning = true
-          need_update!
         end
       end
 
       def cleaned!
         @mark_for_cleaning = false
-      end
-
-      def updated?
-        @updated
-      end
-
-      def need_update!
-        @updated = false
-      end
-
-      def updated!
-        @updated = true
       end
 
       def marked_for_cleaning?
@@ -53,16 +40,13 @@ class TheGame
         if @content.is_a? Construction::FallenTree and @content.empty?
           @content = nil
           cleaned! if marked_for_cleaning?
-          need_update!
         elsif @content.is_a? Nature::BerriesBush and @content.empty?
           @content = nil
           cleaned! if marked_for_cleaning?
-          need_update!
         elsif @content.is_a? Nature::Tree and @content.cut?
           fallen_tree = TheGame::Construction::FallenTree.new(@x, @y)
           @content = fallen_tree
           Settlement.instance.fallen_trees << fallen_tree
-          need_update!
         end
       end
     end

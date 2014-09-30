@@ -9,7 +9,7 @@
       this.time = __bind(this.time, this);
       this.mapHeight = __bind(this.mapHeight, this);
       this.mapWidth = __bind(this.mapWidth, this);
-      var person, _i, _len, _ref;
+      var person, row, tile, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
       this.engine = Opal.TheGame.Engine.$new();
       this.stash = new GameEngine.Stash();
       this.dormitory = new GameEngine.Dormitory();
@@ -19,6 +19,15 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         person = _ref[_i];
         this.people.push(new GameEngine.Person(person));
+      }
+      this.tiles = [];
+      _ref1 = this.engine.$map().$grid();
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        row = _ref1[_j];
+        for (_k = 0, _len2 = row.length; _k < _len2; _k++) {
+          tile = row[_k];
+          this.tiles.push(new GameEngine.Tile(tile));
+        }
       }
     }
 
@@ -39,20 +48,12 @@
     };
 
     GameEngine.prototype.eachTile = function(block) {
-      var row, tile, _i, _len, _ref, _results;
-      _ref = this.engine.$map().$grid();
+      var tile, _i, _len, _ref, _results;
+      _ref = this.tiles;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        row = _ref[_i];
-        _results.push((function() {
-          var _j, _len1, _results1;
-          _results1 = [];
-          for (_j = 0, _len1 = row.length; _j < _len1; _j++) {
-            tile = row[_j];
-            _results1.push(block(tile));
-          }
-          return _results1;
-        })());
+        tile = _ref[_i];
+        _results.push(block(tile));
       }
       return _results;
     };
@@ -78,6 +79,8 @@
 
   this.GameEngine.Dormitory = (function() {
     function Dormitory() {
+      this.y = __bind(this.y, this);
+      this.x = __bind(this.x, this);
       this.dormitory = __bind(this.dormitory, this);
       this.minutesLeft = __bind(this.minutesLeft, this);
       this.firewoodNeeded = __bind(this.firewoodNeeded, this);
@@ -106,6 +109,14 @@
       return Opal.TheGame.Settlement.$instance().$dormitory();
     };
 
+    Dormitory.prototype.x = function() {
+      return this.settlement.$dormitory().$x();
+    };
+
+    Dormitory.prototype.y = function() {
+      return this.settlement.$dormitory().$y();
+    };
+
     return Dormitory;
 
   })();
@@ -116,16 +127,16 @@
 
   this.GameEngine.Fireplace = (function() {
     function Fireplace() {
-      this.$y = __bind(this.$y, this);
-      this.$x = __bind(this.$x, this);
+      this.y = __bind(this.y, this);
+      this.x = __bind(this.x, this);
       this.fireplace = Opal.TheGame.Settlement.$instance().$fireplace();
     }
 
-    Fireplace.prototype.$x = function() {
+    Fireplace.prototype.x = function() {
       return this.fireplace.$x();
     };
 
-    Fireplace.prototype.$y = function() {
+    Fireplace.prototype.y = function() {
       return this.fireplace.$y();
     };
 
@@ -140,8 +151,8 @@
   this.GameEngine.Person = (function() {
     function Person(person) {
       this.person = person;
-      this.$y = __bind(this.$y, this);
-      this.$x = __bind(this.$x, this);
+      this.y = __bind(this.y, this);
+      this.x = __bind(this.x, this);
       this.actionDescription = __bind(this.actionDescription, this);
       this.energy = __bind(this.energy, this);
       this.hunger = __bind(this.hunger, this);
@@ -169,11 +180,11 @@
       return this.person.$action().$description();
     };
 
-    Person.prototype.$x = function() {
+    Person.prototype.x = function() {
       return this.person.$x();
     };
 
-    Person.prototype.$y = function() {
+    Person.prototype.y = function() {
       return this.person.$y();
     };
 
@@ -187,8 +198,8 @@
 
   this.GameEngine.Stash = (function() {
     function Stash() {
-      this.$y = __bind(this.$y, this);
-      this.$x = __bind(this.$x, this);
+      this.y = __bind(this.y, this);
+      this.x = __bind(this.x, this);
       this.count = __bind(this.count, this);
       this.itemTypes = __bind(this.itemTypes, this);
       this.stash = Opal.TheGame.Settlement.$instance().$stash();
@@ -202,15 +213,65 @@
       return this.stash.$count(type);
     };
 
-    Stash.prototype.$x = function() {
+    Stash.prototype.x = function() {
       return this.stash.$x();
     };
 
-    Stash.prototype.$y = function() {
+    Stash.prototype.y = function() {
       return this.stash.$y();
     };
 
     return Stash;
+
+  })();
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  this.GameEngine.Tile = (function() {
+    function Tile(tile) {
+      this.tile = tile;
+      this.y = __bind(this.y, this);
+      this.x = __bind(this.x, this);
+      this.updated = __bind(this.updated, this);
+      this.isUpdated = __bind(this.isUpdated, this);
+      this.contentName = __bind(this.contentName, this);
+      this.isMarkedForCleaning = __bind(this.isMarkedForCleaning, this);
+      this.cachedContentName = this.contentName();
+      this.cachedIsMarkedForCleaning = this.isMarkedForCleaning();
+    }
+
+    Tile.prototype.isMarkedForCleaning = function() {
+      return this.tile["$marked_for_cleaning?"]();
+    };
+
+    Tile.prototype.contentName = function() {
+      if (this.tile.$terrain() === "river") {
+        return "river";
+      } else {
+        return this.tile.$content().constructor.name;
+      }
+    };
+
+    Tile.prototype.isUpdated = function() {
+      return (this.cachedContentName !== this.contentName()) || (this.cachedIsMarkedForCleaning !== this.isMarkedForCleaning());
+    };
+
+    Tile.prototype.updated = function() {
+      this.cachedContentName = this.contentName();
+      return this.cachedIsMarkedForCleaning = this.isMarkedForCleaning();
+    };
+
+    Tile.prototype.x = function() {
+      return this.tile.$x();
+    };
+
+    Tile.prototype.y = function() {
+      return this.tile.$y();
+    };
+
+    return Tile;
 
   })();
 
@@ -228,6 +289,7 @@
       this.gameMenu = new GameMenu(this.gameEngine);
       this.gameWindow = new GameWindow(this.gameEngine);
       this.startButton = $("#start");
+      this.expectedTurnsPerSecond = 30;
     }
 
     GameLoop.prototype.setup = function() {
@@ -251,7 +313,7 @@
     };
 
     GameLoop.prototype.startGame = function() {
-      this.gameLoop = setInterval(this.update, 1000 / 30);
+      this.gameLoop = setInterval(this.update, 1000 / this.expectedTurnsPerSecond);
       this.playing = true;
       this.gameWindow.playing = true;
       return this.startButton.text("Stop!");
@@ -302,7 +364,7 @@
       var object, _i, _len, _ref, _results;
       if (!this.engine.dormitory.isNil()) {
         if (!this.renderingDormitory) {
-          this.renderingDormitory = new RenderingDormitory(this.engine.dormitory.dormitory(), this);
+          this.renderingDormitory = new RenderingDormitory(this.engine.dormitory, this);
         }
       }
       _ref = this.updatable;
@@ -526,7 +588,7 @@
     Renderable.prototype.updateSelf = function() {};
 
     Renderable.prototype.isWithinView = function() {
-      return this.object.$y() * this.gameWindow.tileSize >= -this.gameWindow.x_offset && this.object.$y() * this.gameWindow.tileSize < -this.gameWindow.x_offset + this.renderedWidth * this.gameWindow.tileSize && this.object.$x() * this.gameWindow.tileSize >= -this.gameWindow.y_offset && this.object.$x() * this.gameWindow.tileSize < -this.gameWindow.y_offset + this.renderedHeight * this.gameWindow.tileSize;
+      return this.object.y() * this.gameWindow.tileSize >= -this.gameWindow.x_offset && this.object.y() * this.gameWindow.tileSize < -this.gameWindow.x_offset + this.renderedWidth * this.gameWindow.tileSize && this.object.x() * this.gameWindow.tileSize >= -this.gameWindow.y_offset && this.object.x() * this.gameWindow.tileSize < -this.gameWindow.y_offset + this.renderedHeight * this.gameWindow.tileSize;
     };
 
     Renderable.prototype.removeContent = function() {
@@ -534,8 +596,8 @@
     };
 
     Renderable.prototype.updateContentPosition = function() {
-      this.content.position.x = this.object.$y() * this.gameWindow.tileSize + this.gameWindow.x_offset;
-      return this.content.position.y = this.object.$x() * this.gameWindow.tileSize + this.gameWindow.y_offset;
+      this.content.position.x = this.object.y() * this.gameWindow.tileSize + this.gameWindow.x_offset;
+      return this.content.position.y = this.object.x() * this.gameWindow.tileSize + this.gameWindow.y_offset;
     };
 
     return Renderable;
@@ -573,7 +635,7 @@
     };
 
     RenderingDormitory.prototype.updateSelf = function() {
-      if (this.object.$status() === "done") {
+      if (this.object.status() === "done") {
         this.color = 0x6F1C1C;
         return this.draw();
       }
@@ -694,37 +756,37 @@
     };
 
     RenderingTile.prototype.updateSelf = function() {
-      if (!this.object["$updated?"]()) {
+      if (this.object.isUpdated()) {
         this.removeContent();
         this.createContent();
         this.gameWindow.stage.addChild(this.content);
-        return this.object["$updated!"]();
+        return this.object.updated();
       }
     };
 
     RenderingTile.prototype.setData = function() {
-      if (this.object["$marked_for_cleaning?"]()) {
-        if (this.object.$content().constructor.name === "$Tree") {
+      if (this.object.isMarkedForCleaning()) {
+        if (this.object.contentName() === "$Tree") {
           this.contentString = "t";
           return this.contentColor = "red";
-        } else if (this.object.$content().constructor.name === "$FallenTree") {
+        } else if (this.object.contentName() === "$FallenTree") {
           this.contentString = "/";
           return this.contentColor = "red";
-        } else if (this.object.$content().constructor.name === "$BerriesBush") {
+        } else if (this.object.contentName() === "$BerriesBush") {
           this.contentString = "#";
           return this.contentColor = "red";
         }
       } else {
-        if (this.object.$content().constructor.name === "$Tree") {
+        if (this.object.contentName() === "$Tree") {
           this.contentString = "t";
           return this.contentColor = "green";
-        } else if (this.object.$content().constructor.name === "$FallenTree") {
+        } else if (this.object.contentName() === "$FallenTree") {
           this.contentString = "/";
           return this.contentColor = "green";
-        } else if (this.object.$content().constructor.name === "$BerriesBush") {
+        } else if (this.object.contentName() === "$BerriesBush") {
           this.contentString = "#";
           return this.contentColor = "yellow";
-        } else if (this.object.$terrain() === "river") {
+        } else if (this.object.contentName() === "river") {
           this.contentString = "~";
           return this.contentColor = "blue";
         } else {

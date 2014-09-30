@@ -5,34 +5,34 @@ class @RenderingTile extends Renderable
     @updateContentPosition()
 
   updateSelf: =>
-    unless @object["$updated?"]()
+    if @object.isUpdated()
       @removeContent()
       @createContent()
       @gameWindow.stage.addChild(@content)
-      @object["$updated!"]()
+      @object.updated()
 
   setData: =>
-    if @object["$marked_for_cleaning?"]()
-      if @object.$content().constructor.name == "$Tree"
+    if @object.isMarkedForCleaning()
+      if @object.contentName() == "$Tree"
         @contentString = "t"
         @contentColor   = "red"
-      else if @object.$content().constructor.name == "$FallenTree"
+      else if @object.contentName() == "$FallenTree"
         @contentString = "/"
         @contentColor   = "red"
-      else if @object.$content().constructor.name == "$BerriesBush"
+      else if @object.contentName() == "$BerriesBush"
         @contentString = "#"
         @contentColor   = "red"
     else
-      if @object.$content().constructor.name == "$Tree"
+      if @object.contentName() == "$Tree"
         @contentString = "t"
         @contentColor = "green"
-      else if @object.$content().constructor.name == "$FallenTree"
+      else if @object.contentName() == "$FallenTree"
         @contentString = "/"
         @contentColor = "green"
-      else if @object.$content().constructor.name == "$BerriesBush"
+      else if @object.contentName() == "$BerriesBush"
         @contentString = "#"
         @contentColor = "yellow"
-      else if @object.$terrain() == "river"
+      else if @object.contentName() == "river"
         @contentString = "~"
         @contentColor   = "blue"
       else

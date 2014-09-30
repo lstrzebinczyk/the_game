@@ -6,6 +6,8 @@ class @GameLoop
 
     @startButton = $("#start")
 
+    @expectedTurnsPerSecond = 30
+
   setup: =>
     @startButton.click =>
       if @playing
@@ -22,7 +24,7 @@ class @GameLoop
     @gameWindow.render()
 
   startGame: =>
-    @gameLoop = setInterval(@update, 1000/30)
+    @gameLoop = setInterval(@update, 1000/@expectedTurnsPerSecond)
     @playing = true
     @gameWindow.playing = true
     @startButton.text("Stop!")

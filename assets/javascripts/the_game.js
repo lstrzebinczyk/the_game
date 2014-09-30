@@ -12843,7 +12843,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$empty?', '$need_update!', '$==', '$nil?', '$is_a?', '$marked_for_cleaning?', '$cleaned!', '$cut?', '$new', '$<<', '$fallen_trees', '$instance']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$empty?', '$==', '$nil?', '$is_a?', '$marked_for_cleaning?', '$cleaned!', '$cut?', '$new', '$<<', '$fallen_trees', '$instance']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12862,7 +12862,7 @@ if (column_index == null) column_index = nil;
 
         var def = self._proto, $scope = self._scope, $a, $b;
 
-        def.updated = def.mark_for_cleaning = def.terrain = def.content = def.x = def.y = nil;
+        def.mark_for_cleaning = def.terrain = def.content = def.x = def.y = nil;
         self.$include((($a = ((($b = $scope.TheGame) == null ? $opal.cm('TheGame') : $b))._scope).HasPosition == null ? $a.cm('HasPosition') : $a.HasPosition));
 
         self.$attr_accessor("content", "terrain");
@@ -12880,8 +12880,7 @@ if (column_index == null) column_index = nil;
           if ((($a = self['$empty?']()) !== nil && (!$a._isBoolean || $a == true))) {
             return nil
             } else {
-            self.mark_for_cleaning = true;
-            return self['$need_update!']();
+            return self.mark_for_cleaning = true
           };
         };
 
@@ -12889,24 +12888,6 @@ if (column_index == null) column_index = nil;
           var self = this;
 
           return self.mark_for_cleaning = false;
-        };
-
-        def['$updated?'] = function() {
-          var self = this;
-
-          return self.updated;
-        };
-
-        def['$need_update!'] = function() {
-          var self = this;
-
-          return self.updated = false;
-        };
-
-        def['$updated!'] = function() {
-          var self = this;
-
-          return self.updated = true;
         };
 
         def['$marked_for_cleaning?'] = function() {
@@ -12939,18 +12920,21 @@ if (column_index == null) column_index = nil;
           if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Construction) == null ? $opal.cm('Construction') : $d))._scope).FallenTree == null ? $c.cm('FallenTree') : $c.FallenTree)), $b !== false && $b !== nil ?self.content['$empty?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
             self.content = nil;
             if ((($a = self['$marked_for_cleaning?']()) !== nil && (!$a._isBoolean || $a == true))) {
-              self['$cleaned!']()};
-            return self['$need_update!']();
+              return self['$cleaned!']()
+              } else {
+              return nil
+            };
           } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).BerriesBush == null ? $c.cm('BerriesBush') : $c.BerriesBush)), $b !== false && $b !== nil ?self.content['$empty?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
             self.content = nil;
             if ((($a = self['$marked_for_cleaning?']()) !== nil && (!$a._isBoolean || $a == true))) {
-              self['$cleaned!']()};
-            return self['$need_update!']();
+              return self['$cleaned!']()
+              } else {
+              return nil
+            };
           } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree)), $b !== false && $b !== nil ?self.content['$cut?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
             fallen_tree = (($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Construction == null ? $b.cm('Construction') : $b.Construction))._scope).FallenTree == null ? $a.cm('FallenTree') : $a.FallenTree).$new(self.x, self.y);
             self.content = fallen_tree;
-            (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$fallen_trees()['$<<'](fallen_tree);
-            return self['$need_update!']();
+            return (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$fallen_trees()['$<<'](fallen_tree);
             } else {
             return nil
           };

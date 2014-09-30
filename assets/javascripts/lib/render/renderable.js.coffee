@@ -23,14 +23,14 @@ class @Renderable
   updateSelf: ->
 
   isWithinView: =>
-    @object.$y() * @gameWindow.tileSize >= - @gameWindow.x_offset and
-    @object.$y() * @gameWindow.tileSize < - @gameWindow.x_offset + @renderedWidth*@gameWindow.tileSize and
-    @object.$x() * @gameWindow.tileSize >= - @gameWindow.y_offset and
-    @object.$x() * @gameWindow.tileSize < - @gameWindow.y_offset + @renderedHeight*@gameWindow.tileSize
+    @object.y() * @gameWindow.tileSize >= - @gameWindow.x_offset and
+    @object.y() * @gameWindow.tileSize < - @gameWindow.x_offset + @renderedWidth*@gameWindow.tileSize and
+    @object.x() * @gameWindow.tileSize >= - @gameWindow.y_offset and
+    @object.x() * @gameWindow.tileSize < - @gameWindow.y_offset + @renderedHeight*@gameWindow.tileSize
 
   removeContent: =>
     @gameWindow.removeChild(@)
 
   updateContentPosition: =>
-    @content.position.x = @object.$y() * @gameWindow.tileSize + @gameWindow.x_offset
-    @content.position.y = @object.$x() * @gameWindow.tileSize + @gameWindow.y_offset
+    @content.position.x = @object.y() * @gameWindow.tileSize + @gameWindow.x_offset
+    @content.position.y = @object.x() * @gameWindow.tileSize + @gameWindow.y_offset

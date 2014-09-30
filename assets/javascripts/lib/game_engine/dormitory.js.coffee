@@ -17,3 +17,9 @@ class @GameEngine.Dormitory
 
   dormitory: =>
     Opal.TheGame.Settlement.$instance().$dormitory()
+
+  x: =>
+    @settlement.$dormitory().$x()
+
+  y: =>
+    @settlement.$dormitory().$y()

@@ -2,9 +2,9 @@ class @GameEngine.Fireplace
   constructor: ->
     @fireplace = Opal.TheGame.Settlement.$instance().$fireplace()
 
-  $x: =>
+  x: =>
     @fireplace.$x()
 
-  $y: =>
+  y: =>
     @fireplace.$y()
 

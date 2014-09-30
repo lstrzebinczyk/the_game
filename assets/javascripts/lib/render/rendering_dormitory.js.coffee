@@ -10,6 +10,6 @@ class @RenderingDormitory extends Renderable
     @content.endFill()
 
   updateSelf: =>
-    if @object.$status() == "done"
+    if @object.status() == "done"
       @color = 0x6F1C1C
       @draw()

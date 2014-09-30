@@ -16,9 +16,9 @@ class @GameEngine.Person
   actionDescription: =>
     @person.$action().$description()
 
-  $x: =>
+  x: =>
     @person.$x()
 
-  $y: =>
+  y: =>
     @person.$y()
 
