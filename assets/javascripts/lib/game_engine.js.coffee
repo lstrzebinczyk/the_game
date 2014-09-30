@@ -34,3 +34,6 @@ class @GameEngine
   eachPerson: (block) =>
     for person in @people
       block(person)
+
+  findTile: (x, y) =>
+    @engine.$map().$fetch(x, y)

@@ -8,13 +8,13 @@ class TheGame
         # @width  = 90
         # @height = 90
 
-        grid = new_grid
-        map = Map.new(grid)
-        create_river(map)
-        populate_with_trees(map)
-        populate_with_food(map)
-        create_camp(map)
-        map
+        @map = Map.new
+        @map.grid = new_grid
+        create_river(@map)
+        populate_with_trees(@map)
+        populate_with_food(@map)
+        create_camp(@map)
+        @map
       end
 
       private
@@ -67,7 +67,7 @@ class TheGame
         @height.times do |row_index|
           row = []
           @width.times do |column_index|
-            row << Map::Tile.new(row_index, column_index)
+            row << Map::Tile.new(row_index, column_index, @map)
           end
           grid << row
         end

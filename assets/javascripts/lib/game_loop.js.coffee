@@ -6,7 +6,7 @@ class @GameLoop
 
     @startButton = $("#start")
 
-    @expectedTurnsPerSecond = 30
+    @expectedTurnsPerSecond = 60
 
   setup: =>
     @startButton.click =>

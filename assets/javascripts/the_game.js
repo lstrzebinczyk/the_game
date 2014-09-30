@@ -11613,7 +11613,7 @@ if (arg == null) arg = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$attr_reader', '$[]', '$find', '$each_tile', '$<', '$distance_to', '$update', '$length', '$first', '$each', '$private']);
+  $opal.add_stubs(['$attr_accessor', '$[]', '$find', '$each_tile', '$<', '$distance_to', '$update', '$length', '$first', '$each', '$private']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -11627,7 +11627,7 @@ if (arg == null) arg = nil;
       var def = self._proto, $scope = self._scope, TMP_1, TMP_3, TMP_8, TMP_10;
 
       def.grid = nil;
-      self.$attr_reader("grid");
+      self.$attr_accessor("grid");
 
       def.$initialize = function(grid) {
         var self = this;
@@ -11725,7 +11725,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
 
-  $opal.add_stubs(['$[]=', '$<<', '$[]', '$type', '$pop', '$any?', '$size', '$inject', '$to_proc', '$map', '$amount', '$+', '$alphas']);
+  $opal.add_stubs(['$each', '$[]=', '$<<', '$[]', '$type', '$pop', '$any?', '$size', '$inject', '$to_proc', '$map', '$amount', '$+', '$alphas']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -11739,18 +11739,16 @@ if (tile == null) tile = nil;
       var def = self._proto, $scope = self._scope;
 
       def.content = nil;
-      $opal.cdecl($scope, 'ITEM_TYPES', ["berries", "fish", "cooked_fish", "firewood", "axe", "fishing_rod"]);
+      $opal.cdecl($scope, 'ITEM_TYPES', ["berries", "fish", "cooked_fish", "log", "firewood", "axe", "fishing_rod"]);
 
       def.$initialize = function() {
-        var self = this;
+        var $a, $b, TMP_1, $c, self = this;
 
         self.content = $hash2([], {});
-        self.content['$[]=']("berries", []);
-        self.content['$[]=']("axe", []);
-        self.content['$[]=']("firewood", []);
-        self.content['$[]=']("fishing_rod", []);
-        self.content['$[]=']("fish", []);
-        return self.content['$[]=']("cooked_fish", []);
+        return ($a = ($b = (($c = $scope.ITEM_TYPES) == null ? $opal.cm('ITEM_TYPES') : $c)).$each, $a._p = (TMP_1 = function(type){var self = TMP_1._s || this;
+          if (self.content == null) self.content = nil;
+if (type == null) type = nil;
+        return self.content['$[]='](type, [])}, TMP_1._s = self, TMP_1), $a).call($b);
       };
 
       def.$item_types = function() {
@@ -11784,21 +11782,21 @@ if (tile == null) tile = nil;
       };
 
       def.$firewood_amount = function() {
-        var $a, $b, $c, $d, TMP_1, self = this;
+        var $a, $b, $c, $d, TMP_2, self = this;
 
-        return ($a = ($b = ($c = ($d = self.content['$[]']("firewood")).$map, $c._p = (TMP_1 = function(wood){var self = TMP_1._s || this;
+        return ($a = ($b = ($c = ($d = self.content['$[]']("firewood")).$map, $c._p = (TMP_2 = function(wood){var self = TMP_2._s || this;
 if (wood == null) wood = nil;
-        return wood.$amount()}, TMP_1._s = self, TMP_1), $c).call($d)).$inject, $a._p = "+".$to_proc(), $a).call($b, 0);
+        return wood.$amount()}, TMP_2._s = self, TMP_2), $c).call($d)).$inject, $a._p = "+".$to_proc(), $a).call($b, 0);
       };
 
       return (def.$food_amount = function() {
-        var $a, $b, $c, $d, TMP_2, $e, $f, TMP_3, self = this;
+        var $a, $b, $c, $d, TMP_3, $e, $f, TMP_4, self = this;
 
-        return ($a = ($b = ($c = ($d = self.content['$[]']("berries")).$map, $c._p = (TMP_2 = function(food){var self = TMP_2._s || this;
+        return ($a = ($b = ($c = ($d = self.content['$[]']("berries")).$map, $c._p = (TMP_3 = function(food){var self = TMP_3._s || this;
 if (food == null) food = nil;
-        return food.$alphas()}, TMP_2._s = self, TMP_2), $c).call($d)).$inject, $a._p = "+".$to_proc(), $a).call($b, 0)['$+'](($a = ($c = ($e = ($f = self.content['$[]']("cooked_fish")).$map, $e._p = (TMP_3 = function(food){var self = TMP_3._s || this;
+        return food.$alphas()}, TMP_3._s = self, TMP_3), $c).call($d)).$inject, $a._p = "+".$to_proc(), $a).call($b, 0)['$+'](($a = ($c = ($e = ($f = self.content['$[]']("cooked_fish")).$map, $e._p = (TMP_4 = function(food){var self = TMP_4._s || this;
 if (food == null) food = nil;
-        return food.$alphas()}, TMP_3._s = self, TMP_3), $e).call($f)).$inject, $a._p = "+".$to_proc(), $a).call($c, 0));
+        return food.$alphas()}, TMP_4._s = self, TMP_4), $e).call($f)).$inject, $a._p = "+".$to_proc(), $a).call($c, 0));
       }, nil) && 'food_amount';
     })(self, null)
   })(self, null)
@@ -12019,9 +12017,9 @@ if (food == null) food = nil;
 if (tile == null) tile = nil;
             return tile.$content()['$is_a?']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).BerriesBush == null ? $a.cm('BerriesBush') : $a.BerriesBush))}, TMP_1._s = self, TMP_1), $a).call($b)
           } else if (job_type['$==']("woodcutting")) {
-            return ($a = ($c = self.$fields()).$find, $a._p = (TMP_2 = function(tile){var self = TMP_2._s || this, $a, $b;
+            return ($a = ($c = self.$fields()).$find, $a._p = (TMP_2 = function(tile){var self = TMP_2._s || this, $a, $b, $c, $d;
 if (tile == null) tile = nil;
-            return tile.$content()['$is_a?']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).Tree == null ? $a.cm('Tree') : $a.Tree))}, TMP_2._s = self, TMP_2), $a).call($c)
+            return ((($a = tile.$content()['$is_a?']((($b = ((($c = $scope.Nature) == null ? $opal.cm('Nature') : $c))._scope).Tree == null ? $b.cm('Tree') : $b.Tree))) !== false && $a !== nil) ? $a : tile.$content()['$is_a?']((($b = ((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree))._scope).Piece == null ? $b.cm('Piece') : $b.Piece)))}, TMP_2._s = self, TMP_2), $a).call($c)
           } else if (job_type['$==']("haul")) {
             return ($a = ($d = self.$fields()).$find, $a._p = (TMP_3 = function(tile){var self = TMP_3._s || this, $a, $b;
 if (tile == null) tile = nil;
@@ -12039,9 +12037,9 @@ if (tile == null) tile = nil;
 if (tile == null) tile = nil;
             return tile.$content()['$is_a?']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).BerriesBush == null ? $a.cm('BerriesBush') : $a.BerriesBush))}, TMP_4._s = self, TMP_4), $a).call($b)
           } else if (job_type['$==']("woodcutting")) {
-            return ($a = ($c = self.$fields())['$any?'], $a._p = (TMP_5 = function(tile){var self = TMP_5._s || this, $a, $b;
+            return ($a = ($c = self.$fields())['$any?'], $a._p = (TMP_5 = function(tile){var self = TMP_5._s || this, $a, $b, $c, $d;
 if (tile == null) tile = nil;
-            return tile.$content()['$is_a?']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).Tree == null ? $a.cm('Tree') : $a.Tree))}, TMP_5._s = self, TMP_5), $a).call($c)
+            return ((($a = tile.$content()['$is_a?']((($b = ((($c = $scope.Nature) == null ? $opal.cm('Nature') : $c))._scope).Tree == null ? $b.cm('Tree') : $b.Tree))) !== false && $a !== nil) ? $a : tile.$content()['$is_a?']((($b = ((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree))._scope).Piece == null ? $b.cm('Piece') : $b.Piece)))}, TMP_5._s = self, TMP_5), $a).call($c)
           } else if (job_type['$==']("haul")) {
             return ($a = ($d = self.$fields())['$any?'], $a._p = (TMP_6 = function(tile){var self = TMP_6._s || this, $a, $b;
 if (tile == null) tile = nil;
@@ -12697,7 +12695,52 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$*', '$new_grid', '$new', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$set_position', '$/', '$height', '$width', '$+', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$content=', '$y', '$<<']);
+  $opal.add_stubs(['$==']);
+  return (function($base, $super) {
+    function $TheGame(){};
+    var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
+
+    var def = self._proto, $scope = self._scope;
+
+    return (function($base, $super) {
+      function $Item(){};
+      var self = $Item = $klass($base, $super, 'Item', $Item);
+
+      var def = self._proto, $scope = self._scope;
+
+      return (function($base, $super) {
+        function $Log(){};
+        var self = $Log = $klass($base, $super, 'Log', $Log);
+
+        var def = self._proto, $scope = self._scope;
+
+        def.$type = function() {
+          var self = this;
+
+          return "log";
+        };
+
+        return (def.$count = function(type) {
+          var self = this;
+
+          if (type['$==']("firewood")) {
+            return 32
+            } else {
+            return nil
+          };
+        }, nil) && 'count';
+      })(self, null)
+    })(self, null)
+  })(self, null)
+})(Opal);
+
+//# sourceMappingURL=/__opal_source_maps__/the_game/item/log.js.map
+;
+/* Generated by Opal 0.6.2 */
+(function($opal) {
+  var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
+
+  $opal.add_stubs(['$*', '$new', '$grid=', '$new_grid', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$set_position', '$/', '$height', '$width', '$+', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$content=', '$y', '$<<']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12716,19 +12759,19 @@ if (tile == null) tile = nil;
 
         var def = self._proto, $scope = self._scope;
 
-        def.height = nil;
+        def.map = def.height = nil;
         def.$generate = function() {
-          var $a, self = this, grid = nil, map = nil;
+          var $a, self = this;
 
           self.width = (16)['$*'](4);
           self.height = (16)['$*'](3);
-          grid = self.$new_grid();
-          map = (($a = $scope.Map) == null ? $opal.cm('Map') : $a).$new(grid);
-          self.$create_river(map);
-          self.$populate_with_trees(map);
-          self.$populate_with_food(map);
-          self.$create_camp(map);
-          return map;
+          self.map = (($a = $scope.Map) == null ? $opal.cm('Map') : $a).$new();
+          self.map['$grid='](self.$new_grid());
+          self.$create_river(self.map);
+          self.$populate_with_trees(self.map);
+          self.$populate_with_food(self.map);
+          self.$create_camp(self.map);
+          return self.map;
         };
 
         self.$private();
@@ -12803,8 +12846,9 @@ if (tile == null) tile = nil;
 if (row_index == null) row_index = nil;
           row = [];
             ($a = ($b = self.width).$times, $a._p = (TMP_6 = function(column_index){var self = TMP_6._s || this, $a, $b;
+              if (self.map == null) self.map = nil;
 if (column_index == null) column_index = nil;
-            return row['$<<']((($a = ((($b = $scope.Map) == null ? $opal.cm('Map') : $b))._scope).Tile == null ? $a.cm('Tile') : $a.Tile).$new(row_index, column_index))}, TMP_6._s = self, TMP_6), $a).call($b);
+            return row['$<<']((($a = ((($b = $scope.Map) == null ? $opal.cm('Map') : $b))._scope).Tile == null ? $a.cm('Tile') : $a.Tile).$new(row_index, column_index, self.map))}, TMP_6._s = self, TMP_6), $a).call($b);
             return grid['$<<'](row);}, TMP_5._s = self, TMP_5), $a).call($b);
           return grid;
         }, nil) && 'new_grid';
@@ -12819,7 +12863,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$empty?', '$==', '$nil?', '$is_a?', '$marked_for_cleaning?', '$cleaned!', '$cut?', '$new', '$<<', '$fallen_trees', '$instance']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$empty?', '$==', '$nil?', '$is_a?', '$marked_for_cleaning?', '$cleaned!', '$cut?', '$-', '$pieces_count', '$new', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12838,16 +12882,17 @@ if (column_index == null) column_index = nil;
 
         var def = self._proto, $scope = self._scope, $a, $b;
 
-        def.mark_for_cleaning = def.terrain = def.content = def.x = def.y = nil;
+        def.mark_for_cleaning = def.terrain = def.content = def.x = def.y = def.map = nil;
         self.$include((($a = ((($b = $scope.TheGame) == null ? $opal.cm('TheGame') : $b))._scope).HasPosition == null ? $a.cm('HasPosition') : $a.HasPosition));
 
         self.$attr_accessor("content", "terrain");
 
-        def.$initialize = function(x, y) {
+        def.$initialize = function(x, y, map) {
           var self = this;
 
           self['$x='](x);
-          return self['$y='](y);
+          self['$y='](y);
+          return self.map = map;
         };
 
         def['$mark_for_cleaning!'] = function() {
@@ -12891,16 +12936,9 @@ if (column_index == null) column_index = nil;
         };
 
         return (def.$update = function() {
-          var $a, $b, $c, $d, self = this, fallen_tree = nil;
+          var $a, $b, $c, $d, $e, self = this, fallen_tree_pieces_to_deploy = nil, x = nil, y = nil, tile = nil, fallen_tree_piece = nil;
 
-          if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Construction) == null ? $opal.cm('Construction') : $d))._scope).FallenTree == null ? $c.cm('FallenTree') : $c.FallenTree)), $b !== false && $b !== nil ?self.content['$empty?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
-            self.content = nil;
-            if ((($a = self['$marked_for_cleaning?']()) !== nil && (!$a._isBoolean || $a == true))) {
-              return self['$cleaned!']()
-              } else {
-              return nil
-            };
-          } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).BerriesBush == null ? $c.cm('BerriesBush') : $c.BerriesBush)), $b !== false && $b !== nil ?self.content['$empty?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
+          if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).BerriesBush == null ? $c.cm('BerriesBush') : $c.BerriesBush)), $b !== false && $b !== nil ?self.content['$empty?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
             self.content = nil;
             if ((($a = self['$marked_for_cleaning?']()) !== nil && (!$a._isBoolean || $a == true))) {
               return self['$cleaned!']()
@@ -12908,9 +12946,21 @@ if (column_index == null) column_index = nil;
               return nil
             };
           } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree)), $b !== false && $b !== nil ?self.content['$cut?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
-            fallen_tree = (($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Construction == null ? $b.cm('Construction') : $b.Construction))._scope).FallenTree == null ? $a.cm('FallenTree') : $a.FallenTree).$new(self.x, self.y);
-            self.content = fallen_tree;
-            return (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$fallen_trees()['$<<'](fallen_tree);
+            fallen_tree_pieces_to_deploy = self.content.$pieces_count()['$-'](1);
+            x = self.x;
+            y = self.y;
+            self.content = (($a = ((($b = ((($c = $scope.Nature) == null ? $opal.cm('Nature') : $c))._scope).Tree == null ? $b.cm('Tree') : $b.Tree))._scope).Piece == null ? $a.cm('Piece') : $a.Piece).$new(x, y);
+            x = x['$+'](1);
+            while (fallen_tree_pieces_to_deploy['$>'](0)) {
+            tile = self.map.$fetch(x, y);
+            if ((($b = tile['$empty?']()) !== nil && (!$b._isBoolean || $b == true))) {
+              fallen_tree_piece = (($b = ((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree))._scope).Piece == null ? $b.cm('Piece') : $b.Piece).$new(x, y);
+              tile['$content='](fallen_tree_piece);
+              fallen_tree_pieces_to_deploy = fallen_tree_pieces_to_deploy['$-'](1);};
+            x = x['$+'](1);};
+          } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = ((($e = $scope.Nature) == null ? $opal.cm('Nature') : $e))._scope).Tree == null ? $d.cm('Tree') : $d.Tree))._scope).Piece == null ? $c.cm('Piece') : $c.Piece)), $b !== false && $b !== nil ?self.content['$cut?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
+            self.content = (($a = ((($b = $scope.Item) == null ? $opal.cm('Item') : $b))._scope).Log == null ? $a.cm('Log') : $a.Log).$new(self.x, self.y);
+            return (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stuff_to_bring()['$<<'](self);
             } else {
             return nil
           };
@@ -13811,15 +13861,22 @@ if (type == null) type = nil;
         };
 
         return (def.$perform = function(person, map, time_in_minutes) {
-          var $a, $b, TMP_1, $c, self = this, closest = nil;
+          var $a, $b, TMP_1, $c, TMP_2, $d, self = this, closest_tree_piece = nil, closest_tree = nil;
 
-          closest = ($a = ($b = map).$find_closest_to, $a._p = (TMP_1 = function(tile){var self = TMP_1._s || this, $a, $b;
+          closest_tree_piece = ($a = ($b = map).$find_closest_to, $a._p = (TMP_1 = function(tile){var self = TMP_1._s || this, $a, $b, $c;
 if (tile == null) tile = nil;
-          return tile.$content()['$is_a?']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).Tree == null ? $a.cm('Tree') : $a.Tree))}, TMP_1._s = self, TMP_1), $a).call($b, person);
-          if (closest !== false && closest !== nil) {
-            return person['$action=']((($a = ((($c = $scope.Action) == null ? $opal.cm('Action') : $c))._scope).CutTree == null ? $a.cm('CutTree') : $a.CutTree).$create(closest.$content()))
+          return tile.$content()['$is_a?']((($a = ((($b = ((($c = $scope.Nature) == null ? $opal.cm('Nature') : $c))._scope).Tree == null ? $b.cm('Tree') : $b.Tree))._scope).Piece == null ? $a.cm('Piece') : $a.Piece))}, TMP_1._s = self, TMP_1), $a).call($b, person);
+          if (closest_tree_piece !== false && closest_tree_piece !== nil) {
+            return person['$action=']((($a = ((($c = $scope.Action) == null ? $opal.cm('Action') : $c))._scope).CutTree == null ? $a.cm('CutTree') : $a.CutTree).$create(closest_tree_piece.$content()))
             } else {
-            return nil
+            closest_tree = ($a = ($c = map).$find_closest_to, $a._p = (TMP_2 = function(tile){var self = TMP_2._s || this, $a, $b;
+if (tile == null) tile = nil;
+            return tile.$content()['$is_a?']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).Tree == null ? $a.cm('Tree') : $a.Tree))}, TMP_2._s = self, TMP_2), $a).call($c, person);
+            if (closest_tree !== false && closest_tree !== nil) {
+              return person['$action=']((($a = ((($d = $scope.Action) == null ? $opal.cm('Action') : $d))._scope).CutTree == null ? $a.cm('CutTree') : $a.CutTree).$create(closest_tree.$content()))
+              } else {
+              return nil
+            };
           };
         }, nil) && 'perform';
       })(self, (($a = $scope.Action) == null ? $opal.cm('Action') : $a))
@@ -14362,7 +14419,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
 
-  $opal.add_stubs(['$then', '$create', '$new', '$x', '$y', '$-', '$==', '$cut!', '$instance', '$action=', '$stash']);
+  $opal.add_stubs(['$then', '$create', '$new', '$x', '$y', '$description', '$-', '$==', '$cut!', '$instance', '$action=', '$stash']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -14406,7 +14463,7 @@ if (tile == null) tile = nil;
 
           x = self.tree.$x();
           y = self.tree.$y();
-          return "cutting tree at " + (x) + ", " + (y);
+          return "cutting " + (self.tree.$description()) + " at " + (x) + ", " + (y);
         };
 
         def['$done?'] = function(person) {
@@ -14646,6 +14703,151 @@ if (tile == null) tile = nil;
 ;
 /* Generated by Opal 0.6.2 */
 (function($opal) {
+  var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
+
+  $opal.add_stubs(['$stash', '$instance', '$then', '$create', '$new', '$description=', '$==', '$-', '$get', '$times', '$add', '$count']);
+  return (function($base, $super) {
+    function $TheGame(){};
+    var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
+
+    var def = self._proto, $scope = self._scope;
+
+    return (function($base, $super) {
+      function $Action(){};
+      var self = $Action = $klass($base, $super, 'Action', $Action);
+
+      var def = self._proto, $scope = self._scope, $a;
+
+      return (function($base, $super) {
+        function $CutLogIntoFirewood(){};
+        var self = $CutLogIntoFirewood = $klass($base, $super, 'CutLogIntoFirewood', $CutLogIntoFirewood);
+
+        var def = self._proto, $scope = self._scope;
+
+        def.minutes_left = nil;
+        $opal.defs(self, '$create', function() {
+          var $a, $b, self = this, stash = nil, action = nil;
+
+          stash = (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stash();
+          action = (($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).Get == null ? $a.cm('Get') : $a.Get).$create("axe", $hash2(["from"], {"from": stash})).$then((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).Get == null ? $a.cm('Get') : $a.Get).$create("log", $hash2(["from"], {"from": stash}))).$then(self.$new()).$then((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).Carry == null ? $a.cm('Carry') : $a.Carry).$create("axe", $hash2(["to"], {"to": stash})));
+          action['$description=']("Chopping log into firewood");
+          return action;
+        });
+
+        def.$initialize = function(tree) {
+          var self = this;
+
+          return self.minutes_left = 120;
+        };
+
+        def.$type = function() {
+          var self = this;
+
+          return "woodcutting";
+        };
+
+        def['$done?'] = function(person) {
+          var self = this;
+
+          return self.minutes_left['$=='](0);
+        };
+
+        return (def.$perform = function(person, map, time_in_minutes) {
+          var $a, $b, TMP_1, self = this, log = nil, stash = nil;
+
+          self.minutes_left = self.minutes_left['$-'](time_in_minutes);
+          if (self.minutes_left['$=='](0)) {
+            log = person.$get("log");
+            stash = (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stash();
+            return ($a = ($b = log.$count("firewood")).$times, $a._p = (TMP_1 = function(){var self = TMP_1._s || this, $a, $b;
+
+            return stash.$add((($a = ((($b = $scope.Item) == null ? $opal.cm('Item') : $b))._scope).Firewood == null ? $a.cm('Firewood') : $a.Firewood).$new())}, TMP_1._s = self, TMP_1), $a).call($b);
+            } else {
+            return nil
+          };
+        }, nil) && 'perform';
+      })(self, (($a = $scope.Action) == null ? $opal.cm('Action') : $a))
+    })(self, null)
+  })(self, null)
+})(Opal);
+
+//# sourceMappingURL=/__opal_source_maps__/the_game/action/cut_log_into_firewood.js.map
+;
+/* Generated by Opal 0.6.2 */
+(function($opal) {
+  var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
+
+  $opal.add_stubs(['$[]', '$==', '$type', '$content', '$add', '$inventory', '$content=', '$then', '$create', '$description=', '$description']);
+  return (function($base, $super) {
+    function $TheGame(){};
+    var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
+
+    var def = self._proto, $scope = self._scope;
+
+    return (function($base, $super) {
+      function $Action(){};
+      var self = $Action = $klass($base, $super, 'Action', $Action);
+
+      var def = self._proto, $scope = self._scope, $a;
+
+      return (function($base, $super) {
+        function $MoveContent(){};
+        var self = $MoveContent = $klass($base, $super, 'MoveContent', $MoveContent);
+
+        var def = self._proto, $scope = self._scope, $a;
+
+        (function($base, $super) {
+          function $PickUpContent(){};
+          var self = $PickUpContent = $klass($base, $super, 'PickUpContent', $PickUpContent);
+
+          var def = self._proto, $scope = self._scope;
+
+          def.from = def.item_type = nil;
+          def.$initialize = function(item_type, opts) {
+            var self = this, from = nil;
+
+            from = opts['$[]']("from");
+            self.item_type = item_type;
+            return self.from = from;
+          };
+
+          def['$done?'] = function(person) {
+            var self = this;
+
+            return true;
+          };
+
+          return (def.$perform = function(person, map, time_in_minutes) {
+            var self = this, content = nil;
+
+            if (self.from.$content().$type()['$=='](self.item_type)) {
+              content = self.from.$content();
+              person.$inventory().$add(content);
+              return self.from['$content='](nil);
+              } else {
+              return nil
+            };
+          }, nil) && 'perform';
+        })(self, (($a = $scope.Action) == null ? $opal.cm('Action') : $a));
+
+        return ($opal.defs(self, '$create', function(type, opts) {
+          var $a, self = this, from = nil, to = nil, action = nil;
+
+          from = opts['$[]']("from");
+          to = opts['$[]']("to");
+          action = (($a = $scope.GoTo) == null ? $opal.cm('GoTo') : $a).$create(from).$then((($a = $scope.PickUpContent) == null ? $opal.cm('PickUpContent') : $a).$create("log", $hash2(["from"], {"from": from}))).$then((($a = $scope.Carry) == null ? $opal.cm('Carry') : $a).$create(type, $hash2(["to"], {"to": to})));
+          action['$description=']("Carrying " + (type) + " to " + (to.$description()));
+          return action;
+        }), nil) && 'create';
+      })(self, (($a = $scope.Action) == null ? $opal.cm('Action') : $a))
+    })(self, null)
+  })(self, null)
+})(Opal);
+
+//# sourceMappingURL=/__opal_source_maps__/the_game/action/move_content.js.map
+;
+/* Generated by Opal 0.6.2 */
+(function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
   $opal.add_stubs(['$include']);
@@ -14689,17 +14891,87 @@ if (tile == null) tile = nil;
           return self.cut;
         };
 
-        return (def.$description = function() {
+        def.$description = function() {
           var self = this;
 
           return "tree";
-        }, nil) && 'description';
+        };
+
+        return (def.$pieces_count = function() {
+          var self = this;
+
+          return 6;
+        }, nil) && 'pieces_count';
       })(self, null)
     })(self, null)
   })(self, null)
 })(Opal);
 
 //# sourceMappingURL=/__opal_source_maps__/the_game/nature/tree.js.map
+;
+/* Generated by Opal 0.6.2 */
+(function($opal) {
+  var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
+
+  $opal.add_stubs(['$attr_reader']);
+  return (function($base, $super) {
+    function $TheGame(){};
+    var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
+
+    var def = self._proto, $scope = self._scope;
+
+    return (function($base, $super) {
+      function $Nature(){};
+      var self = $Nature = $klass($base, $super, 'Nature', $Nature);
+
+      var def = self._proto, $scope = self._scope;
+
+      return (function($base, $super) {
+        function $Tree(){};
+        var self = $Tree = $klass($base, $super, 'Tree', $Tree);
+
+        var def = self._proto, $scope = self._scope;
+
+        return (function($base, $super) {
+          function $Piece(){};
+          var self = $Piece = $klass($base, $super, 'Piece', $Piece);
+
+          var def = self._proto, $scope = self._scope;
+
+          def.cut = nil;
+          self.$attr_reader("x", "y");
+
+          def.$initialize = function(x, y) {
+            var self = this;
+
+            self.x = x;
+            return self.y = y;
+          };
+
+          def['$cut!'] = function() {
+            var self = this;
+
+            return self.cut = true;
+          };
+
+          def['$cut?'] = function() {
+            var self = this;
+
+            return self.cut;
+          };
+
+          return (def.$description = function() {
+            var self = this;
+
+            return "fallen tree piece";
+          }, nil) && 'description';
+        })(self, null)
+      })(self, null)
+    })(self, null)
+  })(self, null)
+})(Opal);
+
+//# sourceMappingURL=/__opal_source_maps__/the_game/nature/tree/piece.js.map
 ;
 /* Generated by Opal 0.6.2 */
 (function($opal) {
@@ -14933,7 +15205,7 @@ if (person == null) person = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$each', '$==', '$!', '$fire_is_ok?', '$has?', '$create', '$needs_cleaning?', '$tile_for_cleaning', '$content', '$need_more_food?', '$then', '$need_more_wood?', '$need_wood?', '$status', '$any?', '$first', '$nil?', '$can_start_building?', '$start_building!', '$do_stuff', '$ready_to_build?', '$accepted_jobs', '$*', '$+', '$firewood_needed', '$count', '$stash', '$firewood_left', '$<', '$food_amount', '$people_count', '$type', '$new', '$sleep_area', '$update', '$delete_if', '$to_proc', '$size']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$each', '$==', '$!', '$fire_is_ok?', '$has?', '$create', '$needs_cleaning?', '$tile_for_cleaning', '$content', '$need_more_food?', '$then', '$need_more_wood?', '$need_wood?', '$status', '$any?', '$first', '$nil?', '$can_start_building?', '$start_building!', '$do_stuff', '$ready_to_build?', '$accepted_jobs', '$*', '$+', '$firewood_needed', '$count', '$stash', '$<', '$food_amount', '$people_count', '$type', '$new', '$sleep_area', '$update', '$delete_if', '$to_proc', '$size']);
   ;
   return (function($base, $super) {
     function $TheGame(){};
@@ -14947,7 +15219,7 @@ if (person == null) person = nil;
 
       var def = self._proto, $scope = self._scope, $a;
 
-      def.dormitory = def.fallen_trees = def.stash = def.jobs = def.x = def.y = def.fireplace = def.people = nil;
+      def.dormitory = def.stash = def.jobs = def.x = def.y = def.fireplace = def.stuff_to_bring = def.people = nil;
       self.$include((($a = $scope.Singleton) == null ? $opal.cm('Singleton') : $a));
 
       self.$attr_accessor("stash");
@@ -14958,7 +15230,7 @@ if (person == null) person = nil;
 
       self.$attr_accessor("fireplace", "dormitory");
 
-      self.$attr_accessor("fallen_trees");
+      self.$attr_accessor("stuff_to_bring");
 
       def.$initialize = function() {
         var self = this;
@@ -14966,18 +15238,18 @@ if (person == null) person = nil;
         self.dormitory = nil;
         self.fireplace = nil;
         self.stash = nil;
-        return self.fallen_trees = [];
+        return self.stuff_to_bring = [];
       };
 
       def.$get_job = function(person) {try {
 
         var $a, $b, TMP_1, self = this;
 
-        ($a = ($b = person.$accepted_jobs()).$each, $a._p = (TMP_1 = function(job_type){var self = TMP_1._s || this, $a, $b, $c, $d, tile = nil, action = nil;
+        ($a = ($b = person.$accepted_jobs()).$each, $a._p = (TMP_1 = function(job_type){var self = TMP_1._s || this, $a, $b, $c, $d, tile = nil, action = nil, stuff = nil;
           if (self.fireplace == null) self.fireplace = nil;
           if (self.stash == null) self.stash = nil;
           if (self.dormitory == null) self.dormitory = nil;
-          if (self.fallen_trees == null) self.fallen_trees = nil;
+          if (self.stuff_to_bring == null) self.stuff_to_bring = nil;
 if (job_type == null) job_type = nil;
         if ((($a = ($b = (($c = job_type['$==']("survival")) ? self.fireplace['$fire_is_ok?']()['$!']() : $c), $b !== false && $b !== nil ?self.stash['$has?']("firewood") : $b)) !== nil && (!$a._isBoolean || $a == true))) {
             $opal.$return((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).CheckFireplace == null ? $a.cm('CheckFireplace') : $a.CheckFireplace).$create())
@@ -14995,7 +15267,11 @@ if (job_type == null) job_type = nil;
               tile = self.dormitory.$tile_for_cleaning("woodcutting");
               $opal.$return((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).Get == null ? $a.cm('Get') : $a.Get).$create("axe", $hash2(["from"], {"from": self.stash})).$then((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).CutTree == null ? $a.cm('CutTree') : $a.CutTree).$create(tile.$content())));
             } else if ((($a = self['$need_more_wood?']()) !== nil && (!$a._isBoolean || $a == true))) {
-              $opal.$return((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).LookForTreeToCut == null ? $a.cm('LookForTreeToCut') : $a.LookForTreeToCut).$create())
+              if ((($a = self.stash['$has?']("log")) !== nil && (!$a._isBoolean || $a == true))) {
+                $opal.$return((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).CutLogIntoFirewood == null ? $a.cm('CutLogIntoFirewood') : $a.CutLogIntoFirewood).$create())
+                } else {
+                $opal.$return((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).LookForTreeToCut == null ? $a.cm('LookForTreeToCut') : $a.LookForTreeToCut).$create())
+              }
               } else {
               return nil
             }
@@ -15007,9 +15283,9 @@ if (job_type == null) job_type = nil;
             } else if ((($a = ($b = ($c = ($d = self.dormitory, $d !== false && $d !== nil ?self.dormitory['$need_wood?']() : $d), $c !== false && $c !== nil ?self.dormitory.$status()['$==']("plan") : $c), $b !== false && $b !== nil ?self.stash['$has?']("firewood") : $b)) !== nil && (!$a._isBoolean || $a == true))) {
               action = (($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).Supply == null ? $a.cm('Supply') : $a.Supply).$create(self.dormitory, $hash2(["with", "from"], {"with": "firewood", "from": self.stash}));
               $opal.$return(action);
-            } else if ((($a = self.fallen_trees['$any?']()) !== nil && (!$a._isBoolean || $a == true))) {
-              action = (($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).Supply == null ? $a.cm('Supply') : $a.Supply).$create(self.stash, $hash2(["with", "from"], {"with": "firewood", "from": self.fallen_trees.$first()}));
-              $opal.$return(action);
+            } else if ((($a = self.stuff_to_bring['$any?']()) !== nil && (!$a._isBoolean || $a == true))) {
+              stuff = self.stuff_to_bring.$first();
+              $opal.$return((($a = ((($b = $scope.Action) == null ? $opal.cm('Action') : $b))._scope).MoveContent == null ? $a.cm('MoveContent') : $a.MoveContent).$create("log", $hash2(["from", "to"], {"from": stuff, "to": self.stash})));
               } else {
               return nil
             }
@@ -15042,15 +15318,12 @@ if (job_type == null) job_type = nil;
       };
 
       def['$need_more_wood?'] = function() {
-        var $a, $b, TMP_2, self = this, expected_firewood = nil, available_firewood = nil;
+        var $a, self = this, expected_firewood = nil, available_firewood = nil;
 
         expected_firewood = (2)['$*'](24);
         if ((($a = self.dormitory) !== nil && (!$a._isBoolean || $a == true))) {
           expected_firewood = expected_firewood['$+'](self.dormitory.$firewood_needed())};
         available_firewood = self.$stash().$count("firewood");
-        ($a = ($b = self.fallen_trees).$each, $a._p = (TMP_2 = function(cut_tree){var self = TMP_2._s || this;
-if (cut_tree == null) cut_tree = nil;
-        return available_firewood = available_firewood['$+'](cut_tree.$firewood_left())}, TMP_2._s = self, TMP_2), $a).call($b);
         return available_firewood['$<'](expected_firewood);
       };
 
@@ -15061,17 +15334,17 @@ if (cut_tree == null) cut_tree = nil;
       };
 
       def.$jobs_count = function() {
-        var $a, $b, TMP_3, $c, TMP_4, $d, TMP_5, $e, TMP_6, self = this;
+        var $a, $b, TMP_2, $c, TMP_3, $d, TMP_4, $e, TMP_5, self = this;
 
-        return $hash2(["haul", "management", "woodcutting", "gatherer"], {"haul": ($a = ($b = self.jobs).$count, $a._p = (TMP_3 = function(job){var self = TMP_3._s || this;
+        return $hash2(["haul", "management", "woodcutting", "gatherer"], {"haul": ($a = ($b = self.jobs).$count, $a._p = (TMP_2 = function(job){var self = TMP_2._s || this;
 if (job == null) job = nil;
-        return job.$type()['$==']("haul")}, TMP_3._s = self, TMP_3), $a).call($b), "management": ($a = ($c = self.jobs).$count, $a._p = (TMP_4 = function(job){var self = TMP_4._s || this;
+        return job.$type()['$==']("haul")}, TMP_2._s = self, TMP_2), $a).call($b), "management": ($a = ($c = self.jobs).$count, $a._p = (TMP_3 = function(job){var self = TMP_3._s || this;
 if (job == null) job = nil;
-        return job.$type()['$==']("management")}, TMP_4._s = self, TMP_4), $a).call($c), "woodcutting": ($a = ($d = self.jobs).$count, $a._p = (TMP_5 = function(job){var self = TMP_5._s || this;
+        return job.$type()['$==']("management")}, TMP_3._s = self, TMP_3), $a).call($c), "woodcutting": ($a = ($d = self.jobs).$count, $a._p = (TMP_4 = function(job){var self = TMP_4._s || this;
 if (job == null) job = nil;
-        return job.$type()['$==']("woodcutting")}, TMP_5._s = self, TMP_5), $a).call($d), "gatherer": ($a = ($e = self.jobs).$count, $a._p = (TMP_6 = function(job){var self = TMP_6._s || this;
+        return job.$type()['$==']("woodcutting")}, TMP_4._s = self, TMP_4), $a).call($d), "gatherer": ($a = ($e = self.jobs).$count, $a._p = (TMP_5 = function(job){var self = TMP_5._s || this;
 if (job == null) job = nil;
-        return job.$type()['$==']("gatherer")}, TMP_6._s = self, TMP_6), $a).call($e)});
+        return job.$type()['$==']("gatherer")}, TMP_5._s = self, TMP_5), $a).call($e)});
       };
 
       def.$set_position = function(x, y) {
@@ -15097,7 +15370,7 @@ if (job == null) job = nil;
         var $a, $b, self = this;
 
         self.fireplace.$update(minutes);
-        return ($a = ($b = self.fallen_trees).$delete_if, $a._p = "empty?".$to_proc(), $a).call($b);
+        return ($a = ($b = self.stuff_to_bring).$delete_if, $a._p = "empty?".$to_proc(), $a).call($b);
       };
 
       def.$people_count = function() {
@@ -15146,6 +15419,10 @@ if (job == null) job = nil;
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
   $opal.add_stubs([]);
+  ;
+  ;
+  ;
+  ;
   ;
   ;
   ;

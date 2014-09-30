@@ -5,9 +5,10 @@ class TheGame
 
       attr_accessor :content, :terrain
 
-      def initialize(x, y)
+      def initialize(x, y, map)
         self.x = x
         self.y = y
+        @map = map
       end
 
       def mark_for_cleaning!
@@ -37,16 +38,29 @@ class TheGame
       end
 
       def update
-        if @content.is_a? Construction::FallenTree and @content.empty?
-          @content = nil
-          cleaned! if marked_for_cleaning?
-        elsif @content.is_a? Nature::BerriesBush and @content.empty?
+        if @content.is_a? Nature::BerriesBush and @content.empty?
           @content = nil
           cleaned! if marked_for_cleaning?
         elsif @content.is_a? Nature::Tree and @content.cut?
-          fallen_tree = TheGame::Construction::FallenTree.new(@x, @y)
-          @content = fallen_tree
-          Settlement.instance.fallen_trees << fallen_tree
+          fallen_tree_pieces_to_deploy = @content.pieces_count - 1
+          x = @x
+          y = @y
+
+          @content = Nature::Tree::Piece.new(x, y)
+          x += 1
+
+          while fallen_tree_pieces_to_deploy > 0
+            tile = @map.fetch(x, y)
+            if tile.empty?
+              fallen_tree_piece = Nature::Tree::Piece.new(x, y)
+              tile.content = fallen_tree_piece
+              fallen_tree_pieces_to_deploy -= 1
+            end
+            x += 1
+          end
+        elsif @content.is_a? Nature::Tree::Piece and @content.cut?
+          @content = Item::Log.new(@x, @y)
+          Settlement.instance.stuff_to_bring << self
         end
       end
     end

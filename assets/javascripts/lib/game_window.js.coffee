@@ -76,5 +76,12 @@ class @GameWindow
     @stage.mouseupoutside = =>
       @change_offset = false
 
-    @stage.mousedown = =>
+    @stage.mousedown = (mouseData) =>
       @change_offset = true
+
+      mouse_x = mouseData.global.x
+      mouse_y = mouseData.global.y
+      map_x = parseInt(mouse_x / @tileSize)
+      map_y = parseInt(mouse_y / @tileSize)
+      tile = @engine.findTile(map_y, map_x)
+      console.log tile
