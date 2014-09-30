@@ -8,14 +8,13 @@ class TheGame
     attr_accessor :people
     attr_accessor :firewood_needed
     attr_accessor :fireplace, :dormitory
-    attr_accessor :fallen_trees
+    attr_accessor :stuff_to_bring
 
     def initialize
       @dormitory = nil
       @fireplace = nil
       @stash     = nil
-
-      @fallen_trees = []
+      @stuff_to_bring = []
     end
 
     # job types:
@@ -38,7 +37,11 @@ class TheGame
             tile = @dormitory.tile_for_cleaning(:woodcutting)
             return Action::Get.create(:axe, from: @stash).then(Action::CutTree.create(tile.content))
           elsif need_more_wood?
-            return Action::LookForTreeToCut.create()
+            if @stash.has?(:log)
+              return Action::CutLogIntoFirewood.create()
+            else
+              return Action::LookForTreeToCut.create()
+            end
           end
         elsif job_type == :haul
           if needs_cleaning?(:haul)
@@ -49,11 +52,15 @@ class TheGame
           elsif @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
             action = Action::Supply.create(@dormitory, with: :firewood, from: @stash)
             return action
+          elsif @stuff_to_bring.any?
+            stuff = @stuff_to_bring.first
+            return Action::MoveContent.create(:log, from: stuff, to: @stash)
+
             # return Action::Get.create(:firewood, from: @stash).then(Action::Carry.create(:firewood, to: @dormitory))
-          elsif @fallen_trees.any?
-            action = Action::Supply.create(@stash, with: :firewood, from: @fallen_trees.first)
-            return action
-            # return Action::Get.create(:firewood, from: @fallen_trees.first).then(Action::Carry.create(:firewood, to: @stash))
+          # elsif @fallen_trees.any?
+          #   action = Action::Supply.create(@stash, with: :firewood, from: @fallen_trees.first)
+          #   return action
+          #   # return Action::Get.create(:firewood, from: @fallen_trees.first).then(Action::Carry.create(:firewood, to: @stash))
           end
         elsif job_type == :management
           if @dormitory.nil?
@@ -87,11 +94,6 @@ class TheGame
 
       available_firewood = stash.count(:firewood)
 
-      #add cut trees to available firewood
-      @fallen_trees.each do |cut_tree|
-        available_firewood += cut_tree.firewood_left
-      end
-
       available_firewood < expected_firewood
     end
 
@@ -123,7 +125,7 @@ class TheGame
 
     def update(minutes)
       @fireplace.update(minutes)
-      @fallen_trees.delete_if(&:empty?)
+      @stuff_to_bring.delete_if(&:empty?)
     end
 
     def people_count

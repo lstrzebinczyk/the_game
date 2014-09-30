@@ -1,6 +1,6 @@
 class TheGame
   class Map
-    attr_reader :grid
+    attr_accessor :grid
 
     def initialize(grid)
       @grid = grid

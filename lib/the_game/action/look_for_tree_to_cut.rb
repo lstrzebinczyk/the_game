@@ -20,12 +20,20 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        closest = map.find_closest_to(person) do |tile|
-          tile.content.is_a? Nature::Tree
+        closest_tree_piece = map.find_closest_to(person) do |tile|
+          tile.content.is_a? Nature::Tree::Piece
         end
 
-        if closest
-          person.action = Action::CutTree.create(closest.content)
+        if closest_tree_piece
+          person.action = Action::CutTree.create(closest_tree_piece.content)
+        else
+          closest_tree = map.find_closest_to(person) do |tile|
+            tile.content.is_a? Nature::Tree
+          end
+
+          if closest_tree
+            person.action = Action::CutTree.create(closest_tree.content)
+          end
         end
       end
     end

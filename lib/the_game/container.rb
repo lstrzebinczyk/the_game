@@ -1,15 +1,19 @@
 class TheGame
   class Container
-    ITEM_TYPES = [:berries, :fish, :cooked_fish, :firewood, :axe, :fishing_rod]
+    ITEM_TYPES = [:berries, :fish, :cooked_fish, :log, :firewood, :axe, :fishing_rod]
 
     def initialize
       @content = {}
-      @content[:berries]     = []
-      @content[:axe]         = []
-      @content[:firewood]    = []
-      @content[:fishing_rod] = []
-      @content[:fish]        = []
-      @content[:cooked_fish] = []
+      ITEM_TYPES.each do |type|
+        @content[type] = []
+      end
+
+      # @content[:berries]     = []
+      # @content[:axe]         = []
+      # @content[:firewood]    = []
+      # @content[:fishing_rod] = []
+      # @content[:fish]        = []
+      # @content[:cooked_fish] = []
     end
 
     def item_types

@@ -17,7 +17,7 @@ class TheGame
       def description
         x = @tree.x
         y = @tree.y
-        "cutting tree at #{x}, #{y}"
+        "cutting #{@tree.description} at #{x}, #{y}"
       end
 
       def done?(person)

@@ -289,7 +289,7 @@
       this.gameMenu = new GameMenu(this.gameEngine);
       this.gameWindow = new GameWindow(this.gameEngine);
       this.startButton = $("#start");
-      this.expectedTurnsPerSecond = 30;
+      this.expectedTurnsPerSecond = 60;
     }
 
     GameLoop.prototype.setup = function() {
@@ -769,18 +769,24 @@
         if (this.object.contentName() === "$Tree") {
           this.contentString = "t";
           return this.contentColor = "red";
-        } else if (this.object.contentName() === "$FallenTree") {
+        } else if (this.object.contentName() === "$Piece") {
           this.contentString = "/";
           return this.contentColor = "red";
         } else if (this.object.contentName() === "$BerriesBush") {
           this.contentString = "#";
           return this.contentColor = "red";
+        } else if (this.object.contentName() === "$Log") {
+          this.contentString = "---";
+          return this.contentColor = "green";
         }
       } else {
         if (this.object.contentName() === "$Tree") {
           this.contentString = "t";
           return this.contentColor = "green";
-        } else if (this.object.contentName() === "$FallenTree") {
+        } else if (this.object.contentName() === "$Log") {
+          this.contentString = "---";
+          return this.contentColor = "green";
+        } else if (this.object.contentName() === "$Piece") {
           this.contentString = "/";
           return this.contentColor = "green";
         } else if (this.object.contentName() === "$BerriesBush") {
