@@ -49,10 +49,10 @@ class @GameWindow
     @engine.eachTile (tile) =>
       new RenderingTile(tile, @)
 
-    new RenderingFireplace(@engine.fireplace(), @)
-    new RenderingStash(@engine.stash.stash, @)
+    new RenderingFireplace(@engine.fireplace, @)
+    new RenderingStash(@engine.stash, @)
 
-    for person in @engine.people()
+    @engine.eachPerson (person) =>
       new RenderingPerson(person, @)
 
     @stage.mousemove = (data) =>

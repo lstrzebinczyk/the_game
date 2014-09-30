@@ -3,21 +3,24 @@
 
   this.GameEngine = (function() {
     function GameEngine() {
+      this.eachPerson = __bind(this.eachPerson, this);
       this.eachTile = __bind(this.eachTile, this);
-      this.fireplace = __bind(this.fireplace, this);
       this.update = __bind(this.update, this);
       this.time = __bind(this.time, this);
       this.mapHeight = __bind(this.mapHeight, this);
       this.mapWidth = __bind(this.mapWidth, this);
-      this.people = __bind(this.people, this);
+      var person, _i, _len, _ref;
       this.engine = Opal.TheGame.Engine.$new();
       this.stash = new GameEngine.Stash();
       this.dormitory = new GameEngine.Dormitory();
+      this.fireplace = new GameEngine.Fireplace();
+      this.people = [];
+      _ref = this.engine.$people();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        person = _ref[_i];
+        this.people.push(new GameEngine.Person(person));
+      }
     }
-
-    GameEngine.prototype.people = function() {
-      return this.engine.$people();
-    };
 
     GameEngine.prototype.mapWidth = function() {
       return this.engine.map.$width();
@@ -35,12 +38,6 @@
       return this.engine.$update();
     };
 
-    GameEngine.prototype.fireplace = function() {
-      var settlement;
-      settlement = Opal.TheGame.Settlement.$instance();
-      return settlement.$fireplace();
-    };
-
     GameEngine.prototype.eachTile = function(block) {
       var row, tile, _i, _len, _ref, _results;
       _ref = this.engine.$map().$grid();
@@ -56,6 +53,17 @@
           }
           return _results1;
         })());
+      }
+      return _results;
+    };
+
+    GameEngine.prototype.eachPerson = function(block) {
+      var person, _i, _len, _ref, _results;
+      _ref = this.people;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        person = _ref[_i];
+        _results.push(block(person));
       }
       return _results;
     };
@@ -106,8 +114,81 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+  this.GameEngine.Fireplace = (function() {
+    function Fireplace() {
+      this.$y = __bind(this.$y, this);
+      this.$x = __bind(this.$x, this);
+      this.fireplace = Opal.TheGame.Settlement.$instance().$fireplace();
+    }
+
+    Fireplace.prototype.$x = function() {
+      return this.fireplace.$x();
+    };
+
+    Fireplace.prototype.$y = function() {
+      return this.fireplace.$y();
+    };
+
+    return Fireplace;
+
+  })();
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  this.GameEngine.Person = (function() {
+    function Person(person) {
+      this.person = person;
+      this.$y = __bind(this.$y, this);
+      this.$x = __bind(this.$x, this);
+      this.actionDescription = __bind(this.actionDescription, this);
+      this.energy = __bind(this.energy, this);
+      this.hunger = __bind(this.hunger, this);
+      this.thirst = __bind(this.thirst, this);
+      this.type = __bind(this.type, this);
+    }
+
+    Person.prototype.type = function() {
+      return this.person.$type();
+    };
+
+    Person.prototype.thirst = function() {
+      return this.person.$thirst();
+    };
+
+    Person.prototype.hunger = function() {
+      return this.person.$hunger();
+    };
+
+    Person.prototype.energy = function() {
+      return this.person.$energy();
+    };
+
+    Person.prototype.actionDescription = function() {
+      return this.person.$action().$description();
+    };
+
+    Person.prototype.$x = function() {
+      return this.person.$x();
+    };
+
+    Person.prototype.$y = function() {
+      return this.person.$y();
+    };
+
+    return Person;
+
+  })();
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
   this.GameEngine.Stash = (function() {
     function Stash() {
+      this.$y = __bind(this.$y, this);
+      this.$x = __bind(this.$x, this);
       this.count = __bind(this.count, this);
       this.itemTypes = __bind(this.itemTypes, this);
       this.stash = Opal.TheGame.Settlement.$instance().$stash();
@@ -119,6 +200,14 @@
 
     Stash.prototype.count = function(type) {
       return this.stash.$count(type);
+    };
+
+    Stash.prototype.$x = function() {
+      return this.stash.$x();
+    };
+
+    Stash.prototype.$y = function() {
+      return this.stash.$y();
     };
 
     return Stash;
@@ -240,20 +329,19 @@
     };
 
     GameWindow.prototype.setup = function() {
-      var person, _i, _len, _ref;
       $("#view").append(this.renderer.view);
       this.engine.eachTile((function(_this) {
         return function(tile) {
           return new RenderingTile(tile, _this);
         };
       })(this));
-      new RenderingFireplace(this.engine.fireplace(), this);
-      new RenderingStash(this.engine.stash.stash, this);
-      _ref = this.engine.people();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        person = _ref[_i];
-        new RenderingPerson(person, this);
-      }
+      new RenderingFireplace(this.engine.fireplace, this);
+      new RenderingStash(this.engine.stash, this);
+      this.engine.eachPerson((function(_this) {
+        return function(person) {
+          return new RenderingPerson(person, _this);
+        };
+      })(this));
       this.stage.mousemove = (function(_this) {
         return function(data) {
           var x, y;
@@ -367,24 +455,22 @@
     };
 
     GameMenu.prototype.renderPeopleStats = function() {
-      var action_description, energy, hunger, person, progress, template, thirst, type, _i, _len, _ref, _results;
       this.peopleStatsWindow.empty();
-      _ref = this.engine.people();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        person = _ref[_i];
-        type = person.$type();
-        thirst = person.$thirst();
-        hunger = person.$hunger();
-        energy = person.$energy();
-        action_description = person.$action().$description();
-        progress = function(value) {
-          return "<progress value='" + value + "'></progress>";
+      return this.engine.eachPerson((function(_this) {
+        return function(person) {
+          var action_description, energy, hunger, progress, template, thirst, type;
+          type = person.type();
+          thirst = person.thirst();
+          hunger = person.hunger();
+          energy = person.energy();
+          action_description = person.actionDescription();
+          progress = function(value) {
+            return "<progress value='" + value + "'></progress>";
+          };
+          template = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: " + (progress(thirst)) + "</div>\n  <div>hunger: " + (progress(hunger)) + "</div>\n  <div>energy: " + (progress(energy)) + "</div>\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
+          return _this.peopleStatsWindow.append(template);
         };
-        template = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: " + (progress(thirst)) + "</div>\n  <div>hunger: " + (progress(hunger)) + "</div>\n  <div>energy: " + (progress(energy)) + "</div>\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
-        _results.push(this.peopleStatsWindow.append(template));
-      }
-      return _results;
+      })(this));
     };
 
     GameMenu.prototype.renderTurnsPerSecond = function() {
@@ -538,13 +624,13 @@
 
     RenderingPerson.prototype.createContent = function() {
       var content;
-      if (this.object.$type() === "woodcutter") {
+      if (this.object.type() === "woodcutter") {
         content = "W";
-      } else if (this.object.$type() === "leader") {
+      } else if (this.object.type() === "leader") {
         content = "L";
-      } else if (this.object.$type() === "gatherer") {
+      } else if (this.object.type() === "gatherer") {
         content = "G";
-      } else if (this.object.$type() === "fisherman") {
+      } else if (this.object.type() === "fisherman") {
         content = "F";
       }
       return this.content = new PIXI.Text(content, {

@@ -7,3 +7,10 @@ class @GameEngine.Stash
 
   count: (type) =>
     @stash.$count(type)
+
+  $x: =>
+    @stash.$x()
+
+  $y: =>
+    @stash.$y()
+

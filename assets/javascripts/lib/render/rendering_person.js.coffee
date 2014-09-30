@@ -1,12 +1,12 @@
 class @RenderingPerson extends Renderable
   createContent: =>
-    if @object.$type() == "woodcutter"
+    if @object.type() == "woodcutter"
       content = "W"
-    else if @object.$type() == "leader"
+    else if @object.type() == "leader"
       content = "L"
-    else if @object.$type() == "gatherer"
+    else if @object.type() == "gatherer"
       content = "G"
-    else if @object.$type() == "fisherman"
+    else if @object.type() == "fisherman"
       content = "F"
 
     @content = new PIXI.Text(content, {font: "25px", fill: "white"})

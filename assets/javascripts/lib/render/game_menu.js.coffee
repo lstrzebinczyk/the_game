@@ -44,12 +44,12 @@ class @GameMenu
 
   renderPeopleStats: =>
     @peopleStatsWindow.empty()
-    for person in @engine.people()
-      type   = person.$type()
-      thirst = person.$thirst()
-      hunger = person.$hunger()
-      energy = person.$energy()
-      action_description = person.$action().$description()
+    @engine.eachPerson (person) =>
+      type   = person.type()
+      thirst = person.thirst()
+      hunger = person.hunger()
+      energy = person.energy()
+      action_description = person.actionDescription()
 
       progress = (value) ->
         "<progress value='#{value}'></progress>"
