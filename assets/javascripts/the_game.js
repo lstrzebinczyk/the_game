@@ -12863,7 +12863,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$empty?', '$==', '$nil?', '$is_a?', '$marked_for_cleaning?', '$cleaned!', '$cut?', '$-', '$pieces_count', '$new', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$!', '$nil?', '$is_a?', '$empty?', '$cut?', '$-', '$pieces_count', '$new', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12882,39 +12882,26 @@ if (column_index == null) column_index = nil;
 
         var def = self._proto, $scope = self._scope, $a, $b;
 
-        def.mark_for_cleaning = def.terrain = def.content = def.x = def.y = def.map = nil;
+        def.content = def.building = def.terrain = def.x = def.y = def.map = nil;
         self.$include((($a = ((($b = $scope.TheGame) == null ? $opal.cm('TheGame') : $b))._scope).HasPosition == null ? $a.cm('HasPosition') : $a.HasPosition));
 
         self.$attr_accessor("content", "terrain");
+
+        self.$attr_accessor("building");
 
         def.$initialize = function(x, y, map) {
           var self = this;
 
           self['$x='](x);
           self['$y='](y);
-          return self.map = map;
-        };
-
-        def['$mark_for_cleaning!'] = function() {
-          var $a, self = this;
-
-          if ((($a = self['$empty?']()) !== nil && (!$a._isBoolean || $a == true))) {
-            return nil
-            } else {
-            return self.mark_for_cleaning = true
-          };
-        };
-
-        def['$cleaned!'] = function() {
-          var self = this;
-
-          return self.mark_for_cleaning = false;
+          self.map = map;
+          return self.building = nil;
         };
 
         def['$marked_for_cleaning?'] = function() {
-          var self = this;
+          var $a, self = this;
 
-          return self.mark_for_cleaning['$=='](true);
+          return (($a = self.content, $a !== false && $a !== nil ?self.building : $a))['$nil?']()['$!']();
         };
 
         def.$description = function() {
@@ -12939,12 +12926,7 @@ if (column_index == null) column_index = nil;
           var $a, $b, $c, $d, $e, self = this, fallen_tree_pieces_to_deploy = nil, x = nil, y = nil, tile = nil, fallen_tree_piece = nil;
 
           if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).BerriesBush == null ? $c.cm('BerriesBush') : $c.BerriesBush)), $b !== false && $b !== nil ?self.content['$empty?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
-            self.content = nil;
-            if ((($a = self['$marked_for_cleaning?']()) !== nil && (!$a._isBoolean || $a == true))) {
-              return self['$cleaned!']()
-              } else {
-              return nil
-            };
+            return self.content = nil
           } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree)), $b !== false && $b !== nil ?self.content['$cut?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
             fallen_tree_pieces_to_deploy = self.content.$pieces_count()['$-'](1);
             x = self.x;
@@ -13890,7 +13872,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$instance', '$-', '$x', '$fireplace', '$y', '$new', '$each', '$fetch', '$+', '$mark_for_cleaning!', '$<<', '$fields=', '$dormitory=', '$do_stuff']);
+  $opal.add_stubs(['$instance', '$-', '$x', '$fireplace', '$y', '$new', '$each', '$fetch', '$+', '$<<', '$building=', '$fields=', '$dormitory=', '$do_stuff']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -13934,8 +13916,8 @@ if (row == null) row = nil;
           return ($a = ($b = [0, 1, 2, 3]).$each, $a._p = (TMP_2 = function(col){var self = TMP_2._s || this, tile = nil;
 if (col == null) col = nil;
             tile = map.$fetch(dormitory_x['$+'](row), dormitory_y['$+'](col));
-              tile['$mark_for_cleaning!']();
-              return fields['$<<'](tile);}, TMP_2._s = self, TMP_2), $a).call($b)}, TMP_1._s = self, TMP_1), $a).call($b);
+              fields['$<<'](tile);
+              return tile['$building='](dormitory);}, TMP_2._s = self, TMP_2), $a).call($b)}, TMP_1._s = self, TMP_1), $a).call($b);
           dormitory['$fields='](fields);
           settlement['$dormitory='](dormitory);
           return person.$do_stuff();
@@ -14777,7 +14759,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
 
-  $opal.add_stubs(['$[]', '$==', '$type', '$content', '$add', '$inventory', '$content=', '$marked_for_cleaning?', '$cleaned!', '$then', '$create', '$description=', '$description']);
+  $opal.add_stubs(['$[]', '$==', '$type', '$content', '$add', '$inventory', '$content=', '$then', '$create', '$description=', '$description']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -14818,17 +14800,12 @@ if (tile == null) tile = nil;
           };
 
           return (def.$perform = function(person, map, time_in_minutes) {
-            var $a, self = this, content = nil;
+            var self = this, content = nil;
 
             if (self.from.$content().$type()['$=='](self.item_type)) {
               content = self.from.$content();
               person.$inventory().$add(content);
-              self.from['$content='](nil);
-              if ((($a = self.from['$marked_for_cleaning?']()) !== nil && (!$a._isBoolean || $a == true))) {
-                return self.from['$cleaned!']()
-                } else {
-                return nil
-              };
+              return self.from['$content='](nil);
               } else {
               return nil
             };

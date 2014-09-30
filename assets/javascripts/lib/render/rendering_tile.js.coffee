@@ -24,7 +24,10 @@ class @RenderingTile extends Renderable
         @contentColor   = "red"
       else if @object.contentName() == "$Log"
         @contentString = "---"
-        @contentColor = "green"
+        @contentColor = "red"
+      else
+        @contentString = "."
+        @contentColor   = "white"
     else
       if @object.contentName() == "$Tree"
         @contentString = "t"

@@ -18,7 +18,6 @@ class TheGame
             content = @from.content
             person.inventory.add(content)
             @from.content = nil
-            @from.cleaned! if @from.marked_for_cleaning?
           end
         end
       end

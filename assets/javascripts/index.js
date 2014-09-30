@@ -789,7 +789,10 @@
           return this.contentColor = "red";
         } else if (this.object.contentName() === "$Log") {
           this.contentString = "---";
-          return this.contentColor = "green";
+          return this.contentColor = "red";
+        } else {
+          this.contentString = ".";
+          return this.contentColor = "white";
         }
       } else {
         if (this.object.contentName() === "$Tree") {

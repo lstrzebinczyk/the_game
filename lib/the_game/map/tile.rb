@@ -4,25 +4,17 @@ class TheGame
       include TheGame::HasPosition
 
       attr_accessor :content, :terrain
+      attr_accessor :building
 
       def initialize(x, y, map)
         self.x = x
         self.y = y
         @map = map
-      end
-
-      def mark_for_cleaning!
-        unless empty?
-          @mark_for_cleaning = true
-        end
-      end
-
-      def cleaned!
-        @mark_for_cleaning = false
+        @building = nil
       end
 
       def marked_for_cleaning?
-        @mark_for_cleaning == true
+        !(@content && @building).nil?
       end
 
       def description
@@ -40,7 +32,6 @@ class TheGame
       def update
         if @content.is_a? Nature::BerriesBush and @content.empty?
           @content = nil
-          cleaned! if marked_for_cleaning?
         elsif @content.is_a? Nature::Tree and @content.cut?
           fallen_tree_pieces_to_deploy = @content.pieces_count - 1
           x = @x
