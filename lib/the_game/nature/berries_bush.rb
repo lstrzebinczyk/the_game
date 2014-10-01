@@ -24,6 +24,10 @@ class TheGame
         end
       end
 
+      def type
+        :berries_bush
+      end
+
       def empty?
         @berries_count == 0
       end

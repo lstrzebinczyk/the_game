@@ -14935,6 +14935,12 @@ if (tile == null) tile = nil;
           return "tree";
         };
 
+        def.$type = function() {
+          var self = this;
+
+          return "tree";
+        };
+
         return (def.$pieces_count = function() {
           var self = this;
 
@@ -14996,6 +15002,12 @@ if (tile == null) tile = nil;
             var self = this;
 
             return self.cut;
+          };
+
+          def.$type = function() {
+            var self = this;
+
+            return "tree_piece";
           };
 
           return (def.$description = function() {
@@ -15068,6 +15080,12 @@ if (tile == null) tile = nil;
             } else {
             return nil
           };
+        };
+
+        def.$type = function() {
+          var self = this;
+
+          return "berries_bush";
         };
 
         def['$empty?'] = function() {

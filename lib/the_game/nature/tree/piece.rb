@@ -17,6 +17,10 @@ class TheGame
           @cut
         end
 
+        def type
+          :tree_piece
+        end
+
         def description
           "fallen tree piece"
         end

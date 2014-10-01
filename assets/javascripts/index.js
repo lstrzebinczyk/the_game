@@ -254,8 +254,10 @@
     Tile.prototype.contentName = function() {
       if (this.tile.$terrain() === "river") {
         return "river";
+      } else if (this.tile.$content()["$nil?"]()) {
+        return null;
       } else {
-        return this.tile.$content().constructor.name;
+        return this.tile.$content().$type();
       }
     };
 
@@ -806,16 +808,16 @@
 
     RenderingTile.prototype.setData = function() {
       if (this.object.isMarkedForCleaning()) {
-        if (this.object.contentName() === "$Tree") {
+        if (this.object.contentName() === "tree") {
           this.contentString = "t";
           return this.contentColor = "red";
-        } else if (this.object.contentName() === "$Piece") {
+        } else if (this.object.contentName() === "tree_piece") {
           this.contentString = "/";
           return this.contentColor = "red";
-        } else if (this.object.contentName() === "$BerriesBush") {
+        } else if (this.object.contentName() === "berries_bush") {
           this.contentString = "#";
           return this.contentColor = "red";
-        } else if (this.object.contentName() === "$Log") {
+        } else if (this.object.contentName() === "log") {
           this.contentString = "---";
           return this.contentColor = "red";
         } else {
@@ -823,16 +825,16 @@
           return this.contentColor = "white";
         }
       } else {
-        if (this.object.contentName() === "$Tree") {
+        if (this.object.contentName() === "tree") {
           this.contentString = "t";
           return this.contentColor = "green";
-        } else if (this.object.contentName() === "$Log") {
+        } else if (this.object.contentName() === "log") {
           this.contentString = "---";
           return this.contentColor = "green";
-        } else if (this.object.contentName() === "$Piece") {
+        } else if (this.object.contentName() === "tree_piece") {
           this.contentString = "/";
           return this.contentColor = "green";
-        } else if (this.object.contentName() === "$BerriesBush") {
+        } else if (this.object.contentName() === "berries_bush") {
           this.contentString = "#";
           return this.contentColor = "yellow";
         } else if (this.object.contentName() === "river") {

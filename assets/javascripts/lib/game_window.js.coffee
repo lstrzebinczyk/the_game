@@ -22,6 +22,7 @@ class @GameWindow
 
     @renderer = PIXI.autoDetectRenderer(@renderedWidth*@tileSize, @renderedHeight*@tileSize)
 
+
     @updatable = []
 
   update: =>

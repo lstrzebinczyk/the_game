@@ -1,7 +1,6 @@
 class @GameEngine.Dormitory
   constructor: ->
     @settlement = Opal.TheGame.Settlement.$instance()
-    # @dormitory = Opal.TheGame.Settlement.$instance().$dormitory()
 
   isNil: =>
     @settlement.$dormitory()["$nil?"]()

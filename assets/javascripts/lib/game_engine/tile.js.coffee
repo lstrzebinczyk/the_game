@@ -9,8 +9,10 @@ class @GameEngine.Tile
   contentName: =>
     if @tile.$terrain() == "river"
       "river"
+    else if @tile.$content()["$nil?"]()
+      null
     else
-      @tile.$content().constructor.name
+      @tile.$content().$type()
 
   isUpdated: =>
     (@cachedContentName != @contentName()) or (@cachedIsMarkedForCleaning != @isMarkedForCleaning())
