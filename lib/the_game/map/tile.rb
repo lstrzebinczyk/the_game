@@ -1,6 +1,20 @@
 class TheGame
   class Map
     class Tile
+      class NullContent
+        def type
+        end
+
+        def nil?
+          true
+        end
+
+        # meaning, it does not need to be updated
+        def empty?
+          false
+        end
+      end
+
       include TheGame::HasPosition
 
       attr_accessor :content, :terrain
@@ -10,11 +24,16 @@ class TheGame
         self.x = x
         self.y = y
         @map = map
+        @content = NullContent.new
         @building = nil
       end
 
       def marked_for_cleaning?
         !(@content && @building).nil?
+      end
+
+      def clean!
+        @content = NullContent.new
       end
 
       def description
@@ -30,28 +49,31 @@ class TheGame
       end
 
       def update
-        if @content.is_a? Nature::BerriesBush and @content.empty?
-          @content = nil
-        elsif @content.is_a? Nature::Tree and @content.cut?
-          fallen_tree_pieces_to_deploy = @content.pieces_count - 1
-          x = @x
-          y = @y
+        if @content.empty?
+          case @content.type
+          when :berries_bush
+            clean!
+          when :tree
+            fallen_tree_pieces_to_deploy = @content.pieces_count - 1
+            x = @x
+            y = @y
 
-          @content = Nature::Tree::Piece.new(x, y)
-          x += 1
-
-          while fallen_tree_pieces_to_deploy > 0
-            tile = @map.fetch(x, y)
-            if tile.empty?
-              fallen_tree_piece = Nature::Tree::Piece.new(x, y)
-              tile.content = fallen_tree_piece
-              fallen_tree_pieces_to_deploy -= 1
-            end
+            @content = Nature::Tree::Piece.new(x, y)
             x += 1
+
+            while fallen_tree_pieces_to_deploy > 0
+              tile = @map.fetch(x, y)
+              if tile.empty?
+                fallen_tree_piece = Nature::Tree::Piece.new(x, y)
+                tile.content = fallen_tree_piece
+                fallen_tree_pieces_to_deploy -= 1
+              end
+              x += 1
+            end
+          when :tree_piece
+            @content = Item::Log.new(@x, @y)
+            Settlement.instance.stuff_to_bring << self
           end
-        elsif @content.is_a? Nature::Tree::Piece and @content.cut?
-          @content = Item::Log.new(@x, @y)
-          Settlement.instance.stuff_to_bring << self
         end
       end
     end

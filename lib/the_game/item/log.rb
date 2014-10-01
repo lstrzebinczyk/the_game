@@ -10,6 +10,11 @@ class TheGame
           32
         end
       end
+
+      # meaning, rendering tile doesn't need to get updated
+      def empty?
+        false
+      end
     end
   end
 end

@@ -254,8 +254,6 @@
     Tile.prototype.contentName = function() {
       if (this.tile.$terrain() === "river") {
         return "river";
-      } else if (this.tile.$content()["$nil?"]()) {
-        return null;
       } else {
         return this.tile.$content().$type();
       }
@@ -529,50 +527,46 @@
     };
 
     GameMenu.prototype.renderBuildingsStats = function() {
-      var template;
       this.buildingStatsWindow.empty();
       if (!this.engine.dormitory.isNil()) {
-        template = "<div>";
-        template += "<div>DORMITORY:</div>";
-        template += "<div>status: " + (this.engine.dormitory.status()) + "</div>";
+        this.buildingTemplate = "<div>";
+        this.buildingTemplate += "<div>DORMITORY:</div>";
+        this.buildingTemplate += "<div>status: " + (this.engine.dormitory.status()) + "</div>";
         if (this.engine.dormitory.status() === "plan") {
-          template += "<div>firewood needed: " + (this.engine.dormitory.firewoodNeeded()) + "</div>";
+          this.buildingTemplate += "<div>firewood needed: " + (this.engine.dormitory.firewoodNeeded()) + "</div>";
         }
         if (this.engine.dormitory.status() === "building") {
-          template += "<div>construction left: " + (this.engine.dormitory.minutesLeft()) + "</div>";
+          this.buildingTemplate += "<div>construction left: " + (this.engine.dormitory.minutesLeft()) + "</div>";
         }
-        return this.buildingStatsWindow.append(template);
+        return this.buildingStatsWindow.append(this.buildingTemplate);
       }
     };
 
     GameMenu.prototype.renderStashStats = function() {
-      var template, type, _i, _len, _ref;
+      var type, _i, _len, _ref;
       this.stashStatsWindow.empty();
-      template = "<div>";
+      this.stashTemplate = "<div>";
       _ref = this.engine.stash.itemTypes();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         type = _ref[_i];
-        template += "<div>" + type + ": " + (this.engine.stash.count(type));
+        this.stashTemplate += "<div>" + type + ": " + (this.engine.stash.count(type));
       }
-      template += "</div>";
-      return this.stashStatsWindow.append(template);
+      this.stashTemplate += "</div>";
+      return this.stashStatsWindow.append(this.stashTemplate);
     };
 
     GameMenu.prototype.renderPeopleStats = function() {
       this.peopleStatsWindow.empty();
       return this.engine.eachPerson((function(_this) {
         return function(person) {
-          var action_description, energy, hunger, progress, template, thirst, type;
+          var action_description, energy, hunger, thirst, type;
           type = person.type();
           thirst = person.thirst();
           hunger = person.hunger();
           energy = person.energy();
           action_description = person.actionDescription();
-          progress = function(value) {
-            return "<progress value='" + value + "'></progress>";
-          };
-          template = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: " + (progress(thirst)) + "</div>\n  <div>hunger: " + (progress(hunger)) + "</div>\n  <div>energy: " + (progress(energy)) + "</div>\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
-          return _this.peopleStatsWindow.append(template);
+          _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
+          return _this.peopleStatsWindow.append(_this.peopleTemplate);
         };
       })(this));
     };

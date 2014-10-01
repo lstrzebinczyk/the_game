@@ -16,6 +16,10 @@ class TheGame
         @cut
       end
 
+      def empty?
+        cut?
+      end
+
       def description
         "tree"
       end

@@ -12720,7 +12720,7 @@ if (tile == null) tile = nil;
           return "log";
         };
 
-        return (def.$count = function(type) {
+        def.$count = function(type) {
           var self = this;
 
           if (type['$==']("firewood")) {
@@ -12728,7 +12728,13 @@ if (tile == null) tile = nil;
             } else {
             return nil
           };
-        }, nil) && 'count';
+        };
+
+        return (def['$empty?'] = function() {
+          var self = this;
+
+          return false;
+        }, nil) && 'empty?';
       })(self, null)
     })(self, null)
   })(self, null)
@@ -12904,7 +12910,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$!', '$nil?', '$is_a?', '$empty?', '$cut?', '$-', '$pieces_count', '$new', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$new', '$!', '$nil?', '$empty?', '$type', '$===', '$clean!', '$-', '$pieces_count', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12924,6 +12930,31 @@ if (column_index == null) column_index = nil;
         var def = self._proto, $scope = self._scope, $a, $b;
 
         def.content = def.building = def.terrain = def.x = def.y = def.map = nil;
+        (function($base, $super) {
+          function $NullContent(){};
+          var self = $NullContent = $klass($base, $super, 'NullContent', $NullContent);
+
+          var def = self._proto, $scope = self._scope;
+
+          def.$type = function() {
+            var self = this;
+
+            return nil;
+          };
+
+          def['$nil?'] = function() {
+            var self = this;
+
+            return true;
+          };
+
+          return (def['$empty?'] = function() {
+            var self = this;
+
+            return false;
+          }, nil) && 'empty?';
+        })(self, null);
+
         self.$include((($a = ((($b = $scope.TheGame) == null ? $opal.cm('TheGame') : $b))._scope).HasPosition == null ? $a.cm('HasPosition') : $a.HasPosition));
 
         self.$attr_accessor("content", "terrain");
@@ -12931,11 +12962,12 @@ if (column_index == null) column_index = nil;
         self.$attr_accessor("building");
 
         def.$initialize = function(x, y, map) {
-          var self = this;
+          var $a, self = this;
 
           self['$x='](x);
           self['$y='](y);
           self.map = map;
+          self.content = (($a = $scope.NullContent) == null ? $opal.cm('NullContent') : $a).$new();
           return self.building = nil;
         };
 
@@ -12943,6 +12975,12 @@ if (column_index == null) column_index = nil;
           var $a, self = this;
 
           return (($a = self.content, $a !== false && $a !== nil ?self.building : $a))['$nil?']()['$!']();
+        };
+
+        def['$clean!'] = function() {
+          var $a, self = this;
+
+          return self.content = (($a = $scope.NullContent) == null ? $opal.cm('NullContent') : $a).$new();
         };
 
         def.$description = function() {
@@ -12964,12 +13002,10 @@ if (column_index == null) column_index = nil;
         };
 
         return (def.$update = function() {
-          var $a, $b, $c, $d, $e, self = this, fallen_tree_pieces_to_deploy = nil, x = nil, y = nil, tile = nil, fallen_tree_piece = nil;
+          var $a, $b, $c, $d, self = this, $case = nil, fallen_tree_pieces_to_deploy = nil, x = nil, y = nil, tile = nil, fallen_tree_piece = nil;
 
-          if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).BerriesBush == null ? $c.cm('BerriesBush') : $c.BerriesBush)), $b !== false && $b !== nil ?self.content['$empty?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
-            return self.content = nil
-          } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree)), $b !== false && $b !== nil ?self.content['$cut?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
-            fallen_tree_pieces_to_deploy = self.content.$pieces_count()['$-'](1);
+          if ((($a = self.content['$empty?']()) !== nil && (!$a._isBoolean || $a == true))) {
+            return (function() {$case = self.content.$type();if ("berries_bush"['$===']($case)) {return self['$clean!']()}else if ("tree"['$===']($case)) {fallen_tree_pieces_to_deploy = self.content.$pieces_count()['$-'](1);
             x = self.x;
             y = self.y;
             self.content = (($a = ((($b = ((($c = $scope.Nature) == null ? $opal.cm('Nature') : $c))._scope).Tree == null ? $b.cm('Tree') : $b.Tree))._scope).Piece == null ? $a.cm('Piece') : $a.Piece).$new(x, y);
@@ -12980,10 +13016,8 @@ if (column_index == null) column_index = nil;
               fallen_tree_piece = (($b = ((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree))._scope).Piece == null ? $b.cm('Piece') : $b.Piece).$new(x, y);
               tile['$content='](fallen_tree_piece);
               fallen_tree_pieces_to_deploy = fallen_tree_pieces_to_deploy['$-'](1);};
-            x = x['$+'](1);};
-          } else if ((($a = ($b = self.content['$is_a?']((($c = ((($d = ((($e = $scope.Nature) == null ? $opal.cm('Nature') : $e))._scope).Tree == null ? $d.cm('Tree') : $d.Tree))._scope).Piece == null ? $c.cm('Piece') : $c.Piece)), $b !== false && $b !== nil ?self.content['$cut?']() : $b)) !== nil && (!$a._isBoolean || $a == true))) {
-            self.content = (($a = ((($b = $scope.Item) == null ? $opal.cm('Item') : $b))._scope).Log == null ? $a.cm('Log') : $a.Log).$new(self.x, self.y);
-            return (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stuff_to_bring()['$<<'](self);
+            x = x['$+'](1);};}else if ("tree_piece"['$===']($case)) {self.content = (($a = ((($b = $scope.Item) == null ? $opal.cm('Item') : $b))._scope).Log == null ? $a.cm('Log') : $a.Log).$new(self.x, self.y);
+            return (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stuff_to_bring()['$<<'](self);}else { return nil }})()
             } else {
             return nil
           };
@@ -14815,7 +14849,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
 
-  $opal.add_stubs(['$[]', '$==', '$type', '$content', '$add', '$inventory', '$content=', '$then', '$create', '$description=', '$description']);
+  $opal.add_stubs(['$[]', '$==', '$type', '$content', '$add', '$inventory', '$clean!', '$then', '$create', '$description=', '$description']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -14861,7 +14895,7 @@ if (tile == null) tile = nil;
             if (self.from.$content().$type()['$=='](self.item_type)) {
               content = self.from.$content();
               person.$inventory().$add(content);
-              return self.from['$content='](nil);
+              return self.from['$clean!']();
               } else {
               return nil
             };
@@ -14888,7 +14922,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include']);
+  $opal.add_stubs(['$include', '$cut?']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -14929,6 +14963,12 @@ if (tile == null) tile = nil;
           return self.cut;
         };
 
+        def['$empty?'] = function() {
+          var self = this;
+
+          return self['$cut?']();
+        };
+
         def.$description = function() {
           var self = this;
 
@@ -14957,7 +14997,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$attr_reader']);
+  $opal.add_stubs(['$attr_reader', '$cut?']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -15002,6 +15042,12 @@ if (tile == null) tile = nil;
             var self = this;
 
             return self.cut;
+          };
+
+          def['$empty?'] = function() {
+            var self = this;
+
+            return self['$cut?']();
           };
 
           def.$type = function() {

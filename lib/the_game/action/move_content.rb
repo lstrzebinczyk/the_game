@@ -17,7 +17,7 @@ class TheGame
           if @from.content.type == @item_type
             content = @from.content
             person.inventory.add(content)
-            @from.content = nil
+            @from.clean!
           end
         end
       end

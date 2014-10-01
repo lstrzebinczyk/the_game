@@ -22,25 +22,25 @@ class @GameMenu
   renderBuildingsStats: =>
     @buildingStatsWindow.empty()
     unless @engine.dormitory.isNil()
-      template = "<div>"
-      template += "<div>DORMITORY:</div>"
-      template += "<div>status: #{@engine.dormitory.status()}</div>"
+      @buildingTemplate = "<div>"
+      @buildingTemplate += "<div>DORMITORY:</div>"
+      @buildingTemplate += "<div>status: #{@engine.dormitory.status()}</div>"
       if @engine.dormitory.status() == "plan"
-        template += "<div>firewood needed: #{@engine.dormitory.firewoodNeeded()}</div>"
+        @buildingTemplate += "<div>firewood needed: #{@engine.dormitory.firewoodNeeded()}</div>"
       if @engine.dormitory.status() == "building"
-        template += "<div>construction left: #{@engine.dormitory.minutesLeft()}</div>"
+        @buildingTemplate += "<div>construction left: #{@engine.dormitory.minutesLeft()}</div>"
 
-      @buildingStatsWindow.append(template)
+      @buildingStatsWindow.append(@buildingTemplate)
 
   renderStashStats: =>
     @stashStatsWindow.empty()
 
-    template = "<div>"
+    @stashTemplate = "<div>"
     for type in @engine.stash.itemTypes()
-      template += "<div>#{type}: #{@engine.stash.count(type)}"
-    template += "</div>"
+      @stashTemplate += "<div>#{type}: #{@engine.stash.count(type)}"
+    @stashTemplate += "</div>"
 
-    @stashStatsWindow.append(template)
+    @stashStatsWindow.append(@stashTemplate)
 
   renderPeopleStats: =>
     @peopleStatsWindow.empty()
@@ -51,21 +51,19 @@ class @GameMenu
       energy = person.energy()
       action_description = person.actionDescription()
 
-      progress = (value) ->
-        "<progress value='#{value}'></progress>"
-
-      template = """
+      @peopleTemplate = """
       <div>
         <div>type: #{type}</div>
-        <div>thirst: #{progress(thirst)}</div>
-        <div>hunger: #{progress(hunger)}</div>
-        <div>energy: #{progress(energy)}</div>
+        <div>thirst: <progress value='#{thirst}'></progress></div>
+        <div>hunger: <progress value='#{hunger}'></progress></div>
+        <div>energy: <progress value='#{energy}'></progress></div>
+
         <div>action_description: #{action_description}</div>
         <br>
       </div>
       """
 
-      @peopleStatsWindow.append(template)
+      @peopleStatsWindow.append(@peopleTemplate)
 
   renderTurnsPerSecond: =>
     @iterationsSinceLastCountUpdate += 1

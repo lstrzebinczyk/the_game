@@ -17,6 +17,10 @@ class TheGame
           @cut
         end
 
+        def empty?
+          cut?
+        end
+
         def type
           :tree_piece
         end
