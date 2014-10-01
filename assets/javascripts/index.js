@@ -158,6 +158,8 @@
       this.person = person;
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
+      this.inventoryCount = __bind(this.inventoryCount, this);
+      this.inventoryItemTypes = __bind(this.inventoryItemTypes, this);
       this.actionDescription = __bind(this.actionDescription, this);
       this.energy = __bind(this.energy, this);
       this.hunger = __bind(this.hunger, this);
@@ -183,6 +185,14 @@
 
     Person.prototype.actionDescription = function() {
       return this.person.$action().$description();
+    };
+
+    Person.prototype.inventoryItemTypes = function() {
+      return this.person.$inventory().$item_types();
+    };
+
+    Person.prototype.inventoryCount = function(itemType) {
+      return this.person.$inventory().$count(itemType);
     };
 
     Person.prototype.x = function() {
@@ -559,13 +569,22 @@
       this.peopleStatsWindow.empty();
       return this.engine.eachPerson((function(_this) {
         return function(person) {
-          var action_description, energy, hunger, thirst, type;
+          var action_description, count, energy, hunger, thirst, type, _i, _len, _ref;
           type = person.type();
           thirst = person.thirst();
           hunger = person.hunger();
           energy = person.energy();
           action_description = person.actionDescription();
-          _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <br>\n</div>";
+          _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <div>items:</div>";
+          _ref = person.inventoryItemTypes();
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            type = _ref[_i];
+            count = person.inventoryCount(type);
+            if (count > 0) {
+              _this.peopleTemplate += "<div>" + type + ": " + count;
+            }
+          }
+          _this.peopleTemplate += "  <div>\n  </div>\n  <br>\n</div>";
           return _this.peopleStatsWindow.append(_this.peopleTemplate);
         };
       })(this));

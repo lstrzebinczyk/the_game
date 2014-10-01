@@ -16,6 +16,12 @@ class @GameEngine.Person
   actionDescription: =>
     @person.$action().$description()
 
+  inventoryItemTypes: =>
+    @person.$inventory().$item_types()
+
+  inventoryCount: (itemType) =>
+    @person.$inventory().$count(itemType)
+
   x: =>
     @person.$x()
 

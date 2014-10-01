@@ -59,6 +59,15 @@ class @GameMenu
         <div>energy: <progress value='#{energy}'></progress></div>
 
         <div>action_description: #{action_description}</div>
+        <div>items:</div>
+      """
+      for type in person.inventoryItemTypes()
+        count = person.inventoryCount(type)
+        @peopleTemplate += "<div>#{type}: #{count}" if count > 0
+
+      @peopleTemplate += """
+        <div>
+        </div>
         <br>
       </div>
       """
