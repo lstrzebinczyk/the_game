@@ -17,6 +17,29 @@ class @GameLoop
 
     @gameWindow.setup()
 
+    $("#slow").click =>
+      $(".speed_control").removeClass("active")
+      $("#slow").addClass("active")
+      @expectedTurnsPerSecond = 30
+      @stopGame()
+      @startGame()
+
+    $("#fast").addClass("active")
+    $("#fast").click =>
+      $(".speed_control").removeClass("active")
+      $("#fast").addClass("active")
+      @expectedTurnsPerSecond = 60
+      @stopGame()
+      @startGame()
+
+    $("#max").click =>
+      $(".speed_control").removeClass("active")
+      $("#max").addClass("active")
+      @expectedTurnsPerSecond = 1000
+      @stopGame()
+      @startGame()
+
+
   update: =>
     @gameEngine.update()
     @gameMenu.update()

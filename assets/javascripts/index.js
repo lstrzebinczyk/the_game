@@ -307,7 +307,35 @@
           }
         };
       })(this));
-      return this.gameWindow.setup();
+      this.gameWindow.setup();
+      $("#slow").click((function(_this) {
+        return function() {
+          $(".speed_control").removeClass("active");
+          $("#slow").addClass("active");
+          _this.expectedTurnsPerSecond = 30;
+          _this.stopGame();
+          return _this.startGame();
+        };
+      })(this));
+      $("#fast").addClass("active");
+      $("#fast").click((function(_this) {
+        return function() {
+          $(".speed_control").removeClass("active");
+          $("#fast").addClass("active");
+          _this.expectedTurnsPerSecond = 60;
+          _this.stopGame();
+          return _this.startGame();
+        };
+      })(this));
+      return $("#max").click((function(_this) {
+        return function() {
+          $(".speed_control").removeClass("active");
+          $("#max").addClass("active");
+          _this.expectedTurnsPerSecond = 1000;
+          _this.stopGame();
+          return _this.startGame();
+        };
+      })(this));
     };
 
     GameLoop.prototype.update = function() {

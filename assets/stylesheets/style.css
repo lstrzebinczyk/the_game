@@ -20,3 +20,7 @@
   height: 100%;
   width: 300px;
 }
+
+button.active{
+  background-color: #6496c8;
+}
