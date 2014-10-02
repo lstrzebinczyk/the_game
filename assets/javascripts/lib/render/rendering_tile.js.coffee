@@ -12,23 +12,7 @@ class @RenderingTile extends Renderable
       @object.updated()
 
   setData: =>
-    if @object.isMarkedForCleaning()
-      if @object.contentName() == "tree"
-        @contentString = "t"
-        @contentColor   = "red"
-      else if @object.contentName() == "tree_piece"
-        @contentString = "/"
-        @contentColor   = "red"
-      else if @object.contentName() == "berries_bush"
-        @contentString = "#"
-        @contentColor   = "red"
-      else if @object.contentName() == "log"
-        @contentString = "---"
-        @contentColor = "red"
-      else
-        @contentString = "."
-        @contentColor   = "white"
-    else
+    if @object.isNotMarkedForCleaning()
       if @object.contentName() == "tree"
         @contentString = "t"
         @contentColor = "green"
@@ -44,6 +28,22 @@ class @RenderingTile extends Renderable
       else if @object.contentName() == "river"
         @contentString = "~"
         @contentColor   = "blue"
+      else
+        @contentString = "."
+        @contentColor   = "white"
+    else
+      if @object.contentName() == "tree"
+        @contentString = "t"
+        @contentColor   = "red"
+      else if @object.contentName() == "tree_piece"
+        @contentString = "/"
+        @contentColor   = "red"
+      else if @object.contentName() == "berries_bush"
+        @contentString = "#"
+        @contentColor   = "red"
+      else if @object.contentName() == "log"
+        @contentString = "---"
+        @contentColor = "red"
       else
         @contentString = "."
         @contentColor   = "white"

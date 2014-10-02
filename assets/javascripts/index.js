@@ -257,13 +257,13 @@
       this.updated = __bind(this.updated, this);
       this.isUpdated = __bind(this.isUpdated, this);
       this.contentName = __bind(this.contentName, this);
-      this.isMarkedForCleaning = __bind(this.isMarkedForCleaning, this);
+      this.isNotMarkedForCleaning = __bind(this.isNotMarkedForCleaning, this);
       this.cachedContentName = this.contentName();
-      this.cachedIsMarkedForCleaning = this.isMarkedForCleaning();
+      this.cachedIsMarkedForCleaning = this.isNotMarkedForCleaning();
     }
 
-    Tile.prototype.isMarkedForCleaning = function() {
-      return this.tile["$marked_for_cleaning?"]();
+    Tile.prototype.isNotMarkedForCleaning = function() {
+      return this.tile["$not_marked_for_cleaning?"]();
     };
 
     Tile.prototype.contentName = function() {
@@ -275,12 +275,12 @@
     };
 
     Tile.prototype.isUpdated = function() {
-      return (this.cachedContentName !== this.contentName()) || (this.cachedIsMarkedForCleaning !== this.isMarkedForCleaning());
+      return (this.cachedContentName !== this.contentName()) || (this.cachedIsMarkedForCleaning !== this.isNotMarkedForCleaning());
     };
 
     Tile.prototype.updated = function() {
       this.cachedContentName = this.contentName();
-      return this.cachedIsMarkedForCleaning = this.isMarkedForCleaning();
+      return this.cachedIsMarkedForCleaning = this.isNotMarkedForCleaning();
     };
 
     Tile.prototype.x = function() {
@@ -826,24 +826,7 @@
     };
 
     RenderingTile.prototype.setData = function() {
-      if (this.object.isMarkedForCleaning()) {
-        if (this.object.contentName() === "tree") {
-          this.contentString = "t";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "tree_piece") {
-          this.contentString = "/";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "berries_bush") {
-          this.contentString = "#";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "log") {
-          this.contentString = "---";
-          return this.contentColor = "red";
-        } else {
-          this.contentString = ".";
-          return this.contentColor = "white";
-        }
-      } else {
+      if (this.object.isNotMarkedForCleaning()) {
         if (this.object.contentName() === "tree") {
           this.contentString = "t";
           return this.contentColor = "green";
@@ -859,6 +842,23 @@
         } else if (this.object.contentName() === "river") {
           this.contentString = "~";
           return this.contentColor = "blue";
+        } else {
+          this.contentString = ".";
+          return this.contentColor = "white";
+        }
+      } else {
+        if (this.object.contentName() === "tree") {
+          this.contentString = "t";
+          return this.contentColor = "red";
+        } else if (this.object.contentName() === "tree_piece") {
+          this.contentString = "/";
+          return this.contentColor = "red";
+        } else if (this.object.contentName() === "berries_bush") {
+          this.contentString = "#";
+          return this.contentColor = "red";
+        } else if (this.object.contentName() === "log") {
+          this.contentString = "---";
+          return this.contentColor = "red";
         } else {
           this.contentString = ".";
           return this.contentColor = "white";

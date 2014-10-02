@@ -12986,7 +12986,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$new', '$!', '$nil?', '$empty?', '$type', '$===', '$clean!', '$-', '$pieces_count', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$new', '$type', '$nil?', '$empty?', '$===', '$clean!', '$-', '$pieces_count', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -13005,7 +13005,7 @@ if (column_index == null) column_index = nil;
 
         var def = self._proto, $scope = self._scope, $a, $b;
 
-        def.content = def.building = def.terrain = def.x = def.y = def.map = nil;
+        def.building = def.content = def.terrain = def.x = def.y = def.map = nil;
         (function($base, $super) {
           function $NullContent(){};
           var self = $NullContent = $klass($base, $super, 'NullContent', $NullContent);
@@ -13047,10 +13047,10 @@ if (column_index == null) column_index = nil;
           return self.building = nil;
         };
 
-        def['$marked_for_cleaning?'] = function() {
+        def['$not_marked_for_cleaning?'] = function() {
           var $a, self = this;
 
-          return (($a = self.content, $a !== false && $a !== nil ?self.building : $a))['$nil?']()['$!']();
+          return ($a = self.building, $a !== false && $a !== nil ?self.content.$type() : $a);
         };
 
         def['$clean!'] = function() {

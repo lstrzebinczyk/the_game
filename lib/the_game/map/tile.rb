@@ -28,8 +28,10 @@ class TheGame
         @building = nil
       end
 
-      def marked_for_cleaning?
-        !(@content && @building).nil?
+      def not_marked_for_cleaning?
+        @building and @content.type
+        # @building and @content
+        # !(@content && @building).nil?
       end
 
       def clean!
