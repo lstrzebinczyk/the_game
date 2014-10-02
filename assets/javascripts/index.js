@@ -158,6 +158,7 @@
       this.person = person;
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
+      this.waterskinPercentage = __bind(this.waterskinPercentage, this);
       this.inventoryCount = __bind(this.inventoryCount, this);
       this.inventoryItemTypes = __bind(this.inventoryItemTypes, this);
       this.actionDescription = __bind(this.actionDescription, this);
@@ -193,6 +194,10 @@
 
     Person.prototype.inventoryCount = function(itemType) {
       return this.person.$inventory().$count(itemType);
+    };
+
+    Person.prototype.waterskinPercentage = function() {
+      return this.person.$waterskin().$units() / this.person.$waterskin().$capacity();
     };
 
     Person.prototype.x = function() {
@@ -569,13 +574,14 @@
       this.peopleStatsWindow.empty();
       return this.engine.eachPerson((function(_this) {
         return function(person) {
-          var action_description, count, energy, hunger, thirst, type, _i, _len, _ref;
+          var action_description, count, energy, hunger, thirst, type, waterkinPercentage, _i, _len, _ref;
           type = person.type();
           thirst = person.thirst();
           hunger = person.hunger();
           energy = person.energy();
+          waterkinPercentage = person.waterskinPercentage();
           action_description = person.actionDescription();
-          _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <div>items:</div>";
+          _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <div>waterkin capacity: <progress value='" + waterkinPercentage + "'></progress>\n  <div>items:</div>";
           _ref = person.inventoryItemTypes();
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             type = _ref[_i];

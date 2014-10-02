@@ -6,14 +6,16 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        #currently you can only get drink at river
+        if person.waterskin.any?
+          person.action = Action::DrinkFromWaterskin.create()
+        else
+          closest = map.find_closest_to(person) do |tile|
+            tile.terrain == :river
+          end
 
-        closest = map.find_closest_to(person) do |tile|
-          tile.terrain == :river
+          action = Action::GoTo.create(closest).then(Action::DrinkFromRiver.create())
+          person.action = action
         end
-
-        action = Action::GoTo.create(closest).then(Action::DrinkFromRiver.create())
-        person.action = action
       end
     end
   end

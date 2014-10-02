@@ -22,6 +22,9 @@ class @GameEngine.Person
   inventoryCount: (itemType) =>
     @person.$inventory().$count(itemType)
 
+  waterskinPercentage: =>
+    @person.$waterskin().$units() / @person.$waterskin().$capacity()
+
   x: =>
     @person.$x()
 

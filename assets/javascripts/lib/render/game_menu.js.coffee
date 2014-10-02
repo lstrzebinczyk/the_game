@@ -49,6 +49,7 @@ class @GameMenu
       thirst = person.thirst()
       hunger = person.hunger()
       energy = person.energy()
+      waterkinPercentage = person.waterskinPercentage()
       action_description = person.actionDescription()
 
       @peopleTemplate = """
@@ -59,6 +60,7 @@ class @GameMenu
         <div>energy: <progress value='#{energy}'></progress></div>
 
         <div>action_description: #{action_description}</div>
+        <div>waterkin capacity: <progress value='#{waterkinPercentage}'></progress>
         <div>items:</div>
       """
       for type in person.inventoryItemTypes()

@@ -3,7 +3,7 @@ class TheGame
     include TheGame::HasPosition
 
     attr_accessor :action, :thirst, :hunger, :energy, :will_take_jobs
-    attr_reader :inventory
+    attr_reader :inventory, :waterskin
 
     def initialize(attrs = {})
       @hunger = 0.8 + rand / 10
@@ -13,6 +13,7 @@ class TheGame
       do_stuff
 
       @inventory = Container.new
+      @waterskin = Item::Waterskin.new
 
       if attrs[:will_take_jobs].nil?
         @will_take_jobs = true
