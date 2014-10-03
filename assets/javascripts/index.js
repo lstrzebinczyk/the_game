@@ -382,6 +382,110 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
+  this.GameMenu = (function() {
+    function GameMenu(engine) {
+      this.engine = engine;
+      this.renderTurnsPerSecond = __bind(this.renderTurnsPerSecond, this);
+      this.renderPeopleStats = __bind(this.renderPeopleStats, this);
+      this.renderStashStats = __bind(this.renderStashStats, this);
+      this.renderBuildingsStats = __bind(this.renderBuildingsStats, this);
+      this.renderTime = __bind(this.renderTime, this);
+      this.update = __bind(this.update, this);
+      this.peopleStatsWindow = $("#people");
+      this.stashStatsWindow = $("#stash");
+      this.buildingStatsWindow = $("#buildings");
+      this.timeWindow = $("#time");
+      this.timeSinceLastCountUpdate = new Date();
+      this.iterationsSinceLastCountUpdate = 0;
+      this.turnsPerSecondWindow = $("#turns_count");
+    }
+
+    GameMenu.prototype.update = function() {
+      this.renderTime();
+      this.renderBuildingsStats();
+      this.renderStashStats();
+      this.renderPeopleStats();
+      return this.renderTurnsPerSecond();
+    };
+
+    GameMenu.prototype.renderTime = function() {
+      return this.timeWindow.text(this.engine.time());
+    };
+
+    GameMenu.prototype.renderBuildingsStats = function() {
+      this.buildingStatsWindow.empty();
+      if (!this.engine.dormitory.isNil()) {
+        this.buildingTemplate = "<div>";
+        this.buildingTemplate += "<div>DORMITORY:</div>";
+        this.buildingTemplate += "<div>status: " + (this.engine.dormitory.status()) + "</div>";
+        if (this.engine.dormitory.status() === "plan") {
+          this.buildingTemplate += "<div>firewood needed: " + (this.engine.dormitory.firewoodNeeded()) + "</div>";
+        }
+        if (this.engine.dormitory.status() === "building") {
+          this.buildingTemplate += "<div>construction left: " + (this.engine.dormitory.minutesLeft()) + "</div>";
+        }
+        return this.buildingStatsWindow.append(this.buildingTemplate);
+      }
+    };
+
+    GameMenu.prototype.renderStashStats = function() {
+      var type, _i, _len, _ref;
+      this.stashStatsWindow.empty();
+      this.stashTemplate = "<div>";
+      _ref = this.engine.stash.itemTypes();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        type = _ref[_i];
+        this.stashTemplate += "<div>" + type + ": " + (this.engine.stash.count(type));
+      }
+      this.stashTemplate += "</div>";
+      return this.stashStatsWindow.append(this.stashTemplate);
+    };
+
+    GameMenu.prototype.renderPeopleStats = function() {
+      this.peopleStatsWindow.empty();
+      return this.engine.eachPerson((function(_this) {
+        return function(person) {
+          var action_description, count, energy, hunger, thirst, type, waterkinPercentage, _i, _len, _ref;
+          type = person.type();
+          thirst = person.thirst();
+          hunger = person.hunger();
+          energy = person.energy();
+          waterkinPercentage = person.waterskinPercentage();
+          action_description = person.actionDescription();
+          _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <div>waterkin capacity: <progress value='" + waterkinPercentage + "'></progress>\n  <div>items:</div>";
+          _ref = person.inventoryItemTypes();
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            type = _ref[_i];
+            count = person.inventoryCount(type);
+            if (count > 0) {
+              _this.peopleTemplate += "<div>" + type + ": " + count;
+            }
+          }
+          _this.peopleTemplate += "  <div>\n  </div>\n  <br>\n</div>";
+          return _this.peopleStatsWindow.append(_this.peopleTemplate);
+        };
+      })(this));
+    };
+
+    GameMenu.prototype.renderTurnsPerSecond = function() {
+      var possibleNewTime;
+      this.iterationsSinceLastCountUpdate += 1;
+      possibleNewTime = new Date();
+      if (possibleNewTime - this.timeSinceLastCountUpdate > 1000) {
+        this.timeSinceLastCountUpdate = possibleNewTime;
+        this.turnsPerSecondWindow.text(this.iterationsSinceLastCountUpdate);
+        return this.iterationsSinceLastCountUpdate = 0;
+      }
+    };
+
+    return GameMenu;
+
+  })();
+
+}).call(this);
+(function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
   this.GameWindow = (function() {
     function GameWindow(engine) {
       var interactive;
@@ -504,110 +608,6 @@
     };
 
     return GameWindow;
-
-  })();
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  this.GameMenu = (function() {
-    function GameMenu(engine) {
-      this.engine = engine;
-      this.renderTurnsPerSecond = __bind(this.renderTurnsPerSecond, this);
-      this.renderPeopleStats = __bind(this.renderPeopleStats, this);
-      this.renderStashStats = __bind(this.renderStashStats, this);
-      this.renderBuildingsStats = __bind(this.renderBuildingsStats, this);
-      this.renderTime = __bind(this.renderTime, this);
-      this.update = __bind(this.update, this);
-      this.peopleStatsWindow = $("#people");
-      this.stashStatsWindow = $("#stash");
-      this.buildingStatsWindow = $("#buildings");
-      this.timeWindow = $("#time");
-      this.timeSinceLastCountUpdate = new Date();
-      this.iterationsSinceLastCountUpdate = 0;
-      this.turnsPerSecondWindow = $("#turns_count");
-    }
-
-    GameMenu.prototype.update = function() {
-      this.renderTime();
-      this.renderBuildingsStats();
-      this.renderStashStats();
-      this.renderPeopleStats();
-      return this.renderTurnsPerSecond();
-    };
-
-    GameMenu.prototype.renderTime = function() {
-      return this.timeWindow.text(this.engine.time());
-    };
-
-    GameMenu.prototype.renderBuildingsStats = function() {
-      this.buildingStatsWindow.empty();
-      if (!this.engine.dormitory.isNil()) {
-        this.buildingTemplate = "<div>";
-        this.buildingTemplate += "<div>DORMITORY:</div>";
-        this.buildingTemplate += "<div>status: " + (this.engine.dormitory.status()) + "</div>";
-        if (this.engine.dormitory.status() === "plan") {
-          this.buildingTemplate += "<div>firewood needed: " + (this.engine.dormitory.firewoodNeeded()) + "</div>";
-        }
-        if (this.engine.dormitory.status() === "building") {
-          this.buildingTemplate += "<div>construction left: " + (this.engine.dormitory.minutesLeft()) + "</div>";
-        }
-        return this.buildingStatsWindow.append(this.buildingTemplate);
-      }
-    };
-
-    GameMenu.prototype.renderStashStats = function() {
-      var type, _i, _len, _ref;
-      this.stashStatsWindow.empty();
-      this.stashTemplate = "<div>";
-      _ref = this.engine.stash.itemTypes();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        type = _ref[_i];
-        this.stashTemplate += "<div>" + type + ": " + (this.engine.stash.count(type));
-      }
-      this.stashTemplate += "</div>";
-      return this.stashStatsWindow.append(this.stashTemplate);
-    };
-
-    GameMenu.prototype.renderPeopleStats = function() {
-      this.peopleStatsWindow.empty();
-      return this.engine.eachPerson((function(_this) {
-        return function(person) {
-          var action_description, count, energy, hunger, thirst, type, waterkinPercentage, _i, _len, _ref;
-          type = person.type();
-          thirst = person.thirst();
-          hunger = person.hunger();
-          energy = person.energy();
-          waterkinPercentage = person.waterskinPercentage();
-          action_description = person.actionDescription();
-          _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <div>waterkin capacity: <progress value='" + waterkinPercentage + "'></progress>\n  <div>items:</div>";
-          _ref = person.inventoryItemTypes();
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            type = _ref[_i];
-            count = person.inventoryCount(type);
-            if (count > 0) {
-              _this.peopleTemplate += "<div>" + type + ": " + count;
-            }
-          }
-          _this.peopleTemplate += "  <div>\n  </div>\n  <br>\n</div>";
-          return _this.peopleStatsWindow.append(_this.peopleTemplate);
-        };
-      })(this));
-    };
-
-    GameMenu.prototype.renderTurnsPerSecond = function() {
-      var possibleNewTime;
-      this.iterationsSinceLastCountUpdate += 1;
-      possibleNewTime = new Date();
-      if (possibleNewTime - this.timeSinceLastCountUpdate > 1000) {
-        this.timeSinceLastCountUpdate = possibleNewTime;
-        this.turnsPerSecondWindow.text(this.iterationsSinceLastCountUpdate);
-        return this.iterationsSinceLastCountUpdate = 0;
-      }
-    };
-
-    return GameMenu;
 
   })();
 
