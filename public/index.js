@@ -168,6 +168,10 @@
       this.type = __bind(this.type, this);
     }
 
+    Person.prototype.id = function() {
+      return this.person._id;
+    };
+
     Person.prototype.type = function() {
       return this.person.$type();
     };
@@ -493,34 +497,121 @@
 
   this.GameWindow = (function() {
     function GameWindow(engine) {
-      var interactive;
       this.engine = engine;
       this.setup = __bind(this.setup, this);
+      this.reRenderTerrain = __bind(this.reRenderTerrain, this);
+      this.reRenderPeople = __bind(this.reRenderPeople, this);
+      this.renderTerrain = __bind(this.renderTerrain, this);
+      this.findStageTile = __bind(this.findStageTile, this);
       this.render = __bind(this.render, this);
       this.update = __bind(this.update, this);
-      interactive = true;
-      this.stage = new PIXI.Stage('000', interactive);
-      this.playing = true;
-      this.x_offset = 0;
-      this.y_offset = 0;
-      this.change_offset = false;
-      this.width = this.engine.mapWidth();
-      this.height = this.engine.mapHeight();
+      this.stage = $("#stage");
       this.renderedWidth = 14 * 4;
       this.renderedHeight = 14 * 3;
+      this.xOffset = 0;
+      this.yOffset = 0;
+      this.maxYOffset = this.engine.mapWidth() - this.renderedWidth;
+      this.maxXOffset = this.engine.mapHeight() - this.renderedHeight;
       this.tileSize = 16;
-      this.maxXOffset = (this.renderedWidth - this.width) * this.tileSize;
-      this.maxYOffset = (this.renderedHeight - this.height) * this.tileSize;
-      this.renderer = PIXI.autoDetectRenderer(this.renderedWidth * this.tileSize, this.renderedHeight * this.tileSize);
-      this.updatable = [];
     }
 
-    GameWindow.prototype.update = function() {};
+    GameWindow.prototype.update = function() {
+      return this.reRenderPeople();
+    };
 
     GameWindow.prototype.render = function() {};
 
+    GameWindow.prototype.findStageTile = function(height, width) {
+      return this.stage.find("#row_" + height).find("#column_" + width);
+    };
+
+    GameWindow.prototype.renderTerrain = function() {
+      return this.engine.eachTile((function(_this) {
+        return function(tile) {
+          var stageTile, terrainType, x, y;
+          x = tile.x() + _this.xOffset;
+          y = tile.y() + _this.yOffset;
+          stageTile = _this.findStageTile(x, y);
+          terrainType = tile.terrain();
+          return stageTile.addClass("terrain-" + terrainType);
+        };
+      })(this));
+    };
+
+    GameWindow.prototype.reRenderPeople = function() {
+      return this.engine.eachPerson((function(_this) {
+        return function(person) {
+          var id, tile, type, x, y;
+          x = person.x() + _this.xOffset;
+          y = person.y() + _this.yOffset;
+          tile = _this.findStageTile(x, y);
+          type = person.type();
+          id = person.id();
+          _this.stage.find(".person-" + type + ".person-" + id).removeClass("person-" + type + " person-" + id);
+          return tile.addClass("person-" + type + " person-" + id);
+        };
+      })(this));
+    };
+
+    GameWindow.prototype.reRenderTerrain = function() {
+      this.stage.find(".terrain-river").removeClass("terrain-river");
+      this.stage.find(".terrain-ground").removeClass("terrain-ground");
+      return this.renderTerrain();
+    };
+
     GameWindow.prototype.setup = function() {
-      return $("#view").append(this.renderer.view);
+      var columnIndex, rowIndex, stage, _i, _j, _ref, _ref1;
+      stage = "";
+      for (rowIndex = _i = 0, _ref = this.renderedHeight; 0 <= _ref ? _i <= _ref : _i >= _ref; rowIndex = 0 <= _ref ? ++_i : --_i) {
+        stage += "<div class='row' id='row_" + rowIndex + "'>";
+        for (columnIndex = _j = 0, _ref1 = this.renderedWidth; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; columnIndex = 0 <= _ref1 ? ++_j : --_j) {
+          stage += "<span class='tile' id='column_" + columnIndex + "'></span>";
+        }
+        stage += "</div>";
+      }
+      this.stage.append(stage);
+      this.renderTerrain();
+      this.reRenderPeople();
+      this.stage.mousemove((function(_this) {
+        return function(e) {
+          var diffX, diffY;
+          if (_this.moving) {
+            diffY = parseInt((_this.moveStartY - e.clientY) / _this.tileSize);
+            diffX = parseInt((_this.moveStartX - e.clientX) / _this.tileSize);
+            if (diffX !== 0 || diffY !== 0) {
+              _this.xOffset -= diffY;
+              _this.yOffset -= diffX;
+              _this.moveStartY = e.clientY;
+              _this.moveStartX = e.clientX;
+              if (_this.xOffset < -_this.maxXOffset) {
+                _this.xOffset = -_this.maxXOffset;
+              }
+              if (_this.yOffset < -_this.maxYOffset) {
+                _this.yOffset = -_this.maxYOffset;
+              }
+              if (_this.xOffset > 0) {
+                _this.xOffset = 0;
+              }
+              if (_this.yOffset > 0) {
+                _this.yOffset = 0;
+              }
+              return _this.reRenderTerrain();
+            }
+          }
+        };
+      })(this));
+      $("body").mouseup((function(_this) {
+        return function() {
+          return _this.moving = false;
+        };
+      })(this));
+      return this.stage.mousedown((function(_this) {
+        return function(e) {
+          _this.moving = true;
+          _this.moveStartX = e.clientX;
+          return _this.moveStartY = e.clientY;
+        };
+      })(this));
     };
 
     return GameWindow;

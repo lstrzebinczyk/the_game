@@ -24,3 +24,47 @@
 button.active{
   background-color: #6496c8;
 }
+
+#stage{
+  display: inline-block;
+  cursor: default;
+}
+
+.row{
+  margin-bottom: -4px;
+  width: 100%;
+}
+
+.tile{
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.terrain-ground{
+  background-image: url('images/nature/ground.png');
+}
+
+.terrain-river{
+  background-image: url('images/nature/river.png');
+}
+
+.person-leader{
+  background-image: url('images/characters/leader.png');
+  z-index: 1;
+}
+
+.person-woodcutter{
+  background-image: url('images/characters/woodcutter.png');
+  z-index: 1;
+}
+
+.person-gatherer{
+  background-image: url('images/characters/gatherer.png');
+  z-index: 1;
+}
+
+.person-fisherman{
+  background-image: url('images/characters/fisherman.png');
+  z-index: 1;
+}
