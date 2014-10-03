@@ -32,11 +32,19 @@ class @GameWindow
   update: =>
     # rerender every single person
     @reRenderPeople()
+    @renderFireplace()
 
   render: =>
 
   findStageTile: (height, width) =>
     @stage.find("#row_#{height}").find("#column_#{width}")
+
+  renderFireplace: =>
+    fireplace = @engine.fireplace
+    x = fireplace.x() + @xOffset
+    y = fireplace.y() + @yOffset
+    stageTile = @findStageTile(x, y)
+    stageTile.addClass("structure-campfire")
 
   renderTerrain: =>
     @engine.eachTile (tile) =>
@@ -77,6 +85,9 @@ class @GameWindow
 
     # SETUP PEOPLE
     @reRenderPeople()
+
+    # SETUP FIREPLACE
+    @renderFireplace()
 
 
     @stage.mousemove (e) =>

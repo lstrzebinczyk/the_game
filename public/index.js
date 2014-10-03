@@ -502,6 +502,7 @@
       this.reRenderTerrain = __bind(this.reRenderTerrain, this);
       this.reRenderPeople = __bind(this.reRenderPeople, this);
       this.renderTerrain = __bind(this.renderTerrain, this);
+      this.renderFireplace = __bind(this.renderFireplace, this);
       this.findStageTile = __bind(this.findStageTile, this);
       this.render = __bind(this.render, this);
       this.update = __bind(this.update, this);
@@ -516,13 +517,23 @@
     }
 
     GameWindow.prototype.update = function() {
-      return this.reRenderPeople();
+      this.reRenderPeople();
+      return this.renderFireplace();
     };
 
     GameWindow.prototype.render = function() {};
 
     GameWindow.prototype.findStageTile = function(height, width) {
       return this.stage.find("#row_" + height).find("#column_" + width);
+    };
+
+    GameWindow.prototype.renderFireplace = function() {
+      var fireplace, stageTile, x, y;
+      fireplace = this.engine.fireplace;
+      x = fireplace.x() + this.xOffset;
+      y = fireplace.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y);
+      return stageTile.addClass("structure-campfire");
     };
 
     GameWindow.prototype.renderTerrain = function() {
@@ -572,6 +583,7 @@
       this.stage.append(stage);
       this.renderTerrain();
       this.reRenderPeople();
+      this.renderFireplace();
       this.stage.mousemove((function(_this) {
         return function(e) {
           var diffX, diffY;

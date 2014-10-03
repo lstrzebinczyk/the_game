@@ -68,3 +68,8 @@ button.active{
   background-image: url('images/characters/fisherman.png');
   z-index: 1;
 }
+
+.structure-campfire{
+  background-image: url('images/structures/campfire.png');
+  z-index: 1;
+}
