@@ -7,4 +7,4 @@ gem 'opal'
 gem 'guard'
 gem 'guard-rake'
 gem "coffee-script"
-# gem "sinatra"
+gem "sinatra"

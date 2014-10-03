@@ -32,10 +32,10 @@ class @GameWindow
   setup: =>
     $("#view").append(@renderer.view)
 
-    groundTexture = new PIXI.Texture.fromImage("assets/images/nature/ground.png")
+    # groundTexture = new PIXI.Texture.fromImage("assets/images/nature/ground.png")
 
-    @engine.eachTile (tile) =>
-      console.log tile.terrain()
+    # @engine.eachTile (tile) =>
+    #   console.log tile.terrain()
 
     #   eachTile: (block) =>
     # for tile in @tiles
