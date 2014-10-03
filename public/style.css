@@ -41,6 +41,12 @@ button.active{
   display: inline-block;
 }
 
+.content{
+  height: 16px;
+  width: 16px;
+  display: block;
+}
+
 .terrain-ground{
   background-image: url('images/nature/ground.png');
 }

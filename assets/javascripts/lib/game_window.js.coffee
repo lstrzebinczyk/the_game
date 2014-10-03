@@ -37,7 +37,7 @@ class @GameWindow
     fireplace = @engine.fireplace
     x = fireplace.x() + @xOffset
     y = fireplace.y() + @yOffset
-    stageTile = @findStageTile(x, y)
+    stageTile = @findStageTile(x, y).find(".content")
     stageTile.addClass("structure-campfire")
 
   reRenderFireplace: =>
@@ -56,7 +56,7 @@ class @GameWindow
     @engine.eachPerson (person) =>
       x = person.x() + @xOffset
       y = person.y() + @yOffset
-      tile = @findStageTile(x, y)
+      tile = @findStageTile(x, y).find(".content")
       type = person.type()
       id = person.id()
 
@@ -74,7 +74,7 @@ class @GameWindow
     for rowIndex in [0..@renderedHeight]
       stage += "<div class='row' id='row_#{rowIndex}'>"
       for columnIndex in [0..@renderedWidth]
-        stage += "<span class='tile' id='column_#{columnIndex}'></span>"
+        stage += "<span class='tile' id='column_#{columnIndex}'><span class='content'></span></span>"
       stage += "</div>"
     @stage.append(stage)
 

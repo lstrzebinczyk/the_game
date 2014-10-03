@@ -533,7 +533,7 @@
       fireplace = this.engine.fireplace;
       x = fireplace.x() + this.xOffset;
       y = fireplace.y() + this.yOffset;
-      stageTile = this.findStageTile(x, y);
+      stageTile = this.findStageTile(x, y).find(".content");
       return stageTile.addClass("structure-campfire");
     };
 
@@ -561,7 +561,7 @@
           var id, tile, type, x, y;
           x = person.x() + _this.xOffset;
           y = person.y() + _this.yOffset;
-          tile = _this.findStageTile(x, y);
+          tile = _this.findStageTile(x, y).find(".content");
           type = person.type();
           id = person.id();
           _this.stage.find(".person-" + type + ".person-" + id).removeClass("person-" + type + " person-" + id);
@@ -582,7 +582,7 @@
       for (rowIndex = _i = 0, _ref = this.renderedHeight; 0 <= _ref ? _i <= _ref : _i >= _ref; rowIndex = 0 <= _ref ? ++_i : --_i) {
         stage += "<div class='row' id='row_" + rowIndex + "'>";
         for (columnIndex = _j = 0, _ref1 = this.renderedWidth; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; columnIndex = 0 <= _ref1 ? ++_j : --_j) {
-          stage += "<span class='tile' id='column_" + columnIndex + "'></span>";
+          stage += "<span class='tile' id='column_" + columnIndex + "'><span class='content'></span></span>";
         }
         stage += "</div>";
       }
