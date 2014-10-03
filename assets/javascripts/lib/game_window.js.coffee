@@ -26,63 +26,48 @@ class @GameWindow
     @updatable = []
 
   update: =>
-    unless @engine.dormitory.isNil()
-      unless @renderingDormitory
-        @renderingDormitory = new RenderingDormitory(@engine.dormitory, @)
-
-    for object in @updatable
-      object.update()
 
   render: =>
-    @renderer.render(@stage)
-
-  addChild: (child) =>
-    @stage.addChild(child.content)
-    @updatable.push(child)
-
-  removeChild: (child) =>
-    @stage.removeChild(child.content)
-    child.content = null
 
   setup: =>
     $("#view").append(@renderer.view)
 
+    groundTexture = new PIXI.Texture.fromImage("assets/images/nature/ground.png")
+
     @engine.eachTile (tile) =>
-      new RenderingTile(tile, @)
+      console.log tile.terrain()
 
-    new RenderingFireplace(@engine.fireplace, @)
-    new RenderingStash(@engine.stash, @)
+    #   eachTile: (block) =>
+    # for tile in @tiles
+    #   block(tile)
 
-    @engine.eachPerson (person) =>
-      new RenderingPerson(person, @)
+    # @stage.mousemove = (data) =>
+    #   if @change_offset
+    #     x = data.originalEvent.movementX
+    #     y = data.originalEvent.movementY
+    #     @x_offset += x
+    #     @y_offset += y
+    #     @x_offset = 0 if @x_offset > 0
+    #     @y_offset = 0 if @y_offset > 0
+    #     @x_offset = @maxXOffset if @x_offset < @maxXOffset
+    #     @y_offset = @maxYOffset if @y_offset < @maxYOffset
 
-    @stage.mousemove = (data) =>
-      if @change_offset
-        x = data.originalEvent.movementX
-        y = data.originalEvent.movementY
-        @x_offset += x
-        @y_offset += y
-        @x_offset = 0 if @x_offset > 0
-        @y_offset = 0 if @y_offset > 0
-        @x_offset = @maxXOffset if @x_offset < @maxXOffset
-        @y_offset = @maxYOffset if @y_offset < @maxYOffset
+    #   unless @playing
+    #     @update()
+    #     @render()
 
-      unless @playing
-        @update()
-        @render()
+    # @stage.mouseup = =>
+    #   @change_offset = false
 
-    @stage.mouseup = =>
-      @change_offset = false
+    # @stage.mouseupoutside = =>
+    #   @change_offset = false
 
-    @stage.mouseupoutside = =>
-      @change_offset = false
+    # @stage.mousedown = (mouseData) =>
+    #   @change_offset = true
 
-    @stage.mousedown = (mouseData) =>
-      @change_offset = true
-
-      mouse_x = mouseData.global.x
-      mouse_y = mouseData.global.y
-      map_x = parseInt(mouse_x / @tileSize)
-      map_y = parseInt(mouse_y / @tileSize)
-      tile = @engine.findTile(map_y, map_x)
-      console.log tile
+    #   mouse_x = mouseData.global.x
+    #   mouse_y = mouseData.global.y
+    #   map_x = parseInt(mouse_x / @tileSize)
+    #   map_y = parseInt(mouse_y / @tileSize)
+    #   tile = @engine.findTile(map_y, map_x)
+    #   console.log tile

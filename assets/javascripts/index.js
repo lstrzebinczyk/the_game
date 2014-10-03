@@ -254,6 +254,7 @@
       this.tile = tile;
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
+      this.terrain = __bind(this.terrain, this);
       this.updated = __bind(this.updated, this);
       this.isUpdated = __bind(this.isUpdated, this);
       this.contentName = __bind(this.contentName, this);
@@ -267,7 +268,7 @@
     };
 
     Tile.prototype.contentName = function() {
-      if (this.tile.$terrain() === "river") {
+      if (this.terrain() === "river") {
         return "river";
       } else {
         return this.tile.$content().$type();
@@ -281,6 +282,10 @@
     Tile.prototype.updated = function() {
       this.cachedContentName = this.contentName();
       return this.cachedIsMarkedForCleaning = this.isNotMarkedForCleaning();
+    };
+
+    Tile.prototype.terrain = function() {
+      return this.tile.$terrain();
     };
 
     Tile.prototype.x = function() {
@@ -309,7 +314,7 @@
       this.gameMenu = new GameMenu(this.gameEngine);
       this.gameWindow = new GameWindow(this.gameEngine);
       this.startButton = $("#start");
-      this.expectedTurnsPerSecond = 60;
+      this.expectedTurnsPerSecond = 30;
     }
 
     GameLoop.prototype.setup = function() {
@@ -491,8 +496,6 @@
       var interactive;
       this.engine = engine;
       this.setup = __bind(this.setup, this);
-      this.removeChild = __bind(this.removeChild, this);
-      this.addChild = __bind(this.addChild, this);
       this.render = __bind(this.render, this);
       this.update = __bind(this.update, this);
       interactive = true;
@@ -512,363 +515,24 @@
       this.updatable = [];
     }
 
-    GameWindow.prototype.update = function() {
-      var object, _i, _len, _ref, _results;
-      if (!this.engine.dormitory.isNil()) {
-        if (!this.renderingDormitory) {
-          this.renderingDormitory = new RenderingDormitory(this.engine.dormitory, this);
-        }
-      }
-      _ref = this.updatable;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        object = _ref[_i];
-        _results.push(object.update());
-      }
-      return _results;
-    };
+    GameWindow.prototype.update = function() {};
 
-    GameWindow.prototype.render = function() {
-      return this.renderer.render(this.stage);
-    };
-
-    GameWindow.prototype.addChild = function(child) {
-      this.stage.addChild(child.content);
-      return this.updatable.push(child);
-    };
-
-    GameWindow.prototype.removeChild = function(child) {
-      this.stage.removeChild(child.content);
-      return child.content = null;
-    };
+    GameWindow.prototype.render = function() {};
 
     GameWindow.prototype.setup = function() {
+      var groundTexture;
       $("#view").append(this.renderer.view);
-      this.engine.eachTile((function(_this) {
+      groundTexture = new PIXI.Texture.fromImage("assets/images/nature/ground.png");
+      return this.engine.eachTile((function(_this) {
         return function(tile) {
-          return new RenderingTile(tile, _this);
+          return console.log(tile.terrain());
         };
       })(this));
-      new RenderingFireplace(this.engine.fireplace, this);
-      new RenderingStash(this.engine.stash, this);
-      this.engine.eachPerson((function(_this) {
-        return function(person) {
-          return new RenderingPerson(person, _this);
-        };
-      })(this));
-      this.stage.mousemove = (function(_this) {
-        return function(data) {
-          var x, y;
-          if (_this.change_offset) {
-            x = data.originalEvent.movementX;
-            y = data.originalEvent.movementY;
-            _this.x_offset += x;
-            _this.y_offset += y;
-            if (_this.x_offset > 0) {
-              _this.x_offset = 0;
-            }
-            if (_this.y_offset > 0) {
-              _this.y_offset = 0;
-            }
-            if (_this.x_offset < _this.maxXOffset) {
-              _this.x_offset = _this.maxXOffset;
-            }
-            if (_this.y_offset < _this.maxYOffset) {
-              _this.y_offset = _this.maxYOffset;
-            }
-          }
-          if (!_this.playing) {
-            _this.update();
-            return _this.render();
-          }
-        };
-      })(this);
-      this.stage.mouseup = (function(_this) {
-        return function() {
-          return _this.change_offset = false;
-        };
-      })(this);
-      this.stage.mouseupoutside = (function(_this) {
-        return function() {
-          return _this.change_offset = false;
-        };
-      })(this);
-      return this.stage.mousedown = (function(_this) {
-        return function(mouseData) {
-          var map_x, map_y, mouse_x, mouse_y, tile;
-          _this.change_offset = true;
-          mouse_x = mouseData.global.x;
-          mouse_y = mouseData.global.y;
-          map_x = parseInt(mouse_x / _this.tileSize);
-          map_y = parseInt(mouse_y / _this.tileSize);
-          tile = _this.engine.findTile(map_y, map_x);
-          return console.log(tile);
-        };
-      })(this);
     };
 
     return GameWindow;
 
   })();
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  this.Renderable = (function() {
-    function Renderable(object, gameWindow) {
-      this.object = object;
-      this.gameWindow = gameWindow;
-      this.updateContentPosition = __bind(this.updateContentPosition, this);
-      this.removeContent = __bind(this.removeContent, this);
-      this.isWithinView = __bind(this.isWithinView, this);
-      this.update = __bind(this.update, this);
-      this.createContent();
-      this.renderedWidth = this.gameWindow.renderedWidth;
-      this.renderedHeight = this.gameWindow.renderedHeight;
-      this.gameWindow.addChild(this);
-    }
-
-    Renderable.prototype.update = function() {
-      if (this.isWithinView()) {
-        if (this.content) {
-          this.updateSelf();
-          return this.updateContentPosition();
-        } else {
-          this.createContent();
-          this.gameWindow.stage.addChild(this.content);
-          return this.updateContentPosition();
-        }
-      } else {
-        if (this.content) {
-          return this.removeContent();
-        }
-      }
-    };
-
-    Renderable.prototype.updateSelf = function() {};
-
-    Renderable.prototype.isWithinView = function() {
-      return this.object.y() * this.gameWindow.tileSize >= -this.gameWindow.x_offset && this.object.y() * this.gameWindow.tileSize < -this.gameWindow.x_offset + this.renderedWidth * this.gameWindow.tileSize && this.object.x() * this.gameWindow.tileSize >= -this.gameWindow.y_offset && this.object.x() * this.gameWindow.tileSize < -this.gameWindow.y_offset + this.renderedHeight * this.gameWindow.tileSize;
-    };
-
-    Renderable.prototype.removeContent = function() {
-      return this.gameWindow.removeChild(this);
-    };
-
-    Renderable.prototype.updateContentPosition = function() {
-      this.content.position.x = this.object.y() * this.gameWindow.tileSize + this.gameWindow.x_offset;
-      return this.content.position.y = this.object.x() * this.gameWindow.tileSize + this.gameWindow.y_offset;
-    };
-
-    return Renderable;
-
-  })();
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingDormitory = (function(_super) {
-    __extends(RenderingDormitory, _super);
-
-    function RenderingDormitory() {
-      this.updateSelf = __bind(this.updateSelf, this);
-      this.draw = __bind(this.draw, this);
-      this.createContent = __bind(this.createContent, this);
-      return RenderingDormitory.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingDormitory.prototype.createContent = function() {
-      if (!this.color) {
-        this.color = 0x0000FF;
-      }
-      this.content = new PIXI.Graphics();
-      return this.draw();
-    };
-
-    RenderingDormitory.prototype.draw = function() {
-      this.content.beginFill(this.color, 0.3);
-      this.content.drawRect(0, 0, 4 * this.gameWindow.tileSize, 4 * this.gameWindow.tileSize);
-      return this.content.endFill();
-    };
-
-    RenderingDormitory.prototype.updateSelf = function() {
-      if (this.object.status() === "done") {
-        this.color = 0x6F1C1C;
-        return this.draw();
-      }
-    };
-
-    return RenderingDormitory;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingFireplace = (function(_super) {
-    __extends(RenderingFireplace, _super);
-
-    function RenderingFireplace() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingFireplace.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingFireplace.prototype.createContent = function() {
-      return this.content = new PIXI.Text("F", {
-        font: "25px",
-        fill: "red"
-      });
-    };
-
-    return RenderingFireplace;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingPerson = (function(_super) {
-    __extends(RenderingPerson, _super);
-
-    function RenderingPerson() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingPerson.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingPerson.prototype.createContent = function() {
-      var content;
-      if (this.object.type() === "woodcutter") {
-        content = "W";
-      } else if (this.object.type() === "leader") {
-        content = "L";
-      } else if (this.object.type() === "gatherer") {
-        content = "G";
-      } else if (this.object.type() === "fisherman") {
-        content = "F";
-      }
-      return this.content = new PIXI.Text(content, {
-        font: "25px",
-        fill: "white"
-      });
-    };
-
-    return RenderingPerson;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingStash = (function(_super) {
-    __extends(RenderingStash, _super);
-
-    function RenderingStash() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingStash.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingStash.prototype.createContent = function() {
-      return this.content = new PIXI.Text("S", {
-        font: "25px",
-        fill: "white"
-      });
-    };
-
-    return RenderingStash;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingTile = (function(_super) {
-    __extends(RenderingTile, _super);
-
-    function RenderingTile() {
-      this.setData = __bind(this.setData, this);
-      this.updateSelf = __bind(this.updateSelf, this);
-      this.createContent = __bind(this.createContent, this);
-      return RenderingTile.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingTile.prototype.createContent = function() {
-      this.setData();
-      this.content = new PIXI.Text(this.contentString, {
-        font: "25px",
-        fill: this.contentColor
-      });
-      return this.updateContentPosition();
-    };
-
-    RenderingTile.prototype.updateSelf = function() {
-      if (this.object.isUpdated()) {
-        this.removeContent();
-        this.createContent();
-        this.gameWindow.stage.addChild(this.content);
-        return this.object.updated();
-      }
-    };
-
-    RenderingTile.prototype.setData = function() {
-      if (this.object.isNotMarkedForCleaning()) {
-        if (this.object.contentName() === "tree") {
-          this.contentString = "t";
-          return this.contentColor = "green";
-        } else if (this.object.contentName() === "log") {
-          this.contentString = "---";
-          return this.contentColor = "green";
-        } else if (this.object.contentName() === "tree_piece") {
-          this.contentString = "/";
-          return this.contentColor = "green";
-        } else if (this.object.contentName() === "berries_bush") {
-          this.contentString = "#";
-          return this.contentColor = "yellow";
-        } else if (this.object.contentName() === "river") {
-          this.contentString = "~";
-          return this.contentColor = "blue";
-        } else {
-          this.contentString = ".";
-          return this.contentColor = "white";
-        }
-      } else {
-        if (this.object.contentName() === "tree") {
-          this.contentString = "t";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "tree_piece") {
-          this.contentString = "/";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "berries_bush") {
-          this.contentString = "#";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "log") {
-          this.contentString = "---";
-          return this.contentColor = "red";
-        } else {
-          this.contentString = ".";
-          return this.contentColor = "white";
-        }
-      }
-    };
-
-    return RenderingTile;
-
-  })(Renderable);
 
 }).call(this);
 (function() {

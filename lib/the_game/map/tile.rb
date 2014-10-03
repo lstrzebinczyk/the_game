@@ -25,6 +25,7 @@ class TheGame
         self.y = y
         @map = map
         @content = NullContent.new
+        @terrain = :ground
         @building = nil
       end
 

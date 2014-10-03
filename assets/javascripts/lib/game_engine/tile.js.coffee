@@ -7,7 +7,7 @@ class @GameEngine.Tile
     @tile["$not_marked_for_cleaning?"]()
 
   contentName: =>
-    if @tile.$terrain() == "river"
+    if @terrain() == "river"
       "river"
     else
       @tile.$content().$type()
@@ -18,6 +18,9 @@ class @GameEngine.Tile
   updated: =>
     @cachedContentName = @contentName()
     @cachedIsMarkedForCleaning = @isNotMarkedForCleaning()
+
+  terrain: =>
+    @tile.$terrain()
 
   x: =>
     @tile.$x()

@@ -13044,6 +13044,7 @@ if (column_index == null) column_index = nil;
           self['$y='](y);
           self.map = map;
           self.content = (($a = $scope.NullContent) == null ? $opal.cm('NullContent') : $a).$new();
+          self.terrain = "ground";
           return self.building = nil;
         };
 
