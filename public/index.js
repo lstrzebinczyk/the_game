@@ -502,6 +502,7 @@
       this.reRenderTerrain = __bind(this.reRenderTerrain, this);
       this.reRenderPeople = __bind(this.reRenderPeople, this);
       this.renderTerrain = __bind(this.renderTerrain, this);
+      this.reRenderFireplace = __bind(this.reRenderFireplace, this);
       this.renderFireplace = __bind(this.renderFireplace, this);
       this.findStageTile = __bind(this.findStageTile, this);
       this.render = __bind(this.render, this);
@@ -534,6 +535,11 @@
       y = fireplace.y() + this.yOffset;
       stageTile = this.findStageTile(x, y);
       return stageTile.addClass("structure-campfire");
+    };
+
+    GameWindow.prototype.reRenderFireplace = function() {
+      this.stage.find(".structure-campfire").removeClass("structure-campfire");
+      return this.renderFireplace();
     };
 
     GameWindow.prototype.renderTerrain = function() {
@@ -607,7 +613,9 @@
               if (_this.yOffset > 0) {
                 _this.yOffset = 0;
               }
-              return _this.reRenderTerrain();
+              _this.reRenderTerrain();
+              _this.reRenderPeople();
+              return _this.reRenderFireplace();
             }
           }
         };

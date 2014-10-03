@@ -73,3 +73,8 @@ button.active{
   background-image: url('images/structures/campfire.png');
   z-index: 1;
 }
+
+.structure-stash{
+  background-image: url('images/structures/stash.png');
+  z-index: 1;
+}

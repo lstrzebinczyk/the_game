@@ -24,13 +24,7 @@ class @GameWindow
     @tileSize = 16
 
 
-    # @renderer = PIXI.autoDetectRenderer(@renderedWidth*@tileSize, @renderedHeight*@tileSize)
-
-
-    # @updatable = []
-
   update: =>
-    # rerender every single person
     @reRenderPeople()
     @renderFireplace()
 
@@ -45,6 +39,10 @@ class @GameWindow
     y = fireplace.y() + @yOffset
     stageTile = @findStageTile(x, y)
     stageTile.addClass("structure-campfire")
+
+  reRenderFireplace: =>
+    @stage.find(".structure-campfire").removeClass("structure-campfire")
+    @renderFireplace()
 
   renderTerrain: =>
     @engine.eachTile (tile) =>
@@ -114,6 +112,8 @@ class @GameWindow
             @yOffset = 0
 
           @reRenderTerrain()
+          @reRenderPeople()
+          @reRenderFireplace()
 
     $("body").mouseup =>
       @moving = false
