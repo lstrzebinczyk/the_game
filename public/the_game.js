@@ -12184,11 +12184,23 @@ if (tile == null) tile = nil;
           return "fireplace";
         };
 
-        return (def.$energy_per_minute_when_sleeping = function() {
+        def.$energy_per_minute_when_sleeping = function() {
           var self = this;
 
           return (2.3)['$*'](0.00104167);
-        }, nil) && 'energy_per_minute_when_sleeping';
+        };
+
+        def.$type = function() {
+          var self = this;
+
+          return "fireplace";
+        };
+
+        return (def['$empty?'] = function() {
+          var self = this;
+
+          return false;
+        }, nil) && 'empty?';
       })(self, null)
     })(self, null)
   })(self, null)
@@ -12863,7 +12875,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$*', '$new', '$grid=', '$new_grid', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$set_position', '$/', '$height', '$width', '$+', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$content=', '$y', '$<<']);
+  $opal.add_stubs(['$*', '$new', '$grid=', '$new_grid', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$/', '$height', '$width', '$set_position', '$fireplace=', '$content=', '$fetch', '$+', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$y', '$<<']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12900,10 +12912,15 @@ if (tile == null) tile = nil;
         self.$private();
 
         def.$create_camp = function(map) {
-          var $a, $b, $c, TMP_1, self = this, settlement = nil, stash_x = nil, stash_y = nil, stash = nil;
+          var $a, $b, $c, TMP_1, self = this, settlement = nil, settlement_x = nil, settlement_y = nil, fireplace = nil, stash_x = nil, stash_y = nil, stash = nil;
 
           settlement = (($a = ((($b = $scope.TheGame) == null ? $opal.cm('TheGame') : $b))._scope).Settlement == null ? $a.cm('Settlement') : $a.Settlement).$instance();
-          settlement.$set_position(map.$height()['$/'](2), map.$width()['$/'](2));
+          settlement_x = map.$height()['$/'](2);
+          settlement_y = map.$width()['$/'](2);
+          settlement.$set_position(settlement_x, settlement_y);
+          fireplace = (($a = ((($b = $scope.Construction) == null ? $opal.cm('Construction') : $b))._scope).Fireplace == null ? $a.cm('Fireplace') : $a.Fireplace).$new(settlement_x, settlement_y);
+          settlement['$fireplace='](fireplace);
+          map.$fetch(settlement_x, settlement_y)['$content='](fireplace);
           stash_x = map.$height()['$/'](2)['$+'](2);
           stash_y = map.$width()['$/'](2)['$+'](2);
           stash = (($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Construction == null ? $b.cm('Construction') : $b.Construction))._scope).Stash == null ? $a.cm('Stash') : $a.Stash).$new(stash_x, stash_y);
@@ -15492,7 +15509,7 @@ if (person == null) person = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $hash2 = $opal.hash2;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$each', '$==', '$!', '$fire_is_ok?', '$has?', '$create', '$needs_cleaning?', '$tile_for_cleaning', '$content', '$need_more_food?', '$then', '$need_more_wood?', '$need_wood?', '$status', '$any?', '$first', '$nil?', '$can_start_building?', '$start_building!', '$do_stuff', '$ready_to_build?', '$accepted_jobs', '$*', '$+', '$firewood_needed', '$count', '$stash', '$<', '$food_amount', '$people_count', '$type', '$new', '$sleep_area', '$update', '$delete_if', '$to_proc', '$size']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$each', '$==', '$!', '$fire_is_ok?', '$has?', '$create', '$needs_cleaning?', '$tile_for_cleaning', '$content', '$need_more_food?', '$then', '$need_more_wood?', '$need_wood?', '$status', '$any?', '$first', '$nil?', '$can_start_building?', '$start_building!', '$do_stuff', '$ready_to_build?', '$accepted_jobs', '$*', '$+', '$firewood_needed', '$count', '$stash', '$<', '$food_amount', '$people_count', '$type', '$sleep_area', '$update', '$delete_if', '$to_proc', '$size']);
   ;
   return (function($base, $super) {
     function $TheGame(){};
@@ -15506,7 +15523,7 @@ if (person == null) person = nil;
 
       var def = self._proto, $scope = self._scope, $a;
 
-      def.dormitory = def.stash = def.jobs = def.x = def.y = def.fireplace = def.stuff_to_bring = def.people = nil;
+      def.dormitory = def.stash = def.jobs = def.fireplace = def.stuff_to_bring = def.people = nil;
       self.$include((($a = $scope.Singleton) == null ? $opal.cm('Singleton') : $a));
 
       self.$attr_accessor("stash");
@@ -15642,9 +15659,9 @@ if (job == null) job = nil;
       };
 
       def.$setup = function() {
-        var $a, $b, self = this;
+        var self = this;
 
-        return self.fireplace = (($a = ((($b = $scope.Construction) == null ? $opal.cm('Construction') : $b))._scope).Fireplace == null ? $a.cm('Fireplace') : $a.Fireplace).$new(self.x, self.y);
+        return nil;
       };
 
       def.$safe_place_to_sleep = function() {

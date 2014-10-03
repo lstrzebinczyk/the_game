@@ -502,6 +502,8 @@
       this.reRenderTerrain = __bind(this.reRenderTerrain, this);
       this.reRenderPeople = __bind(this.reRenderPeople, this);
       this.renderTerrain = __bind(this.renderTerrain, this);
+      this.reRenderStash = __bind(this.reRenderStash, this);
+      this.renderStash = __bind(this.renderStash, this);
       this.reRenderFireplace = __bind(this.reRenderFireplace, this);
       this.renderFireplace = __bind(this.renderFireplace, this);
       this.findStageTile = __bind(this.findStageTile, this);
@@ -539,6 +541,20 @@
 
     GameWindow.prototype.reRenderFireplace = function() {
       this.stage.find(".structure-campfire").removeClass("structure-campfire");
+      return this.renderFireplace();
+    };
+
+    GameWindow.prototype.renderStash = function() {
+      var stageTile, stash, x, y;
+      stash = this.engine.stash;
+      x = stash.x() + this.xOffset;
+      y = stash.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y).find(".content");
+      return stageTile.addClass("structure-stash");
+    };
+
+    GameWindow.prototype.reRenderStash = function() {
+      this.stage.find(".structure-stash").removeClass("structure-stash");
       return this.renderFireplace();
     };
 
@@ -590,46 +606,17 @@
       this.renderTerrain();
       this.reRenderPeople();
       this.renderFireplace();
-      this.stage.mousemove((function(_this) {
+      this.renderStash();
+      return this.stage.click((function(_this) {
         return function(e) {
-          var diffX, diffY;
-          if (_this.moving) {
-            diffY = parseInt((_this.moveStartY - e.clientY) / _this.tileSize);
-            diffX = parseInt((_this.moveStartX - e.clientX) / _this.tileSize);
-            if (diffX !== 0 || diffY !== 0) {
-              _this.xOffset -= diffY;
-              _this.yOffset -= diffX;
-              _this.moveStartY = e.clientY;
-              _this.moveStartX = e.clientX;
-              if (_this.xOffset < -_this.maxXOffset) {
-                _this.xOffset = -_this.maxXOffset;
-              }
-              if (_this.yOffset < -_this.maxYOffset) {
-                _this.yOffset = -_this.maxYOffset;
-              }
-              if (_this.xOffset > 0) {
-                _this.xOffset = 0;
-              }
-              if (_this.yOffset > 0) {
-                _this.yOffset = 0;
-              }
-              _this.reRenderTerrain();
-              _this.reRenderPeople();
-              return _this.reRenderFireplace();
-            }
-          }
-        };
-      })(this));
-      $("body").mouseup((function(_this) {
-        return function() {
-          return _this.moving = false;
-        };
-      })(this));
-      return this.stage.mousedown((function(_this) {
-        return function(e) {
-          _this.moving = true;
-          _this.moveStartX = e.clientX;
-          return _this.moveStartY = e.clientY;
+          var column, row, tile, x, y;
+          column = $(e.target).parent();
+          x = parseInt(column.attr("id").replace("column_", ""));
+          row = column.parent();
+          y = parseInt(row.attr("id").replace("row_", ""));
+          tile = _this.engine.findTile(y, x);
+          console.log(_this.engine.fireplace.fireplace);
+          return console.log(tile);
         };
       })(this));
     };

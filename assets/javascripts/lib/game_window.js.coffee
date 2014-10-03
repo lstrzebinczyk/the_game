@@ -44,6 +44,17 @@ class @GameWindow
     @stage.find(".structure-campfire").removeClass("structure-campfire")
     @renderFireplace()
 
+  renderStash: =>
+    stash = @engine.stash
+    x = stash.x() + @xOffset
+    y = stash.y() + @yOffset
+    stageTile = @findStageTile(x, y).find(".content")
+    stageTile.addClass("structure-stash")
+
+  reRenderStash: =>
+    @stage.find(".structure-stash").removeClass("structure-stash")
+    @renderFireplace()
+
   renderTerrain: =>
     @engine.eachTile (tile) =>
       x = tile.x() + @xOffset
@@ -78,50 +89,54 @@ class @GameWindow
       stage += "</div>"
     @stage.append(stage)
 
-    # SETUP TERRAIN
     @renderTerrain()
-
-    # SETUP PEOPLE
     @reRenderPeople()
-
-    # SETUP FIREPLACE
     @renderFireplace()
+    @renderStash()
 
+    @stage.click (e) =>
+      column = $(e.target).parent()
+      x = parseInt(column.attr("id").replace("column_", ""))
+      row = column.parent()
+      y = parseInt(row.attr("id").replace("row_", ""))
+      tile = @engine.findTile(y, x)
+      console.log @engine.fireplace.fireplace
+      console.log tile
+    # @stage.mousemove (e) =>
+    #   if @moving
+    #     diffY = parseInt((@moveStartY - e.clientY) / @tileSize)
+    #     diffX = parseInt((@moveStartX - e.clientX) / @tileSize)
 
-    @stage.mousemove (e) =>
-      if @moving
-        diffY = parseInt((@moveStartY - e.clientY) / @tileSize)
-        diffX = parseInt((@moveStartX - e.clientX) / @tileSize)
+    #     if diffX != 0 or diffY != 0
+    #       @xOffset -= diffY
+    #       @yOffset -= diffX
+    #       @moveStartY = e.clientY
+    #       @moveStartX = e.clientX
 
-        if diffX != 0 or diffY != 0
-          @xOffset -= diffY
-          @yOffset -= diffX
-          @moveStartY = e.clientY
-          @moveStartX = e.clientX
+    #       if @xOffset < -@maxXOffset
+    #         @xOffset = -@maxXOffset
 
-          if @xOffset < -@maxXOffset
-            @xOffset = -@maxXOffset
+    #       if @yOffset < -@maxYOffset
+    #         @yOffset = -@maxYOffset
 
-          if @yOffset < -@maxYOffset
-            @yOffset = -@maxYOffset
+    #       if @xOffset > 0
+    #         @xOffset = 0
 
-          if @xOffset > 0
-            @xOffset = 0
+    #       if @yOffset > 0
+    #         @yOffset = 0
 
-          if @yOffset > 0
-            @yOffset = 0
+    #       @reRenderTerrain()
+    #       @reRenderPeople()
+    #       @reRenderFireplace()
+    #       @renderStash()
 
-          @reRenderTerrain()
-          @reRenderPeople()
-          @reRenderFireplace()
+    # $("body").mouseup =>
+    #   @moving = false
 
-    $("body").mouseup =>
-      @moving = false
-
-    @stage.mousedown (e) =>
-      @moving = true
-      @moveStartX = e.clientX
-      @moveStartY = e.clientY
+    # @stage.mousedown (e) =>
+    #   @moving = true
+    #   @moveStartX = e.clientX
+    #   @moveStartY = e.clientY
 
     # @stage.click (e) =>
       # console.log e

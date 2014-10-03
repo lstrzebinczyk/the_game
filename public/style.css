@@ -81,6 +81,8 @@ button.active{
 }
 
 .structure-stash{
+  width: 32px;
+  height: 32px;
   background-image: url('images/structures/stash.png');
   z-index: 1;
 }

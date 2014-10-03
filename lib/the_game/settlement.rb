@@ -105,7 +105,7 @@ class TheGame
     end
 
     def setup
-      @fireplace = Construction::Fireplace.new(@x, @y)
+      # @fireplace = Construction::Fireplace.new(@x, @y)
     end
 
     def safe_place_to_sleep

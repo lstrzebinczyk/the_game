@@ -21,7 +21,14 @@ class TheGame
 
       def create_camp(map)
         settlement = TheGame::Settlement.instance
-        settlement.set_position(map.height / 2, map.width  / 2)
+        settlement_x = map.height / 2
+        settlement_y = map.width  / 2
+
+        settlement.set_position(settlement_x, settlement_y)
+
+        fireplace = Construction::Fireplace.new(settlement_x, settlement_y)
+        settlement.fireplace = fireplace
+        map.fetch(settlement_x, settlement_y).content = fireplace
 
         stash_x = map.height / 2 + 2
         stash_y = map.width  / 2 + 2
