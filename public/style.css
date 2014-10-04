@@ -96,3 +96,13 @@ button.active{
   background: url('images/structures/stash.png') 16px 16px;
   z-index: 1;
 }
+
+.nature-tree{
+  background: url('images/nature/pinetree.png');
+  z-index: 1;
+}
+
+.berries-bush{
+  background: url('images/nature/berrybush.png');
+  z-index: 1;
+}

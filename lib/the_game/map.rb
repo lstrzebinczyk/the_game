@@ -1,9 +1,11 @@
 class TheGame
   class Map
     attr_accessor :grid
+    attr_reader :events
 
     def initialize(grid)
       @grid = grid
+      @events = []
     end
 
     def fetch(width, height)
@@ -30,7 +32,8 @@ class TheGame
 
     def update
       each_tile do |tile|
-        tile.update
+        event_or_nil = tile.update
+        @events << event_or_nil unless event_or_nil.nil?
       end
     end
 

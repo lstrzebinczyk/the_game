@@ -17,6 +17,7 @@ class @GameLoop
 
     @gameWindow.setup()
 
+    $("#slow").addClass("active") if @expectedTurnsPerSecond == 30
     $("#slow").click =>
       $(".speed_control").removeClass("active")
       $("#slow").addClass("active")
@@ -24,7 +25,7 @@ class @GameLoop
       @stopGame()
       @startGame()
 
-    $("#fast").addClass("active")
+    $("#fast").addClass("active") if @expectedTurnsPerSecond == 60
     $("#fast").click =>
       $(".speed_control").removeClass("active")
       $("#fast").addClass("active")

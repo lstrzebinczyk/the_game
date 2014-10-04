@@ -56,6 +56,7 @@ class TheGame
           case @content.type
           when :berries_bush
             clean!
+            clean_event(@x, @y)
           when :tree
             fallen_tree_pieces_to_deploy = @content.pieces_count - 1
             x = @x
@@ -73,11 +74,21 @@ class TheGame
               end
               x += 1
             end
+            clean_event(@x, @y)
           when :tree_piece
             @content = Item::Log.new(@x, @y)
             Settlement.instance.stuff_to_bring << self
+            clean_event(@x, @y)
+          else
+            nil
           end
         end
+      end
+
+      private
+
+      def clean_event(x, y)
+        Map::Event.new(:clean, x, y)
       end
     end
   end

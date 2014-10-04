@@ -25,8 +25,12 @@ class @GameWindow
 
 
   update: =>
+    if @engine.mapEvents().$size() > 0
+      event = @engine.mapEvents().$pop()
+      @rerenderContentBasedOnEvent(event)
+
     @reRenderPeople()
-    @renderFireplace()
+
 
   render: =>
 
@@ -81,6 +85,38 @@ class @GameWindow
     @stage.find(".terrain-ground").removeClass("terrain-ground")
     @renderTerrain()
 
+  rerenderContentBasedOnEvent: (mapEvent) =>
+    x = mapEvent.$x()
+    y = mapEvent.$y()
+    tile = @engine.findTile(x, y)
+    if mapEvent.$type() == "clean"
+      x = tile.x() + @xOffset
+      y = tile.y() + @yOffset
+      stageTile = @findStageTile(x, y).find(".content")
+      stageTile.attr("class", "content")
+      @renderContentTile(tile)
+
+  renderContent: =>
+    @engine.eachTile (tile) =>
+      @renderContentTile(tile)
+
+  renderContentTile: (tile) =>
+    if tile.contentType() == "tree"
+      x = tile.x() + @xOffset
+      y = tile.y() + @yOffset
+      stageTile = @findStageTile(x, y).find(".content")
+      stageTile.addClass("nature-tree")
+    else if tile.contentType() == "berries_bush"
+      x = tile.x() + @xOffset
+      y = tile.y() + @yOffset
+      stageTile = @findStageTile(x, y).find(".content")
+      stageTile.addClass("berries-bush")
+    # else
+    #   x = tile.x() + @xOffset
+    #   y = tile.y() + @yOffset
+    #   stageTile = @findStageTile(x, y).find(".content")
+    #   stageTile.attr("class", "content")
+
   setup: =>
     # INITIALIZE STAGE
     stage = ""
@@ -95,6 +131,7 @@ class @GameWindow
     @reRenderPeople()
     @renderFireplace()
     @renderStash()
+    @renderContent()
 
     @stage.click (e) =>
       column = $(e.target).parent()
@@ -142,103 +179,3 @@ class @GameWindow
 
     # @stage.click (e) =>
       # console.log e
-
-
-    # $("#view").append(@renderer.view)
-
-    # groundTexture = new PIXI.Texture.fromImage("images/nature/ground.png")
-    # riverTexture  = new PIXI.Texture.fromImage("images/nature/river.png")
-
-    # requestAnimFrame( @render )
-
-    # @renderTexture  = new PIXI.RenderTexture(@renderedWidth*@tileSize, @renderedHeight*@tileSize)
-    # @renderTexture2 = new PIXI.RenderTexture(@renderedWidth*@tileSize, @renderedHeight*@tileSize)
-    # @outputSprite  = new PIXI.Sprite(@renderTexture)
-
-    # @outputSprite.position.x = @renderedWidth*@tileSize/2
-    # @outputSprite.position.y = @renderedHeight*@tileSize/2
-
-    # # outputSprite.anchor.x = 0.5
-    # # outputSprite.anchor.y = 0.5
-
-    # @stage.addChild(@outputSprite)
-
-    # @terrainContainer = new PIXI.DisplayObjectContainer()
-    # @terrainContainer.position.x = @renderedWidth*@tileSize/2;
-    # @terrainContainer.position.y = @renderedHeight*@tileSize/2
-
-    # @stage.addChild(@terrainContainer)
-
-    # @engine.eachTile (tile) =>
-    #   if tile.terrain() == "river"
-    #     # sprite = new PIXI.Sprite(riverTexture)
-    #     sprite = new PIXI.Sprite.fromImage("images/nature/river.png")
-    #   else
-    #     # sprite = new PIXI.Sprite(groundTexture)
-    #     sprite = new PIXI.Sprite.fromImage("images/nature/ground.png")
-    #   sprite.position.x = tile.y() * @tileSize + @x_offset
-    #   sprite.position.y = tile.x() * @tileSize + @x_offset
-
-    #   @terrainContainer.addChild(sprite)
-
-    # renderTexture = new PIXI.RenderTexture(@renderedWidth*@tileSize, @renderedHeight*@tileSize)
-    # terrainSprite = new PIXI.Sprite(renderTexture)
-    # @stage.addChild(terrainSprite)
-
-    # terrainContainer = new PIXI.SpriteBatch()
-    # @stage.addChild(terrainContainer)
-
-    # @engine.eachTile (tile) =>
-    #   if tile.terrain() == "river"
-    #     # sprite = new PIXI.Sprite(riverTexture)
-    #     sprite = new PIXI.Sprite.fromImage("images/nature/river.png")
-    #   else
-    #     # sprite = new PIXI.Sprite(groundTexture)
-    #     sprite = new PIXI.Sprite.fromImage("images/nature/ground.png")
-
-    #   sprite.position.x = tile.y() * @tileSize + @x_offset
-    #   sprite.position.y = tile.x() * @tileSize + @x_offset
-
-    #   # renderTexture.render(sprite)
-    #   terrainContainer.addChild(sprite)
-
-    #   # renderTexture.render(sprite)
-
-    # # @stage.addChild(terrainSprite)
-
-    # requestAnimFrame( @render )
-
-    #   eachTile: (block) =>
-    # for tile in @tiles
-    #   block(tile)
-
-    # @stage.mousemove = (data) =>
-    #   if @change_offset
-    #     x = data.originalEvent.movementX
-    #     y = data.originalEvent.movementY
-    #     @x_offset += x
-    #     @y_offset += y
-    #     @x_offset = 0 if @x_offset > 0
-    #     @y_offset = 0 if @y_offset > 0
-    #     @x_offset = @maxXOffset if @x_offset < @maxXOffset
-    #     @y_offset = @maxYOffset if @y_offset < @maxYOffset
-
-    #   unless @playing
-    #     @update()
-    #     @render()
-
-    # @stage.mouseup = =>
-    #   @change_offset = false
-
-    # @stage.mouseupoutside = =>
-    #   @change_offset = false
-
-    # @stage.mousedown = (mouseData) =>
-    #   @change_offset = true
-
-    #   mouse_x = mouseData.global.x
-    #   mouse_y = mouseData.global.y
-    #   map_x = parseInt(mouse_x / @tileSize)
-    #   map_y = parseInt(mouse_y / @tileSize)
-    #   tile = @engine.findTile(map_y, map_x)
-    #   console.log tile

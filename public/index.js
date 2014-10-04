@@ -8,6 +8,7 @@
       this.eachTile = __bind(this.eachTile, this);
       this.update = __bind(this.update, this);
       this.time = __bind(this.time, this);
+      this.mapEvents = __bind(this.mapEvents, this);
       this.mapHeight = __bind(this.mapHeight, this);
       this.mapWidth = __bind(this.mapWidth, this);
       var person, row, tile, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
@@ -30,6 +31,7 @@
           this.tiles.push(new GameEngine.Tile(tile));
         }
       }
+      console.log(this.engine.map);
     }
 
     GameEngine.prototype.mapWidth = function() {
@@ -38,6 +40,10 @@
 
     GameEngine.prototype.mapHeight = function() {
       return this.engine.map.$height();
+    };
+
+    GameEngine.prototype.mapEvents = function() {
+      return this.engine.map.$events();
     };
 
     GameEngine.prototype.time = function() {
@@ -71,7 +77,14 @@
     };
 
     GameEngine.prototype.findTile = function(x, y) {
-      return this.engine.$map().$fetch(x, y);
+      var tile, _i, _len, _ref;
+      _ref = this.tiles;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
+        if (tile.x() === x && tile.y() === y) {
+          return tile;
+        }
+      }
     };
 
     return GameEngine;
@@ -264,7 +277,7 @@
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
       this.terrain = __bind(this.terrain, this);
-      this.contentName = __bind(this.contentName, this);
+      this.contentType = __bind(this.contentType, this);
       this.isNotMarkedForCleaning = __bind(this.isNotMarkedForCleaning, this);
     }
 
@@ -272,12 +285,8 @@
       return this.tile["$not_marked_for_cleaning?"]();
     };
 
-    Tile.prototype.contentName = function() {
-      if (this.terrain() === "river") {
-        return "river";
-      } else {
-        return this.tile.$content().$type();
-      }
+    Tile.prototype.contentType = function() {
+      return this.tile.$content().$type();
     };
 
     Tile.prototype.terrain = function() {
@@ -324,6 +333,9 @@
         };
       })(this));
       this.gameWindow.setup();
+      if (this.expectedTurnsPerSecond === 30) {
+        $("#slow").addClass("active");
+      }
       $("#slow").click((function(_this) {
         return function() {
           $(".speed_control").removeClass("active");
@@ -333,7 +345,9 @@
           return _this.startGame();
         };
       })(this));
-      $("#fast").addClass("active");
+      if (this.expectedTurnsPerSecond === 60) {
+        $("#fast").addClass("active");
+      }
       $("#fast").click((function(_this) {
         return function() {
           $(".speed_control").removeClass("active");
@@ -491,6 +505,9 @@
     function GameWindow(engine) {
       this.engine = engine;
       this.setup = __bind(this.setup, this);
+      this.renderContentTile = __bind(this.renderContentTile, this);
+      this.renderContent = __bind(this.renderContent, this);
+      this.rerenderContentBasedOnEvent = __bind(this.rerenderContentBasedOnEvent, this);
       this.reRenderTerrain = __bind(this.reRenderTerrain, this);
       this.reRenderPeople = __bind(this.reRenderPeople, this);
       this.renderTerrain = __bind(this.renderTerrain, this);
@@ -512,8 +529,12 @@
     }
 
     GameWindow.prototype.update = function() {
-      this.reRenderPeople();
-      return this.renderFireplace();
+      var event;
+      if (this.engine.mapEvents().$size() > 0) {
+        event = this.engine.mapEvents().$pop();
+        this.rerenderContentBasedOnEvent(event);
+      }
+      return this.reRenderPeople();
     };
 
     GameWindow.prototype.render = function() {};
@@ -590,6 +611,43 @@
       return this.renderTerrain();
     };
 
+    GameWindow.prototype.rerenderContentBasedOnEvent = function(mapEvent) {
+      var stageTile, tile, x, y;
+      x = mapEvent.$x();
+      y = mapEvent.$y();
+      tile = this.engine.findTile(x, y);
+      if (mapEvent.$type() === "clean") {
+        x = tile.x() + this.xOffset;
+        y = tile.y() + this.yOffset;
+        stageTile = this.findStageTile(x, y).find(".content");
+        stageTile.attr("class", "content");
+        return this.renderContentTile(tile);
+      }
+    };
+
+    GameWindow.prototype.renderContent = function() {
+      return this.engine.eachTile((function(_this) {
+        return function(tile) {
+          return _this.renderContentTile(tile);
+        };
+      })(this));
+    };
+
+    GameWindow.prototype.renderContentTile = function(tile) {
+      var stageTile, x, y;
+      if (tile.contentType() === "tree") {
+        x = tile.x() + this.xOffset;
+        y = tile.y() + this.yOffset;
+        stageTile = this.findStageTile(x, y).find(".content");
+        return stageTile.addClass("nature-tree");
+      } else if (tile.contentType() === "berries_bush") {
+        x = tile.x() + this.xOffset;
+        y = tile.y() + this.yOffset;
+        stageTile = this.findStageTile(x, y).find(".content");
+        return stageTile.addClass("berries-bush");
+      }
+    };
+
     GameWindow.prototype.setup = function() {
       var columnIndex, rowIndex, stage, _i, _j, _ref, _ref1;
       stage = "";
@@ -605,6 +663,7 @@
       this.reRenderPeople();
       this.renderFireplace();
       this.renderStash();
+      this.renderContent();
       return this.stage.click((function(_this) {
         return function(e) {
           var column, row, tile, x, y;

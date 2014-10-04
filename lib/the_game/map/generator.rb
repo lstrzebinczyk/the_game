@@ -11,9 +11,9 @@ class TheGame
         @map = Map.new
         @map.grid = new_grid
         create_river(@map)
+        create_camp(@map)
         populate_with_trees(@map)
         populate_with_food(@map)
-        create_camp(@map)
         @map
       end
 

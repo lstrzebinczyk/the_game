@@ -11613,7 +11613,7 @@ if (arg == null) arg = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$attr_accessor', '$[]', '$find', '$each_tile', '$<', '$distance_to', '$update', '$length', '$first', '$each', '$private']);
+  $opal.add_stubs(['$attr_accessor', '$attr_reader', '$[]', '$find', '$each_tile', '$<', '$distance_to', '$update', '$nil?', '$<<', '$length', '$first', '$each', '$private']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -11629,10 +11629,13 @@ if (arg == null) arg = nil;
       def.grid = nil;
       self.$attr_accessor("grid");
 
+      self.$attr_reader("events");
+
       def.$initialize = function(grid) {
         var self = this;
 
-        return self.grid = grid;
+        self.grid = grid;
+        return self.events = [];
       };
 
       def.$fetch = TMP_1 = function(width, height) {
@@ -11670,9 +11673,15 @@ if (tile == null) tile = nil;
       def.$update = function() {
         var $a, $b, TMP_5, self = this;
 
-        return ($a = ($b = self).$each_tile, $a._p = (TMP_5 = function(tile){var self = TMP_5._s || this;
+        return ($a = ($b = self).$each_tile, $a._p = (TMP_5 = function(tile){var self = TMP_5._s || this, $a, event_or_nil = nil;
+          if (self.events == null) self.events = nil;
 if (tile == null) tile = nil;
-        return tile.$update()}, TMP_5._s = self, TMP_5), $a).call($b);
+        event_or_nil = tile.$update();
+          if ((($a = event_or_nil['$nil?']()) !== nil && (!$a._isBoolean || $a == true))) {
+            return nil
+            } else {
+            return self.events['$<<'](event_or_nil)
+          };}, TMP_5._s = self, TMP_5), $a).call($b);
       };
 
       def.$width = function() {
@@ -12881,7 +12890,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$*', '$new', '$grid=', '$new_grid', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$/', '$height', '$width', '$set_position', '$fireplace=', '$building=', '$fetch', '$+', '$each', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$nil?', '$content', '$building', '$content=', '$y', '$<<']);
+  $opal.add_stubs(['$*', '$new', '$grid=', '$new_grid', '$create_river', '$create_camp', '$populate_with_trees', '$populate_with_food', '$private', '$instance', '$/', '$height', '$width', '$set_position', '$fireplace=', '$building=', '$fetch', '$+', '$each', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$nil?', '$content', '$building', '$content=', '$y', '$<<']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12909,9 +12918,9 @@ if (tile == null) tile = nil;
           self.map = (($a = $scope.Map) == null ? $opal.cm('Map') : $a).$new();
           self.map['$grid='](self.$new_grid());
           self.$create_river(self.map);
+          self.$create_camp(self.map);
           self.$populate_with_trees(self.map);
           self.$populate_with_food(self.map);
-          self.$create_camp(self.map);
           return self.map;
         };
 
@@ -13015,7 +13024,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$new', '$type', '$nil?', '$empty?', '$===', '$clean!', '$-', '$pieces_count', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$new', '$type', '$nil?', '$empty?', '$===', '$clean!', '$clean_event', '$-', '$pieces_count', '$+', '$>', '$fetch', '$content=', '$<<', '$stuff_to_bring', '$instance', '$private']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -13107,11 +13116,12 @@ if (column_index == null) column_index = nil;
           return self.terrain = "river";
         };
 
-        return (def.$update = function() {
+        def.$update = function() {
           var $a, $b, $c, $d, self = this, $case = nil, fallen_tree_pieces_to_deploy = nil, x = nil, y = nil, tile = nil, fallen_tree_piece = nil;
 
           if ((($a = self.content['$empty?']()) !== nil && (!$a._isBoolean || $a == true))) {
-            return (function() {$case = self.content.$type();if ("berries_bush"['$===']($case)) {return self['$clean!']()}else if ("tree"['$===']($case)) {fallen_tree_pieces_to_deploy = self.content.$pieces_count()['$-'](1);
+            return (function() {$case = self.content.$type();if ("berries_bush"['$===']($case)) {self['$clean!']();
+            return self.$clean_event(self.x, self.y);}else if ("tree"['$===']($case)) {fallen_tree_pieces_to_deploy = self.content.$pieces_count()['$-'](1);
             x = self.x;
             y = self.y;
             self.content = (($a = ((($b = ((($c = $scope.Nature) == null ? $opal.cm('Nature') : $c))._scope).Tree == null ? $b.cm('Tree') : $b.Tree))._scope).Piece == null ? $a.cm('Piece') : $a.Piece).$new(x, y);
@@ -13122,18 +13132,67 @@ if (column_index == null) column_index = nil;
               fallen_tree_piece = (($b = ((($c = ((($d = $scope.Nature) == null ? $opal.cm('Nature') : $d))._scope).Tree == null ? $c.cm('Tree') : $c.Tree))._scope).Piece == null ? $b.cm('Piece') : $b.Piece).$new(x, y);
               tile['$content='](fallen_tree_piece);
               fallen_tree_pieces_to_deploy = fallen_tree_pieces_to_deploy['$-'](1);};
-            x = x['$+'](1);};}else if ("tree_piece"['$===']($case)) {self.content = (($a = ((($b = $scope.Item) == null ? $opal.cm('Item') : $b))._scope).Log == null ? $a.cm('Log') : $a.Log).$new(self.x, self.y);
-            return (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stuff_to_bring()['$<<'](self);}else { return nil }})()
+            x = x['$+'](1);};
+            return self.$clean_event(self.x, self.y);}else if ("tree_piece"['$===']($case)) {self.content = (($a = ((($b = $scope.Item) == null ? $opal.cm('Item') : $b))._scope).Log == null ? $a.cm('Log') : $a.Log).$new(self.x, self.y);
+            (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stuff_to_bring()['$<<'](self);
+            return self.$clean_event(self.x, self.y);}else {return nil}})()
             } else {
             return nil
           };
-        }, nil) && 'update';
+        };
+
+        self.$private();
+
+        return (def.$clean_event = function(x, y) {
+          var $a, $b, self = this;
+
+          return (($a = ((($b = $scope.Map) == null ? $opal.cm('Map') : $b))._scope).Event == null ? $a.cm('Event') : $a.Event).$new("clean", x, y);
+        }, nil) && 'clean_event';
       })(self, null)
     })(self, null)
   })(self, null)
 })(Opal);
 
 //# sourceMappingURL=/__opal_source_maps__/the_game/map/tile.js.map
+;
+/* Generated by Opal 0.6.2 */
+(function($opal) {
+  var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
+
+  $opal.add_stubs(['$attr_reader']);
+  return (function($base, $super) {
+    function $TheGame(){};
+    var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
+
+    var def = self._proto, $scope = self._scope;
+
+    return (function($base, $super) {
+      function $Map(){};
+      var self = $Map = $klass($base, $super, 'Map', $Map);
+
+      var def = self._proto, $scope = self._scope;
+
+      return (function($base, $super) {
+        function $Event(){};
+        var self = $Event = $klass($base, $super, 'Event', $Event);
+
+        var def = self._proto, $scope = self._scope;
+
+        self.$attr_reader("type", "x", "y");
+
+        return (def.$initialize = function(type, x, y) {
+          var self = this;
+
+          self.type = type;
+          self.x = x;
+          return self.y = y;
+        }, nil) && 'initialize';
+      })(self, null)
+    })(self, null)
+  })(self, null)
+})(Opal);
+
+//# sourceMappingURL=/__opal_source_maps__/the_game/map/event.js.map
 ;
 /* Generated by Opal 0.6.2 */
 (function($opal) {
@@ -15735,6 +15794,7 @@ if (job == null) job = nil;
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
   $opal.add_stubs([]);
+  ;
   ;
   ;
   ;
