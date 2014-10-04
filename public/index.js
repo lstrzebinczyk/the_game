@@ -224,6 +224,7 @@
     function Stash() {
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
+      this.tilesCoords = __bind(this.tilesCoords, this);
       this.count = __bind(this.count, this);
       this.itemTypes = __bind(this.itemTypes, this);
       this.stash = Opal.TheGame.Settlement.$instance().$stash();
@@ -235,6 +236,10 @@
 
     Stash.prototype.count = function(type) {
       return this.stash.$count(type);
+    };
+
+    Stash.prototype.tilesCoords = function() {
+      return this.stash.$tiles_coords();
     };
 
     Stash.prototype.x = function() {
@@ -259,12 +264,8 @@
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
       this.terrain = __bind(this.terrain, this);
-      this.updated = __bind(this.updated, this);
-      this.isUpdated = __bind(this.isUpdated, this);
       this.contentName = __bind(this.contentName, this);
       this.isNotMarkedForCleaning = __bind(this.isNotMarkedForCleaning, this);
-      this.cachedContentName = this.contentName();
-      this.cachedIsMarkedForCleaning = this.isNotMarkedForCleaning();
     }
 
     Tile.prototype.isNotMarkedForCleaning = function() {
@@ -277,15 +278,6 @@
       } else {
         return this.tile.$content().$type();
       }
-    };
-
-    Tile.prototype.isUpdated = function() {
-      return (this.cachedContentName !== this.contentName()) || (this.cachedIsMarkedForCleaning !== this.isNotMarkedForCleaning());
-    };
-
-    Tile.prototype.updated = function() {
-      this.cachedContentName = this.contentName();
-      return this.cachedIsMarkedForCleaning = this.isNotMarkedForCleaning();
     };
 
     Tile.prototype.terrain = function() {
@@ -545,17 +537,23 @@
     };
 
     GameWindow.prototype.renderStash = function() {
-      var stageTile, stash, x, y;
+      var coords, stageTile, stash, x, y, _i, _len, _ref, _results;
       stash = this.engine.stash;
-      x = stash.x() + this.xOffset;
-      y = stash.y() + this.yOffset;
-      stageTile = this.findStageTile(x, y).find(".content");
-      return stageTile.addClass("structure-stash");
+      _ref = stash.tilesCoords();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        coords = _ref[_i];
+        x = stash.x() + this.xOffset + coords[0];
+        y = stash.y() + this.yOffset + coords[1];
+        stageTile = this.findStageTile(x, y).find(".content");
+        _results.push(stageTile.addClass("structure-stash structure-stash-" + coords[0] + "-" + coords[1]));
+      }
+      return _results;
     };
 
     GameWindow.prototype.reRenderStash = function() {
-      this.stage.find(".structure-stash").removeClass("structure-stash");
-      return this.renderFireplace();
+      this.stage.find(".structure-stash").attr("class", "content");
+      return this.renderStash();
     };
 
     GameWindow.prototype.renderTerrain = function() {
@@ -615,7 +613,6 @@
           row = column.parent();
           y = parseInt(row.attr("id").replace("row_", ""));
           tile = _this.engine.findTile(y, x);
-          console.log(_this.engine.fireplace.fireplace);
           return console.log(tile);
         };
       })(this));

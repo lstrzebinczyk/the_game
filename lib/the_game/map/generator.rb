@@ -28,11 +28,19 @@ class TheGame
 
         fireplace = Construction::Fireplace.new(settlement_x, settlement_y)
         settlement.fireplace = fireplace
-        map.fetch(settlement_x, settlement_y).content = fireplace
+        map.fetch(settlement_x, settlement_y).building = fireplace
 
         stash_x = map.height / 2 + 2
         stash_y = map.width  / 2 + 2
         stash = TheGame::Construction::Stash.new(stash_x, stash_y)
+
+        [0, 1].each do |row|
+          [0, 1].each do |col|
+            tile = map.fetch(stash_x + row, stash_y + col)
+            tile.building = stash
+          end
+        end
+
         stash.add(TheGame::Item::Axe.new)
         stash.add(TheGame::Item::FishingRod.new)
 
@@ -56,7 +64,7 @@ class TheGame
       def populate_with_food(map)
         map.each_tile do |tile|
           if rand < 0.12
-            tile.content = Nature::BerriesBush.new(tile.x, tile.y) unless tile.terrain == :river
+            tile.content = Nature::BerriesBush.new(tile.x, tile.y) if (tile.terrain == :ground and tile.content.nil? and tile.building.nil?)
           end
         end
       end
@@ -64,7 +72,7 @@ class TheGame
       def populate_with_trees(map)
         map.each_tile do |tile|
           if rand < 0.08
-            tile.content = Nature::Tree.new(tile.x, tile.y)  unless tile.terrain == :river
+            tile.content = Nature::Tree.new(tile.x, tile.y) if (tile.terrain == :ground and tile.content.nil? and tile.building.nil?)
           end
         end
       end

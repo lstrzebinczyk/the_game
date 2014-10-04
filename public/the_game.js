@@ -11930,11 +11930,17 @@ if (food == null) food = nil;
           return "stash";
         };
 
-        return (def['$need?'] = function(item_type) {
+        def['$need?'] = function(item_type) {
           var self = this;
 
           return true;
-        }, nil) && 'need?';
+        };
+
+        return (def.$tiles_coords = function() {
+          var self = this;
+
+          return [[0, 0], [0, 1], [1, 0], [1, 1]];
+        }, nil) && 'tiles_coords';
       })(self, (($a = $scope.Container) == null ? $opal.cm('Container') : $a))
     })(self, null)
   })(self, null);
@@ -12875,7 +12881,7 @@ if (tile == null) tile = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$*', '$new', '$grid=', '$new_grid', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$/', '$height', '$width', '$set_position', '$fireplace=', '$content=', '$fetch', '$+', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$y', '$<<']);
+  $opal.add_stubs(['$*', '$new', '$grid=', '$new_grid', '$create_river', '$populate_with_trees', '$populate_with_food', '$create_camp', '$private', '$instance', '$/', '$height', '$width', '$set_position', '$fireplace=', '$building=', '$fetch', '$+', '$each', '$add', '$times', '$stash=', '$setup', '$each_tile', '$>', '$x', '$<', '$set_river', '$rand', '$==', '$terrain', '$nil?', '$content', '$building', '$content=', '$y', '$<<']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12912,7 +12918,7 @@ if (tile == null) tile = nil;
         self.$private();
 
         def.$create_camp = function(map) {
-          var $a, $b, $c, TMP_1, self = this, settlement = nil, settlement_x = nil, settlement_y = nil, fireplace = nil, stash_x = nil, stash_y = nil, stash = nil;
+          var $a, $b, $c, TMP_1, $d, TMP_3, self = this, settlement = nil, settlement_x = nil, settlement_y = nil, fireplace = nil, stash_x = nil, stash_y = nil, stash = nil;
 
           settlement = (($a = ((($b = $scope.TheGame) == null ? $opal.cm('TheGame') : $b))._scope).Settlement == null ? $a.cm('Settlement') : $a.Settlement).$instance();
           settlement_x = map.$height()['$/'](2);
@@ -12920,76 +12926,82 @@ if (tile == null) tile = nil;
           settlement.$set_position(settlement_x, settlement_y);
           fireplace = (($a = ((($b = $scope.Construction) == null ? $opal.cm('Construction') : $b))._scope).Fireplace == null ? $a.cm('Fireplace') : $a.Fireplace).$new(settlement_x, settlement_y);
           settlement['$fireplace='](fireplace);
-          map.$fetch(settlement_x, settlement_y)['$content='](fireplace);
+          map.$fetch(settlement_x, settlement_y)['$building='](fireplace);
           stash_x = map.$height()['$/'](2)['$+'](2);
           stash_y = map.$width()['$/'](2)['$+'](2);
           stash = (($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Construction == null ? $b.cm('Construction') : $b.Construction))._scope).Stash == null ? $a.cm('Stash') : $a.Stash).$new(stash_x, stash_y);
-          stash.$add((($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Item == null ? $b.cm('Item') : $b.Item))._scope).Axe == null ? $a.cm('Axe') : $a.Axe).$new());
-          stash.$add((($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Item == null ? $b.cm('Item') : $b.Item))._scope).FishingRod == null ? $a.cm('FishingRod') : $a.FishingRod).$new());
-          ($a = ($b = (20)).$times, $a._p = (TMP_1 = function(){var self = TMP_1._s || this, $a, $b, $c;
+          ($a = ($b = [0, 1]).$each, $a._p = (TMP_1 = function(row){var self = TMP_1._s || this, $a, $b, TMP_2;
+if (row == null) row = nil;
+          return ($a = ($b = [0, 1]).$each, $a._p = (TMP_2 = function(col){var self = TMP_2._s || this, tile = nil;
+if (col == null) col = nil;
+            tile = map.$fetch(stash_x['$+'](row), stash_y['$+'](col));
+              return tile['$building='](stash);}, TMP_2._s = self, TMP_2), $a).call($b)}, TMP_1._s = self, TMP_1), $a).call($b);
+          stash.$add((($a = ((($c = ((($d = $scope.TheGame) == null ? $opal.cm('TheGame') : $d))._scope).Item == null ? $c.cm('Item') : $c.Item))._scope).Axe == null ? $a.cm('Axe') : $a.Axe).$new());
+          stash.$add((($a = ((($c = ((($d = $scope.TheGame) == null ? $opal.cm('TheGame') : $d))._scope).Item == null ? $c.cm('Item') : $c.Item))._scope).FishingRod == null ? $a.cm('FishingRod') : $a.FishingRod).$new());
+          ($a = ($c = (20)).$times, $a._p = (TMP_3 = function(){var self = TMP_3._s || this, $a, $b, $c;
 
-          return stash.$add((($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Item == null ? $b.cm('Item') : $b.Item))._scope).Firewood == null ? $a.cm('Firewood') : $a.Firewood).$new())}, TMP_1._s = self, TMP_1), $a).call($b);
+          return stash.$add((($a = ((($b = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Item == null ? $b.cm('Item') : $b.Item))._scope).Firewood == null ? $a.cm('Firewood') : $a.Firewood).$new())}, TMP_3._s = self, TMP_3), $a).call($c);
           settlement['$stash='](stash);
-          return (($a = ((($c = $scope.TheGame) == null ? $opal.cm('TheGame') : $c))._scope).Settlement == null ? $a.cm('Settlement') : $a.Settlement).$instance().$setup();
+          return (($a = ((($d = $scope.TheGame) == null ? $opal.cm('TheGame') : $d))._scope).Settlement == null ? $a.cm('Settlement') : $a.Settlement).$instance().$setup();
         };
 
         def.$create_river = function(map) {
-          var $a, $b, TMP_2, self = this;
+          var $a, $b, TMP_4, self = this;
 
-          return ($a = ($b = map).$each_tile, $a._p = (TMP_2 = function(tile){var self = TMP_2._s || this, $a, $b;
+          return ($a = ($b = map).$each_tile, $a._p = (TMP_4 = function(tile){var self = TMP_4._s || this, $a, $b;
 if (tile == null) tile = nil;
           if ((($a = (($b = tile.$x()['$>'](4)) ? tile.$x()['$<'](9) : $b)) !== nil && (!$a._isBoolean || $a == true))) {
               return tile.$set_river()
               } else {
               return nil
-            }}, TMP_2._s = self, TMP_2), $a).call($b);
-        };
-
-        def.$populate_with_food = function(map) {
-          var $a, $b, TMP_3, self = this;
-
-          return ($a = ($b = map).$each_tile, $a._p = (TMP_3 = function(tile){var self = TMP_3._s || this, $a, $b;
-if (tile == null) tile = nil;
-          if (self.$rand()['$<'](0.12)) {
-              if (tile.$terrain()['$==']("river")) {
-                return nil
-                } else {
-                return tile['$content=']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).BerriesBush == null ? $a.cm('BerriesBush') : $a.BerriesBush).$new(tile.$x(), tile.$y()))
-              }
-              } else {
-              return nil
-            }}, TMP_3._s = self, TMP_3), $a).call($b);
-        };
-
-        def.$populate_with_trees = function(map) {
-          var $a, $b, TMP_4, self = this;
-
-          return ($a = ($b = map).$each_tile, $a._p = (TMP_4 = function(tile){var self = TMP_4._s || this, $a, $b;
-if (tile == null) tile = nil;
-          if (self.$rand()['$<'](0.08)) {
-              if (tile.$terrain()['$==']("river")) {
-                return nil
-                } else {
-                return tile['$content=']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).Tree == null ? $a.cm('Tree') : $a.Tree).$new(tile.$x(), tile.$y()))
-              }
-              } else {
-              return nil
             }}, TMP_4._s = self, TMP_4), $a).call($b);
         };
 
+        def.$populate_with_food = function(map) {
+          var $a, $b, TMP_5, self = this;
+
+          return ($a = ($b = map).$each_tile, $a._p = (TMP_5 = function(tile){var self = TMP_5._s || this, $a, $b, $c;
+if (tile == null) tile = nil;
+          if (self.$rand()['$<'](0.12)) {
+              if ((($a = (($b = (($c = tile.$terrain()['$==']("ground")) ? tile.$content()['$nil?']() : $c), $b !== false && $b !== nil ?tile.$building()['$nil?']() : $b))) !== nil && (!$a._isBoolean || $a == true))) {
+                return tile['$content=']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).BerriesBush == null ? $a.cm('BerriesBush') : $a.BerriesBush).$new(tile.$x(), tile.$y()))
+                } else {
+                return nil
+              }
+              } else {
+              return nil
+            }}, TMP_5._s = self, TMP_5), $a).call($b);
+        };
+
+        def.$populate_with_trees = function(map) {
+          var $a, $b, TMP_6, self = this;
+
+          return ($a = ($b = map).$each_tile, $a._p = (TMP_6 = function(tile){var self = TMP_6._s || this, $a, $b, $c;
+if (tile == null) tile = nil;
+          if (self.$rand()['$<'](0.08)) {
+              if ((($a = (($b = (($c = tile.$terrain()['$==']("ground")) ? tile.$content()['$nil?']() : $c), $b !== false && $b !== nil ?tile.$building()['$nil?']() : $b))) !== nil && (!$a._isBoolean || $a == true))) {
+                return tile['$content=']((($a = ((($b = $scope.Nature) == null ? $opal.cm('Nature') : $b))._scope).Tree == null ? $a.cm('Tree') : $a.Tree).$new(tile.$x(), tile.$y()))
+                } else {
+                return nil
+              }
+              } else {
+              return nil
+            }}, TMP_6._s = self, TMP_6), $a).call($b);
+        };
+
         return (def.$new_grid = function() {
-          var $a, $b, TMP_5, self = this, grid = nil;
+          var $a, $b, TMP_7, self = this, grid = nil;
 
           grid = [];
-          ($a = ($b = self.height).$times, $a._p = (TMP_5 = function(row_index){var self = TMP_5._s || this, $a, $b, TMP_6, row = nil;
+          ($a = ($b = self.height).$times, $a._p = (TMP_7 = function(row_index){var self = TMP_7._s || this, $a, $b, TMP_8, row = nil;
             if (self.width == null) self.width = nil;
 if (row_index == null) row_index = nil;
           row = [];
-            ($a = ($b = self.width).$times, $a._p = (TMP_6 = function(column_index){var self = TMP_6._s || this, $a, $b;
+            ($a = ($b = self.width).$times, $a._p = (TMP_8 = function(column_index){var self = TMP_8._s || this, $a, $b;
               if (self.map == null) self.map = nil;
 if (column_index == null) column_index = nil;
-            return row['$<<']((($a = ((($b = $scope.Map) == null ? $opal.cm('Map') : $b))._scope).Tile == null ? $a.cm('Tile') : $a.Tile).$new(row_index, column_index, self.map))}, TMP_6._s = self, TMP_6), $a).call($b);
-            return grid['$<<'](row);}, TMP_5._s = self, TMP_5), $a).call($b);
+            return row['$<<']((($a = ((($b = $scope.Map) == null ? $opal.cm('Map') : $b))._scope).Tile == null ? $a.cm('Tile') : $a.Tile).$new(row_index, column_index, self.map))}, TMP_8._s = self, TMP_8), $a).call($b);
+            return grid['$<<'](row);}, TMP_7._s = self, TMP_7), $a).call($b);
           return grid;
         }, nil) && 'new_grid';
       })(self, null)

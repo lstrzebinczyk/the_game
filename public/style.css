@@ -80,9 +80,19 @@ button.active{
   z-index: 1;
 }
 
-.structure-stash{
-  width: 32px;
-  height: 32px;
-  background-image: url('images/structures/stash.png');
+.structure-stash-0-0{
+  background: url('images/structures/stash.png');
+  z-index: 1;
+}
+.structure-stash-0-1{
+  background: url('images/structures/stash.png') 16px 0;
+  z-index: 1;
+}
+.structure-stash-1-0{
+  background: url('images/structures/stash.png') 0 16px;
+  z-index: 1;
+}
+.structure-stash-1-1{
+  background: url('images/structures/stash.png') 16px 16px;
   z-index: 1;
 }

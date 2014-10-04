@@ -8,6 +8,9 @@ class @GameEngine.Stash
   count: (type) =>
     @stash.$count(type)
 
+  tilesCoords: =>
+    @stash.$tiles_coords()
+
   x: =>
     @stash.$x()
 

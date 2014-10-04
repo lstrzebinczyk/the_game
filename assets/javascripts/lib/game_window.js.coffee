@@ -46,14 +46,16 @@ class @GameWindow
 
   renderStash: =>
     stash = @engine.stash
-    x = stash.x() + @xOffset
-    y = stash.y() + @yOffset
-    stageTile = @findStageTile(x, y).find(".content")
-    stageTile.addClass("structure-stash")
+
+    for coords in stash.tilesCoords()
+      x = stash.x() + @xOffset + coords[0]
+      y = stash.y() + @yOffset + coords[1]
+      stageTile = @findStageTile(x, y).find(".content")
+      stageTile.addClass("structure-stash structure-stash-#{coords[0]}-#{coords[1]}")
 
   reRenderStash: =>
-    @stage.find(".structure-stash").removeClass("structure-stash")
-    @renderFireplace()
+    @stage.find(".structure-stash").attr("class", "content")
+    @renderStash()
 
   renderTerrain: =>
     @engine.eachTile (tile) =>
@@ -100,8 +102,8 @@ class @GameWindow
       row = column.parent()
       y = parseInt(row.attr("id").replace("row_", ""))
       tile = @engine.findTile(y, x)
-      console.log @engine.fireplace.fireplace
       console.log tile
+
     # @stage.mousemove (e) =>
     #   if @moving
     #     diffY = parseInt((@moveStartY - e.clientY) / @tileSize)
@@ -128,7 +130,7 @@ class @GameWindow
     #       @reRenderTerrain()
     #       @reRenderPeople()
     #       @reRenderFireplace()
-    #       @renderStash()
+    #       @reRenderStash()
 
     # $("body").mouseup =>
     #   @moving = false
