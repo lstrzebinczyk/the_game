@@ -11967,7 +11967,7 @@ if (food == null) food = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_reader', '$attr_accessor', '$==', '$all?', '$to_proc', '$fields', '$terrain_clear?', '$find', '$is_a?', '$content', '$any?', '$>', '$need_wood?', '$position', '$+', '$x', '$sample', '$y', '$type', '$-', '$*']);
+  $opal.add_stubs(['$include', '$attr_reader', '$attr_accessor', '$==', '$all?', '$to_proc', '$fields', '$terrain_clear?', '$find', '$is_a?', '$content', '$any?', '$>', '$need_wood?', '$position', '$+', '$x', '$y', '$type', '$-', '$*']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -12096,7 +12096,7 @@ if (tile == null) tile = nil;
           var self = this;
 
           if (self.status['$==']("done")) {
-            return self.$position(self.$x()['$+']([1, 2].$sample()), self.$y()['$+']([1, 2].$sample()), self)
+            return self.$position(self.$x()['$+'](1), self.$y()['$+'](2), self)
             } else {
             return nil
           };
@@ -12981,7 +12981,7 @@ if (column_index == null) column_index = nil;
 (function($opal) {
   var self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass;
 
-  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$new', '$type', '$nil?', '$empty?', '$===', '$clean!', '$clean_event', '$update_event', '$private']);
+  $opal.add_stubs(['$include', '$attr_accessor', '$x=', '$y=', '$new', '$nil?', '$type', '$empty?', '$===', '$clean!', '$clean_event', '$update_event', '$private']);
   return (function($base, $super) {
     function $TheGame(){};
     var self = $TheGame = $klass($base, $super, 'TheGame', $TheGame);
@@ -13046,7 +13046,7 @@ if (column_index == null) column_index = nil;
         def['$not_marked_for_cleaning?'] = function() {
           var $a, self = this;
 
-          return ($a = self.building, $a !== false && $a !== nil ?self.content.$type() : $a);
+          return (($a = self.building, $a !== false && $a !== nil ?self.content.$type() : $a))['$nil?']();
         };
 
         def['$clean!'] = function() {

@@ -82,7 +82,7 @@ class TheGame
       def sleep_area
         if @status == :done
           # inside the shack
-          position(x + [1, 2].sample, y + [1, 2].sample, self)
+          position(x+1, y+2, self)
         else
           nil
         end

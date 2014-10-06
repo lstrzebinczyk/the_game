@@ -30,7 +30,7 @@ class TheGame
       end
 
       def not_marked_for_cleaning?
-        @building and @content.type
+        (@building and @content.type).nil?
         # @building and @content
         # !(@content && @building).nil?
       end

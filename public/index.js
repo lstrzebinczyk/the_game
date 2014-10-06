@@ -31,7 +31,6 @@
           this.tiles.push(new GameEngine.Tile(tile));
         }
       }
-      console.log(this.engine.map);
     }
 
     GameEngine.prototype.mapWidth = function() {
@@ -542,7 +541,7 @@
     }
 
     GameWindow.prototype.update = function() {
-      var event, tile, _i, _len, _ref;
+      var blueprint, event, tile, _i, _len, _ref;
       if (this.engine.mapEvents().$size() > 0) {
         event = this.engine.mapEvents().$pop();
         this.rerenderContentBasedOnEvent(event);
@@ -555,6 +554,19 @@
         tile = _ref[_i];
         this.cleanTile(tile);
         this.renderContentTile(tile);
+      }
+      if (this.engine.dormitory.status() === "plan") {
+        blueprint = $(".structure-shelter-blueprint");
+        if (blueprint.hasClass("cleaning")) {
+          blueprint.removeClass("cleaning");
+          blueprint.addClass("plan");
+        }
+      }
+      if (this.engine.dormitory.status() === "done") {
+        blueprint = $(".structure-shelter-blueprint");
+        blueprint.removeClass("plan");
+        blueprint.removeClass("structure-shelter-blueprint");
+        blueprint.addClass("structure-shelter");
       }
       return this.reRenderPeople();
     };
@@ -634,7 +646,7 @@
     };
 
     GameWindow.prototype.rerenderContentBasedOnEvent = function(mapEvent) {
-      var building, tile, x, y;
+      var building, mapTile, tile, x, y, _i, _len, _ref;
       x = mapEvent.$x();
       y = mapEvent.$y();
       tile = this.engine.findTile(x, y);
@@ -646,34 +658,35 @@
         return this.renderContentTile(tile);
       } else if (mapEvent.$type() === "building_created") {
         building = mapEvent.opts.$first()[1];
+        _ref = building.$fields();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          mapTile = _ref[_i];
+          if (!mapTile["$not_marked_for_cleaning?"]()) {
+            this.findStageTile(mapTile.$x(), mapTile.$y()).addClass("marked-for-cleaning");
+          }
+        }
         return this.renderBuilding(tile, building);
       }
     };
 
     GameWindow.prototype.renderBuilding = function(tile, building) {
-      var coords, stageTile, x, y, _i, _len, _ref, _results;
+      var html, stageTile, x, y;
       x = tile.x() + this.xOffset;
       y = tile.y() + this.yOffset;
       stageTile = this.findStageTile(x, y).find(".content");
-      if (tile.buildingType() === "dormitory") {
-        _ref = building.$tiles_coords();
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          coords = _ref[_i];
-          x = building.x + this.xOffset + coords[0];
-          y = building.y + this.yOffset + coords[1];
-          stageTile = this.findStageTile(x, y).find(".content");
-          _results.push(stageTile.addClass("structure-shelter-blueprint-" + coords[0] + "-" + coords[1]));
-        }
-        return _results;
-      }
+      html = $("<span class='structure-shelter-blueprint cleaning'></span>");
+      html.css("left", y * 16 + 8);
+      html.css("top", x * 16 + 64 - 6);
+      return $("#buildings").append(html);
     };
 
     GameWindow.prototype.cleanTile = function(tile) {
-      var stageTile, x, y;
+      var stageBackground, stageTile, x, y;
       x = tile.x() + this.xOffset;
       y = tile.y() + this.yOffset;
-      stageTile = this.findStageTile(x, y).find(".content");
+      stageBackground = this.findStageTile(x, y);
+      stageBackground.removeClass("marked-for-cleaning");
+      stageTile = stageBackground.find(".content");
       return stageTile.attr("class", "content");
     };
 
@@ -702,6 +715,7 @@
 
     GameWindow.prototype.setup = function() {
       var columnIndex, rowIndex, stage, _i, _j, _ref, _ref1;
+      this.stage.append("<div id='buildings'></div>");
       stage = "";
       for (rowIndex = _i = 0, _ref = this.renderedHeight; 0 <= _ref ? _i <= _ref : _i >= _ref; rowIndex = 0 <= _ref ? ++_i : --_i) {
         stage += "<div class='row' id='row_" + rowIndex + "'>";

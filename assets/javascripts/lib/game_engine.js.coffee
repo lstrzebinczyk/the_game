@@ -15,8 +15,6 @@ class @GameEngine
       for tile in row
         @tiles.push(new GameEngine.Tile(tile))
 
-    console.log @engine.map
-
 
   mapWidth: =>
     @engine.map.$width()

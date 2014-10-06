@@ -37,6 +37,17 @@ class @GameWindow
       @cleanTile(tile)
       @renderContentTile(tile)
 
+    if @engine.dormitory.status() == "plan"
+      blueprint = $(".structure-shelter-blueprint")
+      if blueprint.hasClass("cleaning")
+        blueprint.removeClass("cleaning")
+        blueprint.addClass("plan")
+
+    if @engine.dormitory.status() == "done"
+      blueprint = $(".structure-shelter-blueprint")
+      blueprint.removeClass("plan")
+      blueprint.removeClass("structure-shelter-blueprint")
+      blueprint.addClass("structure-shelter")
 
     @reRenderPeople()
 
@@ -106,24 +117,27 @@ class @GameWindow
       @renderContentTile(tile)
     else if mapEvent.$type() == "building_created"
       building = mapEvent.opts.$first()[1]
+      for mapTile in building.$fields()
+        unless mapTile["$not_marked_for_cleaning?"]()
+          @findStageTile(mapTile.$x(), mapTile.$y()).addClass("marked-for-cleaning")
       @renderBuilding(tile, building)
 
   renderBuilding: (tile, building) =>
     x = tile.x() + @xOffset
     y = tile.y() + @yOffset
     stageTile = @findStageTile(x, y).find(".content")
-    if tile.buildingType() == "dormitory"
-      for coords in building.$tiles_coords()
-        x = building.x + @xOffset + coords[0]
-        y = building.y + @yOffset + coords[1]
-        stageTile = @findStageTile(x, y).find(".content")
-        stageTile.addClass("structure-shelter-blueprint-#{coords[0]}-#{coords[1]}")
+    html = $("<span class='structure-shelter-blueprint cleaning'></span>")
+    html.css("left", y * 16 + 8)
+    html.css("top", x * 16 + 64 - 6)
 
+    $("#buildings").append(html)
 
   cleanTile: (tile) =>
     x = tile.x() + @xOffset
     y = tile.y() + @yOffset
-    stageTile = @findStageTile(x, y).find(".content")
+    stageBackground =  @findStageTile(x, y)
+    stageBackground.removeClass("marked-for-cleaning")
+    stageTile = stageBackground.find(".content")
     stageTile.attr("class", "content")
 
   renderContent: =>
@@ -143,6 +157,7 @@ class @GameWindow
       stageTile.addClass("nature-logs-#{logsCount}")
 
   setup: =>
+    @stage.append("<div id='buildings'></div>")
     # INITIALIZE STAGE
     stage = ""
     for rowIndex in [0..@renderedHeight]
