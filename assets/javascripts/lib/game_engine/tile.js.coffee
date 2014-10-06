@@ -7,6 +7,9 @@ class @GameEngine.Tile
   contentType: =>
     @tile.$content().$type()
 
+  buildingType: =>
+    @tile.$building().$type()
+
   terrain: =>
     @tile.$terrain()
 

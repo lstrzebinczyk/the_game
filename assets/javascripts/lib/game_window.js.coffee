@@ -104,6 +104,21 @@ class @GameWindow
     else if mapEvent.$type() == "update"
       @oftenUpdated.push(tile)
       @renderContentTile(tile)
+    else if mapEvent.$type() == "building_created"
+      building = mapEvent.opts.$first()[1]
+      @renderBuilding(tile, building)
+
+  renderBuilding: (tile, building) =>
+    x = tile.x() + @xOffset
+    y = tile.y() + @yOffset
+    stageTile = @findStageTile(x, y).find(".content")
+    if tile.buildingType() == "dormitory"
+      for coords in building.$tiles_coords()
+        x = building.x + @xOffset + coords[0]
+        y = building.y + @yOffset + coords[1]
+        stageTile = @findStageTile(x, y).find(".content")
+        stageTile.addClass("structure-shelter-blueprint-#{coords[0]}-#{coords[1]}")
+
 
   cleanTile: (tile) =>
     x = tile.x() + @xOffset

@@ -22,7 +22,8 @@ class TheGame
 
       def tiles_coords
         [
-          [0, 0], [0, 1], [1, 0], [1, 1]
+          [0, 0], [0, 1],
+          [1, 0], [1, 1]
         ]
       end
     end

@@ -6,12 +6,15 @@ class TheGame
       attr_reader :firewood_needed
       attr_accessor :minutes_left, :status, :fields
 
-
       def initialize(x, y)
         @x = x
         @y = y
         @status = :cleaning
         @firewood_needed = 60
+      end
+
+      def type
+        :dormitory
       end
 
       def description
@@ -105,6 +108,15 @@ class TheGame
 
         # sleeping on floor is way less refreshing
         2.6 * 0.00104167
+      end
+
+      def tiles_coords
+        [
+          [0, 0], [0, 1], [0, 2], [0, 3],
+          [1, 0], [1, 1], [1, 2], [1, 3],
+          [2, 0], [2, 1], [2, 2], [2, 3],
+          [3, 0], [3, 1], [3, 2], [3, 3],
+        ]
       end
     end
   end

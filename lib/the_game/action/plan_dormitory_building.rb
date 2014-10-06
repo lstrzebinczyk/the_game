@@ -25,6 +25,8 @@ class TheGame
 
         dormitory.fields = fields
 
+        map.create_building_event(dormitory)
+
         settlement.dormitory = dormitory
         person.do_stuff
       end

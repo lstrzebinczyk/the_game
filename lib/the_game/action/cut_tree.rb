@@ -7,7 +7,7 @@ class TheGame
 
       def initialize(tree)
         @tree = tree
-        @minutes_left = 180
+        @minutes_left = 360
       end
 
       def type

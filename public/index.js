@@ -278,6 +278,7 @@
       this.x = __bind(this.x, this);
       this.isNil = __bind(this.isNil, this);
       this.terrain = __bind(this.terrain, this);
+      this.buildingType = __bind(this.buildingType, this);
       this.contentType = __bind(this.contentType, this);
       this.isNotMarkedForCleaning = __bind(this.isNotMarkedForCleaning, this);
     }
@@ -288,6 +289,10 @@
 
     Tile.prototype.contentType = function() {
       return this.tile.$content().$type();
+    };
+
+    Tile.prototype.buildingType = function() {
+      return this.tile.$building().$type();
     };
 
     Tile.prototype.terrain = function() {
@@ -513,6 +518,7 @@
       this.renderContentTile = __bind(this.renderContentTile, this);
       this.renderContent = __bind(this.renderContent, this);
       this.cleanTile = __bind(this.cleanTile, this);
+      this.renderBuilding = __bind(this.renderBuilding, this);
       this.rerenderContentBasedOnEvent = __bind(this.rerenderContentBasedOnEvent, this);
       this.reRenderTerrain = __bind(this.reRenderTerrain, this);
       this.reRenderPeople = __bind(this.reRenderPeople, this);
@@ -628,7 +634,7 @@
     };
 
     GameWindow.prototype.rerenderContentBasedOnEvent = function(mapEvent) {
-      var tile, x, y;
+      var building, tile, x, y;
       x = mapEvent.$x();
       y = mapEvent.$y();
       tile = this.engine.findTile(x, y);
@@ -638,6 +644,28 @@
       } else if (mapEvent.$type() === "update") {
         this.oftenUpdated.push(tile);
         return this.renderContentTile(tile);
+      } else if (mapEvent.$type() === "building_created") {
+        building = mapEvent.opts.$first()[1];
+        return this.renderBuilding(tile, building);
+      }
+    };
+
+    GameWindow.prototype.renderBuilding = function(tile, building) {
+      var coords, stageTile, x, y, _i, _len, _ref, _results;
+      x = tile.x() + this.xOffset;
+      y = tile.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y).find(".content");
+      if (tile.buildingType() === "dormitory") {
+        _ref = building.$tiles_coords();
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          coords = _ref[_i];
+          x = building.x + this.xOffset + coords[0];
+          y = building.y + this.yOffset + coords[1];
+          stageTile = this.findStageTile(x, y).find(".content");
+          _results.push(stageTile.addClass("structure-shelter-blueprint-" + coords[0] + "-" + coords[1]));
+        }
+        return _results;
       }
     };
 

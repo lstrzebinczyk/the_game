@@ -30,6 +30,10 @@ class TheGame
       closest
     end
 
+    def create_building_event(building)
+      @events << Event.new(:building_created, building.x, building.y, building: building)
+    end
+
     def update
       each_tile do |tile|
         event_or_nil = tile.update
