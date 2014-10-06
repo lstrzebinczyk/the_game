@@ -19,6 +19,13 @@ class TheGame
       def need?(item_type)
         true
       end
+
+      def tiles_coords
+        [
+          [0, 0], [0, 1],
+          [1, 0], [1, 1]
+        ]
+      end
     end
   end
 end

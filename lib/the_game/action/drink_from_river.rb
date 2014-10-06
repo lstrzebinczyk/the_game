@@ -10,7 +10,7 @@ class TheGame
       end
 
       def perform(person, map, time_in_minutes)
-        person.thirst += 0.05
+        person.drink(Item::Water.new)
       end
     end
   end

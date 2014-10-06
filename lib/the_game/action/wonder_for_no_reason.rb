@@ -12,6 +12,8 @@ class TheGame
           person.action = Action::LookForFood.create
         elsif person.sleepy?
           person.action = Action::LookForPlaceToSleep.create
+        elsif person.has_personal_jobs?
+          person.take_personal_job
         elsif person.will_take_jobs
           job = TheGame::Settlement.instance.get_job(person)
 

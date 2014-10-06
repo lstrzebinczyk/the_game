@@ -16,8 +16,16 @@ class TheGame
         @cut
       end
 
+      def empty?
+        cut?
+      end
+
       def description
         "tree"
+      end
+
+      def type
+        :tree
       end
     end
   end

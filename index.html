@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="assets/stylesheets/style.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div>
       <button id="start">Stop!</button>
       <span>Turns per second: <span id="turns_count"></span></span>
+      <div>
+        <span>Iterations per second:</span>
+        <button class="speed_control" id="slow">30</button>
+        <button class="speed_control" id="fast">60</button>
+        <button class="speed_control" id="max">max</button>
+      </div>
     </div>
+    <span id="stage"></span>
     <div id="menu">
       <div id="time"></div>
       <br>
@@ -17,6 +24,8 @@
       <div id="stash"></div>
       <br>
       <div id="buildings"></div>
+      <br>
+      <div id="selected_tile"></div>
     </div>
     <span id="view"></span>
     <div id="readme">
@@ -63,10 +72,8 @@
       2. Discussion and pull requests very welcome at <a href="https://github.com/KillaPL/the_game">main repo</a>
 
     </div>
-    <script src="assets/javascripts/the_game.js"></script>
-    <script src="vendor/jquery.js"></script>
-    <script src="vendor/pixi.js"></script>
-    <script src="assets/javascripts/index.js"></script>
-    <script src="assets/javascripts/rendering.js"></script>
+    <script src="the_game.js"></script>
+    <script src="jquery.js"></script>
+    <script src="index.js"></script>
   </body>
 </html>

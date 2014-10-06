@@ -18,12 +18,14 @@ class TheGame
         [0, 1, 2, 3].each do |row|
           [0, 1, 2, 3].each do |col|
             tile = map.fetch(dormitory_x + row, dormitory_y + col)
-            tile.mark_for_cleaning!
             fields << tile
+            tile.building = dormitory
           end
         end
 
         dormitory.fields = fields
+
+        map.create_building_event(dormitory)
 
         settlement.dormitory = dormitory
         person.do_stuff

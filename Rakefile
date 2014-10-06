@@ -4,7 +4,7 @@ require "coffee-script"
 
 desc "Build"
 task :build do
-  File.open("assets/javascripts/the_game.js", "w+") do |out|
+  File.open("public/the_game.js", "w+") do |out|
     env = Opal::Environment.new
     env.append_path "lib"
 
@@ -15,28 +15,20 @@ end
 
 desc "build coffee"
 task :build_coffee do
-  # binding.pry
+  env = Sprockets::Environment.new
+  env.append_path "assets/javascripts"
 
-  File.open("assets/javascripts/index.js", "w+") do |out|
-    out << CoffeeScript.compile(File.read("assets/javascripts/index.js.coffee"))
+  File.open("public/index.js", "w+") do |out|
+    out << env["index.js.coffee"]
   end
-  #   Dir["lib/**/*.rb"].each do |path|
-  #     code = File.open(path).read
-  #     out << Opal.compile(code)
-  #   end
-  # end
-
-  # env = Opal::Environment.new
-  # env.append_path "lib"
-  # # # env.use_gem "require_all"
-
-  # # # binding.pry
-
-
-
-
-  #   out << env["the_game"].to_s
-  # end
 end
 
-# Opal.compile(File.open("lib/the_game.rb").read)
+desc "build benchmarks"
+task :build_benchmarks do
+  File.open("benchmarks/attr_accessor.js", "w+") do |out|
+    env = Opal::Environment.new
+    env.append_path "benchmarks"
+
+    out << env["attr_accessor"].to_s
+  end
+end

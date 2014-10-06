@@ -12,7 +12,9 @@ class TheGame
 
       def perform(person, map, time_in_minutes)
         @minutes_spent_eating_left -= time_in_minutes
-        person.hunger += @food.hunger_per_minute_added * time_in_minutes
+        time_in_minutes.times do
+          person.eat(@food)
+        end
 
         if @minutes_spent_eating_left == 0
           person.do_stuff

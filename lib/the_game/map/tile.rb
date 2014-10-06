@@ -1,40 +1,42 @@
 class TheGame
   class Map
     class Tile
-      include TheGame::HasPosition
+      class NullContent
+        def type
+        end
 
-      attr_accessor :content, :terrain
+        def nil?
+          true
+        end
 
-      def initialize(x, y)
-        self.x = x
-        self.y = y
-      end
-
-      def mark_for_cleaning!
-        unless empty?
-          @mark_for_cleaning = true
-          need_update!
+        # meaning, it does not need to be updated
+        def empty?
+          false
         end
       end
 
-      def cleaned!
-        @mark_for_cleaning = false
+      include TheGame::HasPosition
+
+      attr_accessor :content, :terrain
+      attr_accessor :building
+
+      def initialize(x, y, map)
+        self.x = x
+        self.y = y
+        @map = map
+        @content = NullContent.new
+        @terrain = :ground
+        @building = nil
       end
 
-      def updated?
-        @updated
+      def not_marked_for_cleaning?
+        (@building and @content.type).nil?
+        # @building and @content
+        # !(@content && @building).nil?
       end
 
-      def need_update!
-        @updated = false
-      end
-
-      def updated!
-        @updated = true
-      end
-
-      def marked_for_cleaning?
-        @mark_for_cleaning == true
+      def clean!
+        @content = NullContent.new
       end
 
       def description
@@ -50,20 +52,31 @@ class TheGame
       end
 
       def update
-        if @content.is_a? Construction::FallenTree and @content.empty?
-          @content = nil
-          cleaned! if marked_for_cleaning?
-          need_update!
-        elsif @content.is_a? Nature::BerriesBush and @content.empty?
-          @content = nil
-          cleaned! if marked_for_cleaning?
-          need_update!
-        elsif @content.is_a? Nature::Tree and @content.cut?
-          fallen_tree = TheGame::Construction::FallenTree.new(@x, @y)
-          @content = fallen_tree
-          Settlement.instance.fallen_trees << fallen_tree
-          need_update!
+        if @content.empty?
+          case @content.type
+          when :berries_bush
+            clean!
+            clean_event(@x, @y)
+          when :tree
+            @content = Nature::LogPile.new(@x, @y)
+            update_event(@x, @y)
+          when :log_pile
+            clean!
+            clean_event(@x, @y)
+          else
+            nil
+          end
         end
+      end
+
+      private
+
+      def clean_event(x, y)
+        Map::Event.new(:clean, x, y)
+      end
+
+      def update_event(x, y)
+        Map::Event.new(:update, x, y)
       end
     end
   end

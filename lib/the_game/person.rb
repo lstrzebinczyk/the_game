@@ -3,7 +3,7 @@ class TheGame
     include TheGame::HasPosition
 
     attr_accessor :action, :thirst, :hunger, :energy, :will_take_jobs
-    attr_reader :inventory
+    attr_reader :inventory, :waterskin
 
     def initialize(attrs = {})
       @hunger = 0.8 + rand / 10
@@ -13,6 +13,7 @@ class TheGame
       do_stuff
 
       @inventory = Container.new
+      @waterskin = Item::Waterskin.new
 
       if attrs[:will_take_jobs].nil?
         @will_take_jobs = true
@@ -36,12 +37,28 @@ class TheGame
       @inventory.get(type)
     end
 
+    def eat(food)
+      #assume this will be called as many times, as many minutes the person will eat
+      @hunger += food.hunger_per_minute_added
+    end
+
+    def drink(food)
+      #assume this will be called as many times, as many minutes the person will drink
+      @thirst += food.thirst_per_minute_added
+    end
+
     def can_carry_more?(item_type)
-      if item_type != :firewood
-        raise "I wasn't expecting that"
-      else
+      if item_type == :firewood
         @inventory.count(item_type) < 5
+      elsif item_type == :log
+        @inventory.count(item_type) < 1
+      else
+        raise "I wasn't expecting that"
       end
+    end
+
+    def has_personal_jobs?
+      false
     end
 
     def update(map, time_in_minutes)
@@ -79,8 +96,9 @@ class TheGame
 
     def update_thirst(minutes)
       # assume third a day is full thirst bar
+      # full bar is 2 liters per day
 
-      @thirst -= minutes / (8.0 * 60)
+      @thirst -= minutes / (24.0 * 60)
       if @thirst < 0
         @thirst = 0
       end
@@ -101,7 +119,7 @@ class TheGame
     end
 
     def thirsty?
-      thirst < 0.5
+      thirst < 0.65
     end
 
     def done_drinking?
@@ -113,7 +131,7 @@ class TheGame
     end
 
     def sleepy?
-      energy < 0.02
+      energy < 0.1
     end
   end
 end
