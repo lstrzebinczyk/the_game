@@ -21,6 +21,8 @@ class @GameWindow
     @maxYOffset = @engine.mapWidth() - @renderedWidth
     @maxXOffset = @engine.mapHeight() - @renderedHeight
 
+    @oftenUpdated = []
+
     @tileSize = 16
 
 
@@ -28,6 +30,13 @@ class @GameWindow
     if @engine.mapEvents().$size() > 0
       event = @engine.mapEvents().$pop()
       @rerenderContentBasedOnEvent(event)
+      @oftenUpdated = @oftenUpdated.filter (tile) ->
+        !tile.isNil()
+
+    for tile in @oftenUpdated
+      @cleanTile(tile)
+      @renderContentTile(tile)
+
 
     @reRenderPeople()
 
@@ -89,45 +98,34 @@ class @GameWindow
     x = mapEvent.$x()
     y = mapEvent.$y()
     tile = @engine.findTile(x, y)
+    @cleanTile(tile)
     if mapEvent.$type() == "clean"
-      x = tile.x() + @xOffset
-      y = tile.y() + @yOffset
-      stageTile = @findStageTile(x, y).find(".content")
-      stageTile.attr("class", "content")
+
     else if mapEvent.$type() == "update"
-      x = tile.x() + @xOffset
-      y = tile.y() + @yOffset
-      stageTile = @findStageTile(x, y).find(".content")
-      stageTile.attr("class", "content")
+      @oftenUpdated.push(tile)
       @renderContentTile(tile)
+
+  cleanTile: (tile) =>
+    x = tile.x() + @xOffset
+    y = tile.y() + @yOffset
+    stageTile = @findStageTile(x, y).find(".content")
+    stageTile.attr("class", "content")
 
   renderContent: =>
     @engine.eachTile (tile) =>
       @renderContentTile(tile)
 
   renderContentTile: (tile) =>
+    x = tile.x() + @xOffset
+    y = tile.y() + @yOffset
+    stageTile = @findStageTile(x, y).find(".content")
     if tile.contentType() == "tree"
-      x = tile.x() + @xOffset
-      y = tile.y() + @yOffset
-      stageTile = @findStageTile(x, y).find(".content")
       stageTile.addClass("nature-tree")
     else if tile.contentType() == "berries_bush"
-      x = tile.x() + @xOffset
-      y = tile.y() + @yOffset
-      stageTile = @findStageTile(x, y).find(".content")
       stageTile.addClass("berries-bush")
     else if tile.contentType() == "log_pile"
-      x = tile.x() + @xOffset
-      y = tile.y() + @yOffset
-      stageTile = @findStageTile(x, y).find(".content")
       logsCount = tile.tile.content.logs_count
       stageTile.addClass("nature-logs-#{logsCount}")
-
-    # else
-    #   x = tile.x() + @xOffset
-    #   y = tile.y() + @yOffset
-    #   stageTile = @findStageTile(x, y).find(".content")
-    #   stageTile.attr("class", "content")
 
   setup: =>
     # INITIALIZE STAGE

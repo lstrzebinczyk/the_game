@@ -10,6 +10,9 @@ class @GameEngine.Tile
   terrain: =>
     @tile.$terrain()
 
+  isNil: =>
+    @tile.$content()["$nil?"]()
+
   x: =>
     @tile.$x()
 

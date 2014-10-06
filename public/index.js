@@ -276,6 +276,7 @@
       this.tile = tile;
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
+      this.isNil = __bind(this.isNil, this);
       this.terrain = __bind(this.terrain, this);
       this.contentType = __bind(this.contentType, this);
       this.isNotMarkedForCleaning = __bind(this.isNotMarkedForCleaning, this);
@@ -291,6 +292,10 @@
 
     Tile.prototype.terrain = function() {
       return this.tile.$terrain();
+    };
+
+    Tile.prototype.isNil = function() {
+      return this.tile.$content()["$nil?"]();
     };
 
     Tile.prototype.x = function() {
@@ -507,6 +512,7 @@
       this.setup = __bind(this.setup, this);
       this.renderContentTile = __bind(this.renderContentTile, this);
       this.renderContent = __bind(this.renderContent, this);
+      this.cleanTile = __bind(this.cleanTile, this);
       this.rerenderContentBasedOnEvent = __bind(this.rerenderContentBasedOnEvent, this);
       this.reRenderTerrain = __bind(this.reRenderTerrain, this);
       this.reRenderPeople = __bind(this.reRenderPeople, this);
@@ -525,14 +531,24 @@
       this.yOffset = 0;
       this.maxYOffset = this.engine.mapWidth() - this.renderedWidth;
       this.maxXOffset = this.engine.mapHeight() - this.renderedHeight;
+      this.oftenUpdated = [];
       this.tileSize = 16;
     }
 
     GameWindow.prototype.update = function() {
-      var event;
+      var event, tile, _i, _len, _ref;
       if (this.engine.mapEvents().$size() > 0) {
         event = this.engine.mapEvents().$pop();
         this.rerenderContentBasedOnEvent(event);
+        this.oftenUpdated = this.oftenUpdated.filter(function(tile) {
+          return !tile.isNil();
+        });
+      }
+      _ref = this.oftenUpdated;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
+        this.cleanTile(tile);
+        this.renderContentTile(tile);
       }
       return this.reRenderPeople();
     };
@@ -612,22 +628,25 @@
     };
 
     GameWindow.prototype.rerenderContentBasedOnEvent = function(mapEvent) {
-      var stageTile, tile, x, y;
+      var tile, x, y;
       x = mapEvent.$x();
       y = mapEvent.$y();
       tile = this.engine.findTile(x, y);
+      this.cleanTile(tile);
       if (mapEvent.$type() === "clean") {
-        x = tile.x() + this.xOffset;
-        y = tile.y() + this.yOffset;
-        stageTile = this.findStageTile(x, y).find(".content");
-        return stageTile.attr("class", "content");
+
       } else if (mapEvent.$type() === "update") {
-        x = tile.x() + this.xOffset;
-        y = tile.y() + this.yOffset;
-        stageTile = this.findStageTile(x, y).find(".content");
-        stageTile.attr("class", "content");
+        this.oftenUpdated.push(tile);
         return this.renderContentTile(tile);
       }
+    };
+
+    GameWindow.prototype.cleanTile = function(tile) {
+      var stageTile, x, y;
+      x = tile.x() + this.xOffset;
+      y = tile.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y).find(".content");
+      return stageTile.attr("class", "content");
     };
 
     GameWindow.prototype.renderContent = function() {
@@ -640,20 +659,14 @@
 
     GameWindow.prototype.renderContentTile = function(tile) {
       var logsCount, stageTile, x, y;
+      x = tile.x() + this.xOffset;
+      y = tile.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y).find(".content");
       if (tile.contentType() === "tree") {
-        x = tile.x() + this.xOffset;
-        y = tile.y() + this.yOffset;
-        stageTile = this.findStageTile(x, y).find(".content");
         return stageTile.addClass("nature-tree");
       } else if (tile.contentType() === "berries_bush") {
-        x = tile.x() + this.xOffset;
-        y = tile.y() + this.yOffset;
-        stageTile = this.findStageTile(x, y).find(".content");
         return stageTile.addClass("berries-bush");
       } else if (tile.contentType() === "log_pile") {
-        x = tile.x() + this.xOffset;
-        y = tile.y() + this.yOffset;
-        stageTile = this.findStageTile(x, y).find(".content");
         logsCount = tile.tile.content.logs_count;
         return stageTile.addClass("nature-logs-" + logsCount);
       }

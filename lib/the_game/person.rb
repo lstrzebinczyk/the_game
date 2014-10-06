@@ -48,11 +48,17 @@ class TheGame
     end
 
     def can_carry_more?(item_type)
-      if item_type != :firewood
-        raise "I wasn't expecting that"
-      else
+      if item_type == :firewood
         @inventory.count(item_type) < 5
+      elsif item_type == :log
+        @inventory.count(item_type) < 1
+      else
+        raise "I wasn't expecting that"
       end
+    end
+
+    def has_personal_jobs?
+      false
     end
 
     def update(map, time_in_minutes)

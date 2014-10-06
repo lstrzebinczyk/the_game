@@ -38,11 +38,7 @@ class TheGame
             end
           end
         elsif job_type == :haul
-          if needs_cleaning?(:haul)
-            tile = @dormitory.tile_for_cleaning(:haul)
-            action = Action::Supply.create(@stash, with: :firewood, from: tile.content)
-            return action
-          elsif @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
+          if @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
             action = Action::Supply.create(@dormitory, with: :firewood, from: @stash)
             return action
           end
