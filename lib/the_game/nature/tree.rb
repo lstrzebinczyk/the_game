@@ -27,10 +27,6 @@ class TheGame
       def type
         :tree
       end
-
-      def pieces_count
-        6
-      end
     end
   end
 end

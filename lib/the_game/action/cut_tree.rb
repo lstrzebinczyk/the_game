@@ -7,7 +7,7 @@ class TheGame
 
       def initialize(tree)
         @tree = tree
-        @minutes_left = 180
+        @minutes_left = 360
       end
 
       def type
@@ -29,6 +29,7 @@ class TheGame
 
         if @minutes_left == 0
           @tree.cut!
+          person.recently_cut_tree_at = map.fetch(@tree.x, @tree.y)
           settlement = Settlement.instance
           person.action = Action::Carry.create(:axe, to: settlement.stash)
         end

@@ -50,6 +50,14 @@ class TheGame
         # sleeping on floor is way less refreshing
         2.3 * 0.00104167
       end
+
+      def type
+        :fireplace
+      end
+
+      def empty?
+        false
+      end
     end
   end
 end

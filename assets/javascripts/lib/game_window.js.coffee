@@ -1,88 +1,221 @@
 
 class @GameWindow
   constructor: (@engine) ->
-    interactive = true
-    @stage = new PIXI.Stage('000', interactive)
+    @stage = $("#stage")
+    # interactive = true
+    # @stage = new PIXI.Stage('000', interactive)
 
-    @playing = true
-    @x_offset = 0
-    @y_offset = 0
-    @change_offset = false
+    # @playing = true
+    # @x_offset = 0
+    # @y_offset = 0
+    # @change_offset = false
 
-    @width  = @engine.mapWidth()
-    @height = @engine.mapHeight()
+    # @width  = @engine.mapWidth()
+    # @height = @engine.mapHeight()
 
     @renderedWidth  = 14 * 4
     @renderedHeight = 14 * 3
 
+    @xOffset = 0
+    @yOffset = 0
+    @maxYOffset = @engine.mapWidth() - @renderedWidth
+    @maxXOffset = @engine.mapHeight() - @renderedHeight
+
+    @oftenUpdated = []
+
     @tileSize = 16
 
-    @maxXOffset = (@renderedWidth  - @width ) * @tileSize
-    @maxYOffset = (@renderedHeight - @height) * @tileSize
-
-    @renderer = PIXI.autoDetectRenderer(@renderedWidth*@tileSize, @renderedHeight*@tileSize)
-
-
-    @updatable = []
 
   update: =>
-    unless @engine.dormitory.isNil()
-      unless @renderingDormitory
-        @renderingDormitory = new RenderingDormitory(@engine.dormitory, @)
+    if @engine.mapEvents().$size() > 0
+      event = @engine.mapEvents().$pop()
+      @rerenderContentBasedOnEvent(event)
+      @oftenUpdated = @oftenUpdated.filter (tile) ->
+        !tile.isNil()
 
-    for object in @updatable
-      object.update()
+    for tile in @oftenUpdated
+      @cleanTile(tile)
+      @renderContentTile(tile)
+
+    if @engine.dormitory.status() == "plan"
+      blueprint = $(".structure-shelter-blueprint")
+      if blueprint.hasClass("cleaning")
+        blueprint.removeClass("cleaning")
+        blueprint.addClass("plan")
+
+    if @engine.dormitory.status() == "done"
+      blueprint = $(".structure-shelter-blueprint")
+      blueprint.removeClass("plan")
+      blueprint.removeClass("structure-shelter-blueprint")
+      blueprint.addClass("structure-shelter")
+
+    @reRenderPeople()
+
 
   render: =>
-    @renderer.render(@stage)
 
-  addChild: (child) =>
-    @stage.addChild(child.content)
-    @updatable.push(child)
+  findStageTile: (height, width) =>
+    @stage.find("#row_#{height}").find("#column_#{width}")
 
-  removeChild: (child) =>
-    @stage.removeChild(child.content)
-    child.content = null
+  renderFireplace: =>
+    fireplace = @engine.fireplace
+    x = fireplace.x() + @xOffset
+    y = fireplace.y() + @yOffset
+    stageTile = @findStageTile(x, y).find(".content")
+    stageTile.addClass("structure-campfire")
+
+  reRenderFireplace: =>
+    @stage.find(".structure-campfire").removeClass("structure-campfire")
+    @renderFireplace()
+
+  renderStash: =>
+    stash = @engine.stash
+
+    for coords in stash.tilesCoords()
+      x = stash.x() + @xOffset + coords[0]
+      y = stash.y() + @yOffset + coords[1]
+      stageTile = @findStageTile(x, y).find(".content")
+      stageTile.addClass("structure-stash structure-stash-#{coords[0]}-#{coords[1]}")
+
+  reRenderStash: =>
+    @stage.find(".structure-stash").attr("class", "content")
+    @renderStash()
+
+  renderTerrain: =>
+    @engine.eachTile (tile) =>
+      x = tile.x() + @xOffset
+      y = tile.y() + @yOffset
+      stageTile = @findStageTile(x, y)
+      terrainType = tile.terrain()
+      stageTile.addClass("terrain-#{terrainType}")
+
+  reRenderPeople: =>
+    @engine.eachPerson (person) =>
+      x = person.x() + @xOffset
+      y = person.y() + @yOffset
+      tile = @findStageTile(x, y).find(".content")
+      type = person.type()
+      id = person.id()
+
+      @stage.find(".person-#{type}.person-#{id}").removeClass("person-#{type} person-#{id}")
+      tile.addClass("person-#{type} person-#{id}")
+
+  reRenderTerrain: =>
+    @stage.find(".terrain-river").removeClass("terrain-river")
+    @stage.find(".terrain-ground").removeClass("terrain-ground")
+    @renderTerrain()
+
+  rerenderContentBasedOnEvent: (mapEvent) =>
+    x = mapEvent.$x()
+    y = mapEvent.$y()
+    tile = @engine.findTile(x, y)
+    @cleanTile(tile)
+    if mapEvent.$type() == "clean"
+
+    else if mapEvent.$type() == "update"
+      @oftenUpdated.push(tile)
+      @renderContentTile(tile)
+    else if mapEvent.$type() == "building_created"
+      building = mapEvent.opts.$first()[1]
+      for mapTile in building.$fields()
+        unless mapTile["$not_marked_for_cleaning?"]()
+          @findStageTile(mapTile.$x(), mapTile.$y()).addClass("marked-for-cleaning")
+      @renderBuilding(tile, building)
+
+  renderBuilding: (tile, building) =>
+    x = tile.x() + @xOffset
+    y = tile.y() + @yOffset
+    stageTile = @findStageTile(x, y).find(".content")
+    html = $("<span class='structure-shelter-blueprint cleaning'></span>")
+    html.css("left", y * 16 + 8)
+    html.css("top", x * 16 + 64 - 6)
+
+    $("#buildings").append(html)
+
+  cleanTile: (tile) =>
+    x = tile.x() + @xOffset
+    y = tile.y() + @yOffset
+    stageBackground =  @findStageTile(x, y)
+    stageBackground.removeClass("marked-for-cleaning")
+    stageTile = stageBackground.find(".content")
+    stageTile.attr("class", "content")
+
+  renderContent: =>
+    @engine.eachTile (tile) =>
+      @renderContentTile(tile)
+
+  renderContentTile: (tile) =>
+    x = tile.x() + @xOffset
+    y = tile.y() + @yOffset
+    stageTile = @findStageTile(x, y).find(".content")
+    if tile.contentType() == "tree"
+      stageTile.addClass("nature-tree")
+    else if tile.contentType() == "berries_bush"
+      stageTile.addClass("berries-bush")
+    else if tile.contentType() == "log_pile"
+      logsCount = tile.tile.content.logs_count
+      stageTile.addClass("nature-logs-#{logsCount}")
 
   setup: =>
-    $("#view").append(@renderer.view)
+    @stage.append("<div id='buildings'></div>")
+    # INITIALIZE STAGE
+    stage = ""
+    for rowIndex in [0..@renderedHeight]
+      stage += "<div class='row' id='row_#{rowIndex}'>"
+      for columnIndex in [0..@renderedWidth]
+        stage += "<span class='tile' id='column_#{columnIndex}'><span class='content'></span></span>"
+      stage += "</div>"
+    @stage.append(stage)
 
-    @engine.eachTile (tile) =>
-      new RenderingTile(tile, @)
+    @renderTerrain()
+    @reRenderPeople()
+    @renderFireplace()
+    @renderStash()
+    @renderContent()
 
-    new RenderingFireplace(@engine.fireplace, @)
-    new RenderingStash(@engine.stash, @)
-
-    @engine.eachPerson (person) =>
-      new RenderingPerson(person, @)
-
-    @stage.mousemove = (data) =>
-      if @change_offset
-        x = data.originalEvent.movementX
-        y = data.originalEvent.movementY
-        @x_offset += x
-        @y_offset += y
-        @x_offset = 0 if @x_offset > 0
-        @y_offset = 0 if @y_offset > 0
-        @x_offset = @maxXOffset if @x_offset < @maxXOffset
-        @y_offset = @maxYOffset if @y_offset < @maxYOffset
-
-      unless @playing
-        @update()
-        @render()
-
-    @stage.mouseup = =>
-      @change_offset = false
-
-    @stage.mouseupoutside = =>
-      @change_offset = false
-
-    @stage.mousedown = (mouseData) =>
-      @change_offset = true
-
-      mouse_x = mouseData.global.x
-      mouse_y = mouseData.global.y
-      map_x = parseInt(mouse_x / @tileSize)
-      map_y = parseInt(mouse_y / @tileSize)
-      tile = @engine.findTile(map_y, map_x)
+    @stage.click (e) =>
+      column = $(e.target).parent()
+      x = parseInt(column.attr("id").replace("column_", ""))
+      row = column.parent()
+      y = parseInt(row.attr("id").replace("row_", ""))
+      tile = @engine.findTile(y, x)
       console.log tile
+
+    # @stage.mousemove (e) =>
+    #   if @moving
+    #     diffY = parseInt((@moveStartY - e.clientY) / @tileSize)
+    #     diffX = parseInt((@moveStartX - e.clientX) / @tileSize)
+
+    #     if diffX != 0 or diffY != 0
+    #       @xOffset -= diffY
+    #       @yOffset -= diffX
+    #       @moveStartY = e.clientY
+    #       @moveStartX = e.clientX
+
+    #       if @xOffset < -@maxXOffset
+    #         @xOffset = -@maxXOffset
+
+    #       if @yOffset < -@maxYOffset
+    #         @yOffset = -@maxYOffset
+
+    #       if @xOffset > 0
+    #         @xOffset = 0
+
+    #       if @yOffset > 0
+    #         @yOffset = 0
+
+    #       @reRenderTerrain()
+    #       @reRenderPeople()
+    #       @reRenderFireplace()
+    #       @reRenderStash()
+
+    # $("body").mouseup =>
+    #   @moving = false
+
+    # @stage.mousedown (e) =>
+    #   @moving = true
+    #   @moveStartX = e.clientX
+    #   @moveStartY = e.clientY
+
+    # @stage.click (e) =>
+      # console.log e

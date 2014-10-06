@@ -8,6 +8,7 @@
       this.eachTile = __bind(this.eachTile, this);
       this.update = __bind(this.update, this);
       this.time = __bind(this.time, this);
+      this.mapEvents = __bind(this.mapEvents, this);
       this.mapHeight = __bind(this.mapHeight, this);
       this.mapWidth = __bind(this.mapWidth, this);
       var person, row, tile, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
@@ -38,6 +39,10 @@
 
     GameEngine.prototype.mapHeight = function() {
       return this.engine.map.$height();
+    };
+
+    GameEngine.prototype.mapEvents = function() {
+      return this.engine.map.$events();
     };
 
     GameEngine.prototype.time = function() {
@@ -71,7 +76,14 @@
     };
 
     GameEngine.prototype.findTile = function(x, y) {
-      return this.engine.$map().$fetch(x, y);
+      var tile, _i, _len, _ref;
+      _ref = this.tiles;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
+        if (tile.x() === x && tile.y() === y) {
+          return tile;
+        }
+      }
     };
 
     return GameEngine;
@@ -168,6 +180,10 @@
       this.type = __bind(this.type, this);
     }
 
+    Person.prototype.id = function() {
+      return this.person._id;
+    };
+
     Person.prototype.type = function() {
       return this.person.$type();
     };
@@ -220,6 +236,7 @@
     function Stash() {
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
+      this.tilesCoords = __bind(this.tilesCoords, this);
       this.count = __bind(this.count, this);
       this.itemTypes = __bind(this.itemTypes, this);
       this.stash = Opal.TheGame.Settlement.$instance().$stash();
@@ -231,6 +248,10 @@
 
     Stash.prototype.count = function(type) {
       return this.stash.$count(type);
+    };
+
+    Stash.prototype.tilesCoords = function() {
+      return this.stash.$tiles_coords();
     };
 
     Stash.prototype.x = function() {
@@ -254,33 +275,31 @@
       this.tile = tile;
       this.y = __bind(this.y, this);
       this.x = __bind(this.x, this);
-      this.updated = __bind(this.updated, this);
-      this.isUpdated = __bind(this.isUpdated, this);
-      this.contentName = __bind(this.contentName, this);
+      this.isNil = __bind(this.isNil, this);
+      this.terrain = __bind(this.terrain, this);
+      this.buildingType = __bind(this.buildingType, this);
+      this.contentType = __bind(this.contentType, this);
       this.isNotMarkedForCleaning = __bind(this.isNotMarkedForCleaning, this);
-      this.cachedContentName = this.contentName();
-      this.cachedIsMarkedForCleaning = this.isNotMarkedForCleaning();
     }
 
     Tile.prototype.isNotMarkedForCleaning = function() {
       return this.tile["$not_marked_for_cleaning?"]();
     };
 
-    Tile.prototype.contentName = function() {
-      if (this.tile.$terrain() === "river") {
-        return "river";
-      } else {
-        return this.tile.$content().$type();
-      }
+    Tile.prototype.contentType = function() {
+      return this.tile.$content().$type();
     };
 
-    Tile.prototype.isUpdated = function() {
-      return (this.cachedContentName !== this.contentName()) || (this.cachedIsMarkedForCleaning !== this.isNotMarkedForCleaning());
+    Tile.prototype.buildingType = function() {
+      return this.tile.$building().$type();
     };
 
-    Tile.prototype.updated = function() {
-      this.cachedContentName = this.contentName();
-      return this.cachedIsMarkedForCleaning = this.isNotMarkedForCleaning();
+    Tile.prototype.terrain = function() {
+      return this.tile.$terrain();
+    };
+
+    Tile.prototype.isNil = function() {
+      return this.tile.$content()["$nil?"]();
     };
 
     Tile.prototype.x = function() {
@@ -309,7 +328,7 @@
       this.gameMenu = new GameMenu(this.gameEngine);
       this.gameWindow = new GameWindow(this.gameEngine);
       this.startButton = $("#start");
-      this.expectedTurnsPerSecond = 60;
+      this.expectedTurnsPerSecond = 30;
     }
 
     GameLoop.prototype.setup = function() {
@@ -323,6 +342,9 @@
         };
       })(this));
       this.gameWindow.setup();
+      if (this.expectedTurnsPerSecond === 30) {
+        $("#slow").addClass("active");
+      }
       $("#slow").click((function(_this) {
         return function() {
           $(".speed_control").removeClass("active");
@@ -332,7 +354,9 @@
           return _this.startGame();
         };
       })(this));
-      $("#fast").addClass("active");
+      if (this.expectedTurnsPerSecond === 60) {
+        $("#fast").addClass("active");
+      }
       $("#fast").click((function(_this) {
         return function() {
           $(".speed_control").removeClass("active");
@@ -488,387 +512,240 @@
 
   this.GameWindow = (function() {
     function GameWindow(engine) {
-      var interactive;
       this.engine = engine;
       this.setup = __bind(this.setup, this);
-      this.removeChild = __bind(this.removeChild, this);
-      this.addChild = __bind(this.addChild, this);
+      this.renderContentTile = __bind(this.renderContentTile, this);
+      this.renderContent = __bind(this.renderContent, this);
+      this.cleanTile = __bind(this.cleanTile, this);
+      this.renderBuilding = __bind(this.renderBuilding, this);
+      this.rerenderContentBasedOnEvent = __bind(this.rerenderContentBasedOnEvent, this);
+      this.reRenderTerrain = __bind(this.reRenderTerrain, this);
+      this.reRenderPeople = __bind(this.reRenderPeople, this);
+      this.renderTerrain = __bind(this.renderTerrain, this);
+      this.reRenderStash = __bind(this.reRenderStash, this);
+      this.renderStash = __bind(this.renderStash, this);
+      this.reRenderFireplace = __bind(this.reRenderFireplace, this);
+      this.renderFireplace = __bind(this.renderFireplace, this);
+      this.findStageTile = __bind(this.findStageTile, this);
       this.render = __bind(this.render, this);
       this.update = __bind(this.update, this);
-      interactive = true;
-      this.stage = new PIXI.Stage('000', interactive);
-      this.playing = true;
-      this.x_offset = 0;
-      this.y_offset = 0;
-      this.change_offset = false;
-      this.width = this.engine.mapWidth();
-      this.height = this.engine.mapHeight();
+      this.stage = $("#stage");
       this.renderedWidth = 14 * 4;
       this.renderedHeight = 14 * 3;
+      this.xOffset = 0;
+      this.yOffset = 0;
+      this.maxYOffset = this.engine.mapWidth() - this.renderedWidth;
+      this.maxXOffset = this.engine.mapHeight() - this.renderedHeight;
+      this.oftenUpdated = [];
       this.tileSize = 16;
-      this.maxXOffset = (this.renderedWidth - this.width) * this.tileSize;
-      this.maxYOffset = (this.renderedHeight - this.height) * this.tileSize;
-      this.renderer = PIXI.autoDetectRenderer(this.renderedWidth * this.tileSize, this.renderedHeight * this.tileSize);
-      this.updatable = [];
     }
 
     GameWindow.prototype.update = function() {
-      var object, _i, _len, _ref, _results;
-      if (!this.engine.dormitory.isNil()) {
-        if (!this.renderingDormitory) {
-          this.renderingDormitory = new RenderingDormitory(this.engine.dormitory, this);
+      var blueprint, event, tile, _i, _len, _ref;
+      if (this.engine.mapEvents().$size() > 0) {
+        event = this.engine.mapEvents().$pop();
+        this.rerenderContentBasedOnEvent(event);
+        this.oftenUpdated = this.oftenUpdated.filter(function(tile) {
+          return !tile.isNil();
+        });
+      }
+      _ref = this.oftenUpdated;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
+        this.cleanTile(tile);
+        this.renderContentTile(tile);
+      }
+      if (this.engine.dormitory.status() === "plan") {
+        blueprint = $(".structure-shelter-blueprint");
+        if (blueprint.hasClass("cleaning")) {
+          blueprint.removeClass("cleaning");
+          blueprint.addClass("plan");
         }
       }
-      _ref = this.updatable;
+      if (this.engine.dormitory.status() === "done") {
+        blueprint = $(".structure-shelter-blueprint");
+        blueprint.removeClass("plan");
+        blueprint.removeClass("structure-shelter-blueprint");
+        blueprint.addClass("structure-shelter");
+      }
+      return this.reRenderPeople();
+    };
+
+    GameWindow.prototype.render = function() {};
+
+    GameWindow.prototype.findStageTile = function(height, width) {
+      return this.stage.find("#row_" + height).find("#column_" + width);
+    };
+
+    GameWindow.prototype.renderFireplace = function() {
+      var fireplace, stageTile, x, y;
+      fireplace = this.engine.fireplace;
+      x = fireplace.x() + this.xOffset;
+      y = fireplace.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y).find(".content");
+      return stageTile.addClass("structure-campfire");
+    };
+
+    GameWindow.prototype.reRenderFireplace = function() {
+      this.stage.find(".structure-campfire").removeClass("structure-campfire");
+      return this.renderFireplace();
+    };
+
+    GameWindow.prototype.renderStash = function() {
+      var coords, stageTile, stash, x, y, _i, _len, _ref, _results;
+      stash = this.engine.stash;
+      _ref = stash.tilesCoords();
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        object = _ref[_i];
-        _results.push(object.update());
+        coords = _ref[_i];
+        x = stash.x() + this.xOffset + coords[0];
+        y = stash.y() + this.yOffset + coords[1];
+        stageTile = this.findStageTile(x, y).find(".content");
+        _results.push(stageTile.addClass("structure-stash structure-stash-" + coords[0] + "-" + coords[1]));
       }
       return _results;
     };
 
-    GameWindow.prototype.render = function() {
-      return this.renderer.render(this.stage);
+    GameWindow.prototype.reRenderStash = function() {
+      this.stage.find(".structure-stash").attr("class", "content");
+      return this.renderStash();
     };
 
-    GameWindow.prototype.addChild = function(child) {
-      this.stage.addChild(child.content);
-      return this.updatable.push(child);
+    GameWindow.prototype.renderTerrain = function() {
+      return this.engine.eachTile((function(_this) {
+        return function(tile) {
+          var stageTile, terrainType, x, y;
+          x = tile.x() + _this.xOffset;
+          y = tile.y() + _this.yOffset;
+          stageTile = _this.findStageTile(x, y);
+          terrainType = tile.terrain();
+          return stageTile.addClass("terrain-" + terrainType);
+        };
+      })(this));
     };
 
-    GameWindow.prototype.removeChild = function(child) {
-      this.stage.removeChild(child.content);
-      return child.content = null;
+    GameWindow.prototype.reRenderPeople = function() {
+      return this.engine.eachPerson((function(_this) {
+        return function(person) {
+          var id, tile, type, x, y;
+          x = person.x() + _this.xOffset;
+          y = person.y() + _this.yOffset;
+          tile = _this.findStageTile(x, y).find(".content");
+          type = person.type();
+          id = person.id();
+          _this.stage.find(".person-" + type + ".person-" + id).removeClass("person-" + type + " person-" + id);
+          return tile.addClass("person-" + type + " person-" + id);
+        };
+      })(this));
+    };
+
+    GameWindow.prototype.reRenderTerrain = function() {
+      this.stage.find(".terrain-river").removeClass("terrain-river");
+      this.stage.find(".terrain-ground").removeClass("terrain-ground");
+      return this.renderTerrain();
+    };
+
+    GameWindow.prototype.rerenderContentBasedOnEvent = function(mapEvent) {
+      var building, mapTile, tile, x, y, _i, _len, _ref;
+      x = mapEvent.$x();
+      y = mapEvent.$y();
+      tile = this.engine.findTile(x, y);
+      this.cleanTile(tile);
+      if (mapEvent.$type() === "clean") {
+
+      } else if (mapEvent.$type() === "update") {
+        this.oftenUpdated.push(tile);
+        return this.renderContentTile(tile);
+      } else if (mapEvent.$type() === "building_created") {
+        building = mapEvent.opts.$first()[1];
+        _ref = building.$fields();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          mapTile = _ref[_i];
+          if (!mapTile["$not_marked_for_cleaning?"]()) {
+            this.findStageTile(mapTile.$x(), mapTile.$y()).addClass("marked-for-cleaning");
+          }
+        }
+        return this.renderBuilding(tile, building);
+      }
+    };
+
+    GameWindow.prototype.renderBuilding = function(tile, building) {
+      var html, stageTile, x, y;
+      x = tile.x() + this.xOffset;
+      y = tile.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y).find(".content");
+      html = $("<span class='structure-shelter-blueprint cleaning'></span>");
+      html.css("left", y * 16 + 8);
+      html.css("top", x * 16 + 64 - 6);
+      return $("#buildings").append(html);
+    };
+
+    GameWindow.prototype.cleanTile = function(tile) {
+      var stageBackground, stageTile, x, y;
+      x = tile.x() + this.xOffset;
+      y = tile.y() + this.yOffset;
+      stageBackground = this.findStageTile(x, y);
+      stageBackground.removeClass("marked-for-cleaning");
+      stageTile = stageBackground.find(".content");
+      return stageTile.attr("class", "content");
+    };
+
+    GameWindow.prototype.renderContent = function() {
+      return this.engine.eachTile((function(_this) {
+        return function(tile) {
+          return _this.renderContentTile(tile);
+        };
+      })(this));
+    };
+
+    GameWindow.prototype.renderContentTile = function(tile) {
+      var logsCount, stageTile, x, y;
+      x = tile.x() + this.xOffset;
+      y = tile.y() + this.yOffset;
+      stageTile = this.findStageTile(x, y).find(".content");
+      if (tile.contentType() === "tree") {
+        return stageTile.addClass("nature-tree");
+      } else if (tile.contentType() === "berries_bush") {
+        return stageTile.addClass("berries-bush");
+      } else if (tile.contentType() === "log_pile") {
+        logsCount = tile.tile.content.logs_count;
+        return stageTile.addClass("nature-logs-" + logsCount);
+      }
     };
 
     GameWindow.prototype.setup = function() {
-      $("#view").append(this.renderer.view);
-      this.engine.eachTile((function(_this) {
-        return function(tile) {
-          return new RenderingTile(tile, _this);
-        };
-      })(this));
-      new RenderingFireplace(this.engine.fireplace, this);
-      new RenderingStash(this.engine.stash, this);
-      this.engine.eachPerson((function(_this) {
-        return function(person) {
-          return new RenderingPerson(person, _this);
-        };
-      })(this));
-      this.stage.mousemove = (function(_this) {
-        return function(data) {
-          var x, y;
-          if (_this.change_offset) {
-            x = data.originalEvent.movementX;
-            y = data.originalEvent.movementY;
-            _this.x_offset += x;
-            _this.y_offset += y;
-            if (_this.x_offset > 0) {
-              _this.x_offset = 0;
-            }
-            if (_this.y_offset > 0) {
-              _this.y_offset = 0;
-            }
-            if (_this.x_offset < _this.maxXOffset) {
-              _this.x_offset = _this.maxXOffset;
-            }
-            if (_this.y_offset < _this.maxYOffset) {
-              _this.y_offset = _this.maxYOffset;
-            }
-          }
-          if (!_this.playing) {
-            _this.update();
-            return _this.render();
-          }
-        };
-      })(this);
-      this.stage.mouseup = (function(_this) {
-        return function() {
-          return _this.change_offset = false;
-        };
-      })(this);
-      this.stage.mouseupoutside = (function(_this) {
-        return function() {
-          return _this.change_offset = false;
-        };
-      })(this);
-      return this.stage.mousedown = (function(_this) {
-        return function(mouseData) {
-          var map_x, map_y, mouse_x, mouse_y, tile;
-          _this.change_offset = true;
-          mouse_x = mouseData.global.x;
-          mouse_y = mouseData.global.y;
-          map_x = parseInt(mouse_x / _this.tileSize);
-          map_y = parseInt(mouse_y / _this.tileSize);
-          tile = _this.engine.findTile(map_y, map_x);
+      var columnIndex, rowIndex, stage, _i, _j, _ref, _ref1;
+      this.stage.append("<div id='buildings'></div>");
+      stage = "";
+      for (rowIndex = _i = 0, _ref = this.renderedHeight; 0 <= _ref ? _i <= _ref : _i >= _ref; rowIndex = 0 <= _ref ? ++_i : --_i) {
+        stage += "<div class='row' id='row_" + rowIndex + "'>";
+        for (columnIndex = _j = 0, _ref1 = this.renderedWidth; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; columnIndex = 0 <= _ref1 ? ++_j : --_j) {
+          stage += "<span class='tile' id='column_" + columnIndex + "'><span class='content'></span></span>";
+        }
+        stage += "</div>";
+      }
+      this.stage.append(stage);
+      this.renderTerrain();
+      this.reRenderPeople();
+      this.renderFireplace();
+      this.renderStash();
+      this.renderContent();
+      return this.stage.click((function(_this) {
+        return function(e) {
+          var column, row, tile, x, y;
+          column = $(e.target).parent();
+          x = parseInt(column.attr("id").replace("column_", ""));
+          row = column.parent();
+          y = parseInt(row.attr("id").replace("row_", ""));
+          tile = _this.engine.findTile(y, x);
           return console.log(tile);
         };
-      })(this);
+      })(this));
     };
 
     return GameWindow;
 
   })();
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  this.Renderable = (function() {
-    function Renderable(object, gameWindow) {
-      this.object = object;
-      this.gameWindow = gameWindow;
-      this.updateContentPosition = __bind(this.updateContentPosition, this);
-      this.removeContent = __bind(this.removeContent, this);
-      this.isWithinView = __bind(this.isWithinView, this);
-      this.update = __bind(this.update, this);
-      this.createContent();
-      this.renderedWidth = this.gameWindow.renderedWidth;
-      this.renderedHeight = this.gameWindow.renderedHeight;
-      this.gameWindow.addChild(this);
-    }
-
-    Renderable.prototype.update = function() {
-      if (this.isWithinView()) {
-        if (this.content) {
-          this.updateSelf();
-          return this.updateContentPosition();
-        } else {
-          this.createContent();
-          this.gameWindow.stage.addChild(this.content);
-          return this.updateContentPosition();
-        }
-      } else {
-        if (this.content) {
-          return this.removeContent();
-        }
-      }
-    };
-
-    Renderable.prototype.updateSelf = function() {};
-
-    Renderable.prototype.isWithinView = function() {
-      return this.object.y() * this.gameWindow.tileSize >= -this.gameWindow.x_offset && this.object.y() * this.gameWindow.tileSize < -this.gameWindow.x_offset + this.renderedWidth * this.gameWindow.tileSize && this.object.x() * this.gameWindow.tileSize >= -this.gameWindow.y_offset && this.object.x() * this.gameWindow.tileSize < -this.gameWindow.y_offset + this.renderedHeight * this.gameWindow.tileSize;
-    };
-
-    Renderable.prototype.removeContent = function() {
-      return this.gameWindow.removeChild(this);
-    };
-
-    Renderable.prototype.updateContentPosition = function() {
-      this.content.position.x = this.object.y() * this.gameWindow.tileSize + this.gameWindow.x_offset;
-      return this.content.position.y = this.object.x() * this.gameWindow.tileSize + this.gameWindow.y_offset;
-    };
-
-    return Renderable;
-
-  })();
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingDormitory = (function(_super) {
-    __extends(RenderingDormitory, _super);
-
-    function RenderingDormitory() {
-      this.updateSelf = __bind(this.updateSelf, this);
-      this.draw = __bind(this.draw, this);
-      this.createContent = __bind(this.createContent, this);
-      return RenderingDormitory.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingDormitory.prototype.createContent = function() {
-      if (!this.color) {
-        this.color = 0x0000FF;
-      }
-      this.content = new PIXI.Graphics();
-      return this.draw();
-    };
-
-    RenderingDormitory.prototype.draw = function() {
-      this.content.beginFill(this.color, 0.3);
-      this.content.drawRect(0, 0, 4 * this.gameWindow.tileSize, 4 * this.gameWindow.tileSize);
-      return this.content.endFill();
-    };
-
-    RenderingDormitory.prototype.updateSelf = function() {
-      if (this.object.status() === "done") {
-        this.color = 0x6F1C1C;
-        return this.draw();
-      }
-    };
-
-    return RenderingDormitory;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingFireplace = (function(_super) {
-    __extends(RenderingFireplace, _super);
-
-    function RenderingFireplace() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingFireplace.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingFireplace.prototype.createContent = function() {
-      return this.content = new PIXI.Text("F", {
-        font: "25px",
-        fill: "red"
-      });
-    };
-
-    return RenderingFireplace;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingPerson = (function(_super) {
-    __extends(RenderingPerson, _super);
-
-    function RenderingPerson() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingPerson.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingPerson.prototype.createContent = function() {
-      var content;
-      if (this.object.type() === "woodcutter") {
-        content = "W";
-      } else if (this.object.type() === "leader") {
-        content = "L";
-      } else if (this.object.type() === "gatherer") {
-        content = "G";
-      } else if (this.object.type() === "fisherman") {
-        content = "F";
-      }
-      return this.content = new PIXI.Text(content, {
-        font: "25px",
-        fill: "white"
-      });
-    };
-
-    return RenderingPerson;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingStash = (function(_super) {
-    __extends(RenderingStash, _super);
-
-    function RenderingStash() {
-      this.createContent = __bind(this.createContent, this);
-      return RenderingStash.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingStash.prototype.createContent = function() {
-      return this.content = new PIXI.Text("S", {
-        font: "25px",
-        fill: "white"
-      });
-    };
-
-    return RenderingStash;
-
-  })(Renderable);
-
-}).call(this);
-(function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  this.RenderingTile = (function(_super) {
-    __extends(RenderingTile, _super);
-
-    function RenderingTile() {
-      this.setData = __bind(this.setData, this);
-      this.updateSelf = __bind(this.updateSelf, this);
-      this.createContent = __bind(this.createContent, this);
-      return RenderingTile.__super__.constructor.apply(this, arguments);
-    }
-
-    RenderingTile.prototype.createContent = function() {
-      this.setData();
-      this.content = new PIXI.Text(this.contentString, {
-        font: "25px",
-        fill: this.contentColor
-      });
-      return this.updateContentPosition();
-    };
-
-    RenderingTile.prototype.updateSelf = function() {
-      if (this.object.isUpdated()) {
-        this.removeContent();
-        this.createContent();
-        this.gameWindow.stage.addChild(this.content);
-        return this.object.updated();
-      }
-    };
-
-    RenderingTile.prototype.setData = function() {
-      if (this.object.isNotMarkedForCleaning()) {
-        if (this.object.contentName() === "tree") {
-          this.contentString = "t";
-          return this.contentColor = "green";
-        } else if (this.object.contentName() === "log") {
-          this.contentString = "---";
-          return this.contentColor = "green";
-        } else if (this.object.contentName() === "tree_piece") {
-          this.contentString = "/";
-          return this.contentColor = "green";
-        } else if (this.object.contentName() === "berries_bush") {
-          this.contentString = "#";
-          return this.contentColor = "yellow";
-        } else if (this.object.contentName() === "river") {
-          this.contentString = "~";
-          return this.contentColor = "blue";
-        } else {
-          this.contentString = ".";
-          return this.contentColor = "white";
-        }
-      } else {
-        if (this.object.contentName() === "tree") {
-          this.contentString = "t";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "tree_piece") {
-          this.contentString = "/";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "berries_bush") {
-          this.contentString = "#";
-          return this.contentColor = "red";
-        } else if (this.object.contentName() === "log") {
-          this.contentString = "---";
-          return this.contentColor = "red";
-        } else {
-          this.contentString = ".";
-          return this.contentColor = "white";
-        }
-      }
-    };
-
-    return RenderingTile;
-
-  })(Renderable);
 
 }).call(this);
 (function() {

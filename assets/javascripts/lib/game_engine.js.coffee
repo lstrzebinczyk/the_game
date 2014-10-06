@@ -15,11 +15,15 @@ class @GameEngine
       for tile in row
         @tiles.push(new GameEngine.Tile(tile))
 
+
   mapWidth: =>
     @engine.map.$width()
 
   mapHeight: =>
     @engine.map.$height()
+
+  mapEvents: =>
+    @engine.map.$events()
 
   time: =>
     @engine.$time().$strftime("%T")
@@ -36,4 +40,6 @@ class @GameEngine
       block(person)
 
   findTile: (x, y) =>
-    @engine.$map().$fetch(x, y)
+    for tile in @tiles
+      if tile.x() == x and tile.y() == y
+        return tile

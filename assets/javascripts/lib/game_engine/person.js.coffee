@@ -1,6 +1,9 @@
 class @GameEngine.Person
   constructor: (@person) ->
 
+  id: ->
+    @person._id
+
   type: =>
     @person.$type()
 
