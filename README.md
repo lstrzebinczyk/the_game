@@ -29,3 +29,16 @@ And it should work.
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
+## Changelog
+
+# 16.10.2014
+  - Complete graphics overhaul.
+    Sprites were provided by Sebastian Jackowski, who is now officially chief of arts.
+  - New wood management.
+    Once tree is cut, it is transformed into a pile of woods. These are then brought to stash by woodcutter.
+    This is a first step into introducing new building: carpenter workshop, which will produce goods from logs
+  - Waterskins.
+    People now wear waterskins. They are able to hold 1 liter of water in them. When they feel thirsty, they first drink from waterskins, and just when it's empty, they go to river to refill it.
+  - Personal inventory.
+    Each person carries some inventory of his own. It is now printed and can be checked.
+
