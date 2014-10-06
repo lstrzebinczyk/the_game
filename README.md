@@ -15,7 +15,9 @@ watches .rb files and .coffee files and recompiles them automatically
 1. bundle install
 2. rake build
 3. rake build_coffee
-4. index.html
+4. ruby app.rb
+
+Sadly we have to use Sinatra app, since chrome refuses to load images from disk.
 
 And it should work.
 
