@@ -8,13 +8,11 @@ class TheGame
     attr_accessor :people
     attr_accessor :firewood_needed
     attr_accessor :fireplace, :dormitory
-    attr_accessor :stuff_to_bring
 
     def initialize
       @dormitory = nil
       @fireplace = nil
       @stash     = nil
-      @stuff_to_bring = []
     end
 
     def get_job(person)
@@ -47,9 +45,6 @@ class TheGame
           elsif @dormitory and @dormitory.need_wood? and @dormitory.status == :plan and @stash.has?(:firewood)
             action = Action::Supply.create(@dormitory, with: :firewood, from: @stash)
             return action
-          elsif @stuff_to_bring.any?
-            stuff = @stuff_to_bring.first
-            return Action::MoveContent.create(:log, from: stuff, to: @stash)
           end
         elsif job_type == :management
           if @dormitory.nil?
@@ -114,7 +109,6 @@ class TheGame
 
     def update(minutes)
       @fireplace.update(minutes)
-      @stuff_to_bring.delete_if(&:empty?)
     end
 
     def people_count

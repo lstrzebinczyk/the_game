@@ -58,26 +58,10 @@ class TheGame
             clean!
             clean_event(@x, @y)
           when :tree
-            fallen_tree_pieces_to_deploy = @content.pieces_count - 1
-            x = @x
-            y = @y
-
-            @content = Nature::Tree::Piece.new(x, y)
-            x += 1
-
-            while fallen_tree_pieces_to_deploy > 0
-              tile = @map.fetch(x, y)
-              if tile.empty?
-                fallen_tree_piece = Nature::Tree::Piece.new(x, y)
-                tile.content = fallen_tree_piece
-                fallen_tree_pieces_to_deploy -= 1
-              end
-              x += 1
-            end
-            clean_event(@x, @y)
-          when :tree_piece
-            @content = Item::Log.new(@x, @y)
-            Settlement.instance.stuff_to_bring << self
+            @content = Nature::LogPile.new(@x, @y)
+            update_event(@x, @y)
+          when :log_pile
+            clean!
             clean_event(@x, @y)
           else
             nil
@@ -89,6 +73,10 @@ class TheGame
 
       def clean_event(x, y)
         Map::Event.new(:clean, x, y)
+      end
+
+      def update_event(x, y)
+        Map::Event.new(:update, x, y)
       end
     end
   end

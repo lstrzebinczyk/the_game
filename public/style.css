@@ -106,3 +106,28 @@ button.active{
   background: url('images/nature/berrybush.png');
   z-index: 1;
 }
+
+.nature-logs-1{
+  background: url('images/nature/logs/1.png');
+  z-index: 1;
+}
+.nature-logs-2{
+  background: url('images/nature/logs/2.png');
+  z-index: 1;
+}
+.nature-logs-3{
+  background: url('images/nature/logs/3.png');
+  z-index: 1;
+}
+.nature-logs-4{
+  background: url('images/nature/logs/4.png');
+  z-index: 1;
+}
+.nature-logs-5{
+  background: url('images/nature/logs/5.png');
+  z-index: 1;
+}
+.nature-logs-6{
+  background: url('images/nature/logs/6.png');
+  z-index: 1;
+}

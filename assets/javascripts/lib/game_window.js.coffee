@@ -94,6 +94,11 @@ class @GameWindow
       y = tile.y() + @yOffset
       stageTile = @findStageTile(x, y).find(".content")
       stageTile.attr("class", "content")
+    else if mapEvent.$type() == "update"
+      x = tile.x() + @xOffset
+      y = tile.y() + @yOffset
+      stageTile = @findStageTile(x, y).find(".content")
+      stageTile.attr("class", "content")
       @renderContentTile(tile)
 
   renderContent: =>
@@ -111,6 +116,13 @@ class @GameWindow
       y = tile.y() + @yOffset
       stageTile = @findStageTile(x, y).find(".content")
       stageTile.addClass("berries-bush")
+    else if tile.contentType() == "log_pile"
+      x = tile.x() + @xOffset
+      y = tile.y() + @yOffset
+      stageTile = @findStageTile(x, y).find(".content")
+      logsCount = tile.tile.content.logs_count
+      stageTile.addClass("nature-logs-#{logsCount}")
+
     # else
     #   x = tile.x() + @xOffset
     #   y = tile.y() + @yOffset

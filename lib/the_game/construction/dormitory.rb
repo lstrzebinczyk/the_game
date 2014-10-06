@@ -41,11 +41,11 @@ class TheGame
           end
         elsif job_type == :woodcutting
           fields.find do |tile|
-            tile.content.is_a?(Nature::Tree) or tile.content.is_a?(Nature::Tree::Piece)
+            tile.content.is_a? Nature::Tree
           end
         elsif job_type == :haul
           fields.find do |tile|
-            tile.content.is_a? Construction::FallenTree
+            tile.content.is_a? Nature::LogPile
           end
         end
       end
@@ -57,11 +57,11 @@ class TheGame
           end
         elsif job_type == :woodcutting
           fields.any? do |tile|
-            tile.content.is_a?(Nature::Tree) or tile.content.is_a?(Nature::Tree::Piece)
+            tile.content.is_a? Nature::Tree
           end
         elsif job_type == :haul
           fields.any? do |tile|
-            tile.content.is_a? Construction::FallenTree
+            tile.content.is_a? Nature::LogPile
           end
         end
       end

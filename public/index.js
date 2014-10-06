@@ -620,6 +620,11 @@
         x = tile.x() + this.xOffset;
         y = tile.y() + this.yOffset;
         stageTile = this.findStageTile(x, y).find(".content");
+        return stageTile.attr("class", "content");
+      } else if (mapEvent.$type() === "update") {
+        x = tile.x() + this.xOffset;
+        y = tile.y() + this.yOffset;
+        stageTile = this.findStageTile(x, y).find(".content");
         stageTile.attr("class", "content");
         return this.renderContentTile(tile);
       }
@@ -634,7 +639,7 @@
     };
 
     GameWindow.prototype.renderContentTile = function(tile) {
-      var stageTile, x, y;
+      var logsCount, stageTile, x, y;
       if (tile.contentType() === "tree") {
         x = tile.x() + this.xOffset;
         y = tile.y() + this.yOffset;
@@ -645,6 +650,12 @@
         y = tile.y() + this.yOffset;
         stageTile = this.findStageTile(x, y).find(".content");
         return stageTile.addClass("berries-bush");
+      } else if (tile.contentType() === "log_pile") {
+        x = tile.x() + this.xOffset;
+        y = tile.y() + this.yOffset;
+        stageTile = this.findStageTile(x, y).find(".content");
+        logsCount = tile.tile.content.logs_count;
+        return stageTile.addClass("nature-logs-" + logsCount);
       }
     };
 
