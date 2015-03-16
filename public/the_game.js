@@ -27928,7 +27928,7 @@ if (job == null) job = nil;
 (function($opal) {
   var $a, self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $gvars = $opal.gvars;
 
-  $opal.add_stubs(['$find', '$render_time!', '$render_people_stats!', '$render_building_stats!', '$render_stash!', '$empty', '$stash', '$instance', '$each', '$+', '$append', '$dormitory', '$nil?', '$status', '$==', '$firewood_needed', '$minutes_left', '$text', '$time', '$type', '$thirst', '$hunger', '$energy', '$percentage', '$waterskin', '$description', '$action', '$inventory', '$people', '$new', '$on', '$stop!', '$start!', '$setup', '$every', '$update!', '$/', '$start', '$playing=', '$stop', '$private', '$update', '$render', '$ready?', '$setup!']);
+  $opal.add_stubs(['$find', '$now', '$render_time!', '$render_people_stats!', '$render_building_stats!', '$render_stash!', '$render_turns_per_second!', '$+', '$>', '$-', '$text', '$empty', '$stash', '$instance', '$each', '$append', '$dormitory', '$nil?', '$status', '$==', '$firewood_needed', '$minutes_left', '$time', '$type', '$thirst', '$hunger', '$energy', '$percentage', '$waterskin', '$description', '$action', '$inventory', '$people', '$new', '$on', '$stop!', '$start!', '$setup', '$every', '$update!', '$/', '$playing=', '$stop', '$private', '$update', '$render', '$ready?', '$setup!']);
   ;
   ;
   ;
@@ -28002,7 +28002,7 @@ if (job == null) job = nil;
 
       var def = self._proto, $scope = self._scope;
 
-      def.stash_stats_window = def.building_stats_window = def.time_window = def.engine = def.people_stats_window = nil;
+      def.iterations_since_last_count_update = def.time_since_last_count_update = def.turns_per_second_window = def.stash_stats_window = def.building_stats_window = def.time_window = def.engine = def.people_stats_window = nil;
       def.$initialize = function(engine) {
         var $a, self = this;
 
@@ -28010,7 +28010,10 @@ if (job == null) job = nil;
         self.time_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#time");
         self.people_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#people");
         self.building_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#buildings");
-        return self.stash_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#stash");
+        self.stash_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#stash");
+        self.turns_per_second_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#turns_count");
+        self.iterations_since_last_count_update = 0;
+        return self.time_since_last_count_update = (($a = $scope.Time) == null ? $opal.cm('Time') : $a).$now();
       };
 
       def.$update = function() {
@@ -28019,7 +28022,22 @@ if (job == null) job = nil;
         self['$render_time!']();
         self['$render_people_stats!']();
         self['$render_building_stats!']();
-        return self['$render_stash!']();
+        self['$render_stash!']();
+        return self['$render_turns_per_second!']();
+      };
+
+      def['$render_turns_per_second!'] = function() {
+        var $a, self = this, possible_new_time = nil;
+
+        self.iterations_since_last_count_update = self.iterations_since_last_count_update['$+'](1);
+        possible_new_time = (($a = $scope.Time) == null ? $opal.cm('Time') : $a).$now();
+        if (possible_new_time['$-'](self.time_since_last_count_update)['$>'](1)) {
+          self.time_since_last_count_update = possible_new_time;
+          self.turns_per_second_window.$text(self.iterations_since_last_count_update);
+          return self.iterations_since_last_count_update = 0;
+          } else {
+          return nil
+        };
       };
 
       def['$render_stash!'] = function() {
@@ -28119,7 +28137,7 @@ if (type == null) type = nil;if (count == null) count = nil;
 
       var def = self._proto, $scope = self._scope;
 
-      def.engine = def.startButton = def.window = def.turns_per_second = def.game_loop = def.menu = nil;
+      def.engine = def.startButton = def.window = def.turns_per_second = def.interval = def.menu = nil;
       def.$initialize = function() {
         var $a, $b, self = this;
 
@@ -28149,10 +28167,9 @@ if (type == null) type = nil;if (count == null) count = nil;
         var $a, $b, TMP_5, self = this;
         if ($gvars.window == null) $gvars.window = nil;
 
-        self.game_loop = ($a = ($b = $gvars.window).$every, $a._p = (TMP_5 = function(){var self = TMP_5._s || this;
+        self.interval = ($a = ($b = $gvars.window).$every, $a._p = (TMP_5 = function(){var self = TMP_5._s || this;
 
         return self['$update!']()}, TMP_5._s = self, TMP_5), $a).call($b, (1.0)['$/'](self.turns_per_second));
-        self.game_loop.$start();
         self.playing = true;
         self.window['$playing='](true);
         return self.startButton.$text("stop");
@@ -28161,7 +28178,7 @@ if (type == null) type = nil;if (count == null) count = nil;
       def['$stop!'] = function() {
         var self = this;
 
-        self.game_loop.$stop();
+        self.interval.$stop();
         self.playing = false;
         self.window['$playing='](false);
         return self.startButton.$text("Start!");

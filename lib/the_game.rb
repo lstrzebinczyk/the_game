@@ -84,10 +84,14 @@ class TheGame
   class Menu
     def initialize(engine)
       @engine = engine
-      @time_window           = Element.find("#time")
-      @people_stats_window   = Element.find("#people")
-      @building_stats_window = Element.find("#buildings")
-      @stash_stats_window    = Element.find("#stash")
+      @time_window             = Element.find("#time")
+      @people_stats_window     = Element.find("#people")
+      @building_stats_window   = Element.find("#buildings")
+      @stash_stats_window      = Element.find("#stash")
+      @turns_per_second_window = Element.find("#turns_count")
+
+      @iterations_since_last_count_update = 0
+      @time_since_last_count_update = Time.now
     end
 
     def update
@@ -95,6 +99,17 @@ class TheGame
       render_people_stats!
       render_building_stats!
       render_stash!
+      render_turns_per_second!
+    end
+
+    def render_turns_per_second!
+      @iterations_since_last_count_update += 1
+      possible_new_time = Time.now
+      if possible_new_time - @time_since_last_count_update > 1
+        @time_since_last_count_update = possible_new_time
+        @turns_per_second_window.text(@iterations_since_last_count_update)
+        @iterations_since_last_count_update = 0
+      end
     end
 
     def render_stash!
@@ -210,20 +225,16 @@ class TheGame
     end
 
     def start!
-
-      @game_loop = $window.every(1.0/@turns_per_second) do
+      @interval = $window.every(1.0/@turns_per_second) do
         update!
-        # puts "in loop"
       end
-      @game_loop.start
-      # update!
       @playing = true
       @window.playing = true
       @startButton.text("stop")
     end
 
     def stop!
-      @game_loop.stop
+      @interval.stop
       @playing = false
       @window.playing = false
       @startButton.text("Start!")
