@@ -1,33 +1,33 @@
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine = (function() {
     function GameEngine() {
-      this.findTile = __bind(this.findTile, this);
-      this.eachPerson = __bind(this.eachPerson, this);
-      this.eachTile = __bind(this.eachTile, this);
-      this.update = __bind(this.update, this);
-      this.time = __bind(this.time, this);
-      this.mapEvents = __bind(this.mapEvents, this);
-      this.mapHeight = __bind(this.mapHeight, this);
-      this.mapWidth = __bind(this.mapWidth, this);
-      var person, row, tile, _i, _j, _k, _len, _len1, _len2, _ref, _ref1;
+      this.findTile = bind(this.findTile, this);
+      this.eachPerson = bind(this.eachPerson, this);
+      this.eachTile = bind(this.eachTile, this);
+      this.update = bind(this.update, this);
+      this.time = bind(this.time, this);
+      this.mapEvents = bind(this.mapEvents, this);
+      this.mapHeight = bind(this.mapHeight, this);
+      this.mapWidth = bind(this.mapWidth, this);
+      var i, j, k, len, len1, len2, person, ref, ref1, row, tile;
       this.engine = Opal.TheGame.Engine.$new();
       this.stash = new GameEngine.Stash();
       this.dormitory = new GameEngine.Dormitory();
       this.fireplace = new GameEngine.Fireplace();
       this.people = [];
-      _ref = this.engine.$people();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        person = _ref[_i];
+      ref = this.engine.$people();
+      for (i = 0, len = ref.length; i < len; i++) {
+        person = ref[i];
         this.people.push(new GameEngine.Person(person));
       }
       this.tiles = [];
-      _ref1 = this.engine.$map().$grid();
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        row = _ref1[_j];
-        for (_k = 0, _len2 = row.length; _k < _len2; _k++) {
-          tile = row[_k];
+      ref1 = this.engine.$map().$grid();
+      for (j = 0, len1 = ref1.length; j < len1; j++) {
+        row = ref1[j];
+        for (k = 0, len2 = row.length; k < len2; k++) {
+          tile = row[k];
           this.tiles.push(new GameEngine.Tile(tile));
         }
       }
@@ -54,32 +54,32 @@
     };
 
     GameEngine.prototype.eachTile = function(block) {
-      var tile, _i, _len, _ref, _results;
-      _ref = this.tiles;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tile = _ref[_i];
-        _results.push(block(tile));
+      var i, len, ref, results, tile;
+      ref = this.tiles;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        tile = ref[i];
+        results.push(block(tile));
       }
-      return _results;
+      return results;
     };
 
     GameEngine.prototype.eachPerson = function(block) {
-      var person, _i, _len, _ref, _results;
-      _ref = this.people;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        person = _ref[_i];
-        _results.push(block(person));
+      var i, len, person, ref, results;
+      ref = this.people;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        person = ref[i];
+        results.push(block(person));
       }
-      return _results;
+      return results;
     };
 
     GameEngine.prototype.findTile = function(x, y) {
-      var tile, _i, _len, _ref;
-      _ref = this.tiles;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tile = _ref[_i];
+      var i, len, ref, tile;
+      ref = this.tiles;
+      for (i = 0, len = ref.length; i < len; i++) {
+        tile = ref[i];
         if (tile.x() === x && tile.y() === y) {
           return tile;
         }
@@ -92,17 +92,17 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine.Dormitory = (function() {
     function Dormitory() {
-      this.y = __bind(this.y, this);
-      this.x = __bind(this.x, this);
-      this.dormitory = __bind(this.dormitory, this);
-      this.minutesLeft = __bind(this.minutesLeft, this);
-      this.firewoodNeeded = __bind(this.firewoodNeeded, this);
-      this.status = __bind(this.status, this);
-      this.isNil = __bind(this.isNil, this);
+      this.y = bind(this.y, this);
+      this.x = bind(this.x, this);
+      this.dormitory = bind(this.dormitory, this);
+      this.minutesLeft = bind(this.minutesLeft, this);
+      this.firewoodNeeded = bind(this.firewoodNeeded, this);
+      this.status = bind(this.status, this);
+      this.isNil = bind(this.isNil, this);
       this.settlement = Opal.TheGame.Settlement.$instance();
     }
 
@@ -140,12 +140,12 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine.Fireplace = (function() {
     function Fireplace() {
-      this.y = __bind(this.y, this);
-      this.x = __bind(this.x, this);
+      this.y = bind(this.y, this);
+      this.x = bind(this.x, this);
       this.fireplace = Opal.TheGame.Settlement.$instance().$fireplace();
     }
 
@@ -163,21 +163,21 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine.Person = (function() {
     function Person(person) {
       this.person = person;
-      this.y = __bind(this.y, this);
-      this.x = __bind(this.x, this);
-      this.waterskinPercentage = __bind(this.waterskinPercentage, this);
-      this.inventoryCount = __bind(this.inventoryCount, this);
-      this.inventoryItemTypes = __bind(this.inventoryItemTypes, this);
-      this.actionDescription = __bind(this.actionDescription, this);
-      this.energy = __bind(this.energy, this);
-      this.hunger = __bind(this.hunger, this);
-      this.thirst = __bind(this.thirst, this);
-      this.type = __bind(this.type, this);
+      this.y = bind(this.y, this);
+      this.x = bind(this.x, this);
+      this.waterskinPercentage = bind(this.waterskinPercentage, this);
+      this.inventoryCount = bind(this.inventoryCount, this);
+      this.inventoryItemTypes = bind(this.inventoryItemTypes, this);
+      this.actionDescription = bind(this.actionDescription, this);
+      this.energy = bind(this.energy, this);
+      this.hunger = bind(this.hunger, this);
+      this.thirst = bind(this.thirst, this);
+      this.type = bind(this.type, this);
     }
 
     Person.prototype.id = function() {
@@ -230,15 +230,15 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine.Stash = (function() {
     function Stash() {
-      this.y = __bind(this.y, this);
-      this.x = __bind(this.x, this);
-      this.tilesCoords = __bind(this.tilesCoords, this);
-      this.count = __bind(this.count, this);
-      this.itemTypes = __bind(this.itemTypes, this);
+      this.y = bind(this.y, this);
+      this.x = bind(this.x, this);
+      this.tilesCoords = bind(this.tilesCoords, this);
+      this.count = bind(this.count, this);
+      this.itemTypes = bind(this.itemTypes, this);
       this.stash = Opal.TheGame.Settlement.$instance().$stash();
     }
 
@@ -268,18 +268,18 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameEngine.Tile = (function() {
     function Tile(tile) {
       this.tile = tile;
-      this.y = __bind(this.y, this);
-      this.x = __bind(this.x, this);
-      this.isNil = __bind(this.isNil, this);
-      this.terrain = __bind(this.terrain, this);
-      this.buildingType = __bind(this.buildingType, this);
-      this.contentType = __bind(this.contentType, this);
-      this.isNotMarkedForCleaning = __bind(this.isNotMarkedForCleaning, this);
+      this.y = bind(this.y, this);
+      this.x = bind(this.x, this);
+      this.isNil = bind(this.isNil, this);
+      this.terrain = bind(this.terrain, this);
+      this.buildingType = bind(this.buildingType, this);
+      this.contentType = bind(this.contentType, this);
+      this.isNotMarkedForCleaning = bind(this.isNotMarkedForCleaning, this);
     }
 
     Tile.prototype.isNotMarkedForCleaning = function() {
@@ -316,14 +316,14 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameLoop = (function() {
     function GameLoop() {
-      this.stopGame = __bind(this.stopGame, this);
-      this.startGame = __bind(this.startGame, this);
-      this.update = __bind(this.update, this);
-      this.setup = __bind(this.setup, this);
+      this.stopGame = bind(this.stopGame, this);
+      this.startGame = bind(this.startGame, this);
+      this.update = bind(this.update, this);
+      this.setup = bind(this.setup, this);
       this.gameEngine = new GameEngine();
       this.gameMenu = new GameMenu(this.gameEngine);
       this.gameWindow = new GameWindow(this.gameEngine);
@@ -404,17 +404,17 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameMenu = (function() {
     function GameMenu(engine) {
       this.engine = engine;
-      this.renderTurnsPerSecond = __bind(this.renderTurnsPerSecond, this);
-      this.renderPeopleStats = __bind(this.renderPeopleStats, this);
-      this.renderStashStats = __bind(this.renderStashStats, this);
-      this.renderBuildingsStats = __bind(this.renderBuildingsStats, this);
-      this.renderTime = __bind(this.renderTime, this);
-      this.update = __bind(this.update, this);
+      this.renderTurnsPerSecond = bind(this.renderTurnsPerSecond, this);
+      this.renderPeopleStats = bind(this.renderPeopleStats, this);
+      this.renderStashStats = bind(this.renderStashStats, this);
+      this.renderBuildingsStats = bind(this.renderBuildingsStats, this);
+      this.renderTime = bind(this.renderTime, this);
+      this.update = bind(this.update, this);
       this.peopleStatsWindow = $("#people");
       this.stashStatsWindow = $("#stash");
       this.buildingStatsWindow = $("#buildings");
@@ -453,12 +453,12 @@
     };
 
     GameMenu.prototype.renderStashStats = function() {
-      var type, _i, _len, _ref;
+      var i, len, ref, type;
       this.stashStatsWindow.empty();
       this.stashTemplate = "<div>";
-      _ref = this.engine.stash.itemTypes();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        type = _ref[_i];
+      ref = this.engine.stash.itemTypes();
+      for (i = 0, len = ref.length; i < len; i++) {
+        type = ref[i];
         this.stashTemplate += "<div>" + type + ": " + (this.engine.stash.count(type));
       }
       this.stashTemplate += "</div>";
@@ -469,7 +469,7 @@
       this.peopleStatsWindow.empty();
       return this.engine.eachPerson((function(_this) {
         return function(person) {
-          var action_description, count, energy, hunger, thirst, type, waterkinPercentage, _i, _len, _ref;
+          var action_description, count, energy, hunger, i, len, ref, thirst, type, waterkinPercentage;
           type = person.type();
           thirst = person.thirst();
           hunger = person.hunger();
@@ -477,9 +477,9 @@
           waterkinPercentage = person.waterskinPercentage();
           action_description = person.actionDescription();
           _this.peopleTemplate = "<div>\n  <div>type: " + type + "</div>\n  <div>thirst: <progress value='" + thirst + "'></progress></div>\n  <div>hunger: <progress value='" + hunger + "'></progress></div>\n  <div>energy: <progress value='" + energy + "'></progress></div>\n\n  <div>action_description: " + action_description + "</div>\n  <div>waterkin capacity: <progress value='" + waterkinPercentage + "'></progress>\n  <div>items:</div>";
-          _ref = person.inventoryItemTypes();
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            type = _ref[_i];
+          ref = person.inventoryItemTypes();
+          for (i = 0, len = ref.length; i < len; i++) {
+            type = ref[i];
             count = person.inventoryCount(type);
             if (count > 0) {
               _this.peopleTemplate += "<div>" + type + ": " + count;
@@ -508,27 +508,27 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   this.GameWindow = (function() {
     function GameWindow(engine) {
       this.engine = engine;
-      this.setup = __bind(this.setup, this);
-      this.renderContentTile = __bind(this.renderContentTile, this);
-      this.renderContent = __bind(this.renderContent, this);
-      this.cleanTile = __bind(this.cleanTile, this);
-      this.renderBuilding = __bind(this.renderBuilding, this);
-      this.rerenderContentBasedOnEvent = __bind(this.rerenderContentBasedOnEvent, this);
-      this.reRenderTerrain = __bind(this.reRenderTerrain, this);
-      this.reRenderPeople = __bind(this.reRenderPeople, this);
-      this.renderTerrain = __bind(this.renderTerrain, this);
-      this.reRenderStash = __bind(this.reRenderStash, this);
-      this.renderStash = __bind(this.renderStash, this);
-      this.reRenderFireplace = __bind(this.reRenderFireplace, this);
-      this.renderFireplace = __bind(this.renderFireplace, this);
-      this.findStageTile = __bind(this.findStageTile, this);
-      this.render = __bind(this.render, this);
-      this.update = __bind(this.update, this);
+      this.setup = bind(this.setup, this);
+      this.renderContentTile = bind(this.renderContentTile, this);
+      this.renderContent = bind(this.renderContent, this);
+      this.cleanTile = bind(this.cleanTile, this);
+      this.renderBuilding = bind(this.renderBuilding, this);
+      this.rerenderContentBasedOnEvent = bind(this.rerenderContentBasedOnEvent, this);
+      this.reRenderTerrain = bind(this.reRenderTerrain, this);
+      this.reRenderPeople = bind(this.reRenderPeople, this);
+      this.renderTerrain = bind(this.renderTerrain, this);
+      this.reRenderStash = bind(this.reRenderStash, this);
+      this.renderStash = bind(this.renderStash, this);
+      this.reRenderFireplace = bind(this.reRenderFireplace, this);
+      this.renderFireplace = bind(this.renderFireplace, this);
+      this.findStageTile = bind(this.findStageTile, this);
+      this.render = bind(this.render, this);
+      this.update = bind(this.update, this);
       this.stage = $("#stage");
       this.renderedWidth = 14 * 4;
       this.renderedHeight = 14 * 3;
@@ -541,7 +541,7 @@
     }
 
     GameWindow.prototype.update = function() {
-      var blueprint, event, tile, _i, _len, _ref;
+      var blueprint, event, i, len, ref, tile;
       if (this.engine.mapEvents().$size() > 0) {
         event = this.engine.mapEvents().$pop();
         this.rerenderContentBasedOnEvent(event);
@@ -549,9 +549,9 @@
           return !tile.isNil();
         });
       }
-      _ref = this.oftenUpdated;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tile = _ref[_i];
+      ref = this.oftenUpdated;
+      for (i = 0, len = ref.length; i < len; i++) {
+        tile = ref[i];
         this.cleanTile(tile);
         this.renderContentTile(tile);
       }
@@ -592,18 +592,18 @@
     };
 
     GameWindow.prototype.renderStash = function() {
-      var coords, stageTile, stash, x, y, _i, _len, _ref, _results;
+      var coords, i, len, ref, results, stageTile, stash, x, y;
       stash = this.engine.stash;
-      _ref = stash.tilesCoords();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        coords = _ref[_i];
+      ref = stash.tilesCoords();
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        coords = ref[i];
         x = stash.x() + this.xOffset + coords[0];
         y = stash.y() + this.yOffset + coords[1];
         stageTile = this.findStageTile(x, y).find(".content");
-        _results.push(stageTile.addClass("structure-stash structure-stash-" + coords[0] + "-" + coords[1]));
+        results.push(stageTile.addClass("structure-stash structure-stash-" + coords[0] + "-" + coords[1]));
       }
-      return _results;
+      return results;
     };
 
     GameWindow.prototype.reRenderStash = function() {
@@ -646,7 +646,7 @@
     };
 
     GameWindow.prototype.rerenderContentBasedOnEvent = function(mapEvent) {
-      var building, mapTile, tile, x, y, _i, _len, _ref;
+      var building, i, len, mapTile, ref, tile, x, y;
       x = mapEvent.$x();
       y = mapEvent.$y();
       tile = this.engine.findTile(x, y);
@@ -658,9 +658,9 @@
         return this.renderContentTile(tile);
       } else if (mapEvent.$type() === "building_created") {
         building = mapEvent.opts.$first()[1];
-        _ref = building.$fields();
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          mapTile = _ref[_i];
+        ref = building.$fields();
+        for (i = 0, len = ref.length; i < len; i++) {
+          mapTile = ref[i];
           if (!mapTile["$not_marked_for_cleaning?"]()) {
             this.findStageTile(mapTile.$x(), mapTile.$y()).addClass("marked-for-cleaning");
           }
@@ -714,12 +714,12 @@
     };
 
     GameWindow.prototype.setup = function() {
-      var columnIndex, rowIndex, stage, _i, _j, _ref, _ref1;
+      var columnIndex, i, j, ref, ref1, rowIndex, stage;
       this.stage.append("<div id='buildings'></div>");
       stage = "";
-      for (rowIndex = _i = 0, _ref = this.renderedHeight; 0 <= _ref ? _i <= _ref : _i >= _ref; rowIndex = 0 <= _ref ? ++_i : --_i) {
+      for (rowIndex = i = 0, ref = this.renderedHeight; 0 <= ref ? i <= ref : i >= ref; rowIndex = 0 <= ref ? ++i : --i) {
         stage += "<div class='row' id='row_" + rowIndex + "'>";
-        for (columnIndex = _j = 0, _ref1 = this.renderedWidth; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; columnIndex = 0 <= _ref1 ? ++_j : --_j) {
+        for (columnIndex = j = 0, ref1 = this.renderedWidth; 0 <= ref1 ? j <= ref1 : j >= ref1; columnIndex = 0 <= ref1 ? ++j : --j) {
           stage += "<span class='tile' id='column_" + columnIndex + "'><span class='content'></span></span>";
         }
         stage += "</div>";

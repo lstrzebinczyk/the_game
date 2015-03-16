@@ -1,9 +1,10 @@
 source 'https://rubygems.org'
 
-gem "rspec"
 gem "pry"
 
-gem 'opal'
+gem 'opal', '0.6.2'
+gem 'opal-jquery'
+gem 'opal-browser'
 gem 'guard'
 gem 'guard-rake'
 gem "coffee-script"

@@ -1,6 +1,16 @@
 require 'opal'
+require 'opal-jquery'
+require "opal/browser"
+
+# Opal.use_gem("opal-browser")
+
+# require 'browser'
+
 require "pry"
 require "coffee-script"
+
+# binding.pry
+
 
 desc "Build"
 task :build do

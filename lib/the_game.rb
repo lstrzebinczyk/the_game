@@ -1,6 +1,8 @@
 # $:.unshift File.dirname(__FILE__)
 
 require 'opal'
+require 'opal-jquery'
+require 'browser'
 
 # Dir[File.dirname(__FILE__) + '/lib/**/*.rb'].each do |file|
 #   require File.basename(file, File.extname(file))
@@ -79,4 +81,83 @@ require 'the_game/construction'
 require 'the_game/container'
 
 class TheGame
+  class Menu
+    def update
+    end
+  end
+
+  class Window
+    def setup
+    end
+
+    def render
+    end
+
+    def update
+    end
+
+    def playing=(value)
+    end
+  end
+
+  class GameLoop
+    def initialize
+      @engine      = TheGame::Engine.new
+      @menu        = TheGame::Menu.new
+      @window      = TheGame::Window.new
+      @startButton = Element.find("#start")
+      @playing     = true
+      @turns_per_second = 30
+    end
+
+    def setup!
+      @startButton.on :click do
+        if @playing
+          stop!
+        else
+          start!
+        end
+      end
+
+      @window.setup
+
+      # TODO
+      # add handlers for speed buttons
+    end
+
+    def start!
+      @game_loop = every(1000/@turns_per_second) do
+        update!
+      end
+      @playing = true
+      @window.playing = true
+      @startButton.text("stop")
+    end
+
+    def stop!
+      @game_loop.stop
+      @playing = false
+      @window.playing = false
+      @startButton.text("Start!")
+    end
+
+    private
+
+    def update!
+      @engine.update
+      @menu.update
+      @window.update
+      @window.render
+    end
+  end
+
+  def initialize
+    Document.ready? do
+      @game_loop = GameLoop.new
+      @game_loop.setup!
+      @game_loop.start!
+    end
+  end
 end
+
+TheGame.new
