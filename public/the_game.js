@@ -27928,7 +27928,7 @@ if (job == null) job = nil;
 (function($opal) {
   var $a, self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $gvars = $opal.gvars;
 
-  $opal.add_stubs(['$find', '$render_time!', '$render_people_stats!', '$render_building_stats!', '$empty', '$dormitory', '$instance', '$nil?', '$+', '$status', '$==', '$firewood_needed', '$minutes_left', '$append', '$text', '$time', '$each', '$type', '$thirst', '$hunger', '$energy', '$percentage', '$waterskin', '$description', '$action', '$inventory', '$people', '$new', '$on', '$stop!', '$start!', '$setup', '$every', '$update!', '$/', '$start', '$playing=', '$stop', '$private', '$update', '$render', '$ready?', '$setup!']);
+  $opal.add_stubs(['$find', '$render_time!', '$render_people_stats!', '$render_building_stats!', '$render_stash!', '$empty', '$stash', '$instance', '$each', '$+', '$append', '$dormitory', '$nil?', '$status', '$==', '$firewood_needed', '$minutes_left', '$text', '$time', '$type', '$thirst', '$hunger', '$energy', '$percentage', '$waterskin', '$description', '$action', '$inventory', '$people', '$new', '$on', '$stop!', '$start!', '$setup', '$every', '$update!', '$/', '$start', '$playing=', '$stop', '$private', '$update', '$render', '$ready?', '$setup!']);
   ;
   ;
   ;
@@ -28002,14 +28002,15 @@ if (job == null) job = nil;
 
       var def = self._proto, $scope = self._scope;
 
-      def.building_stats_window = def.time_window = def.engine = def.people_stats_window = nil;
+      def.stash_stats_window = def.building_stats_window = def.time_window = def.engine = def.people_stats_window = nil;
       def.$initialize = function(engine) {
         var $a, self = this;
 
         self.engine = engine;
         self.time_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#time");
         self.people_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#people");
-        return self.building_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#buildings");
+        self.building_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#buildings");
+        return self.stash_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#stash");
       };
 
       def.$update = function() {
@@ -28017,7 +28018,21 @@ if (job == null) job = nil;
 
         self['$render_time!']();
         self['$render_people_stats!']();
-        return self['$render_building_stats!']();
+        self['$render_building_stats!']();
+        return self['$render_stash!']();
+      };
+
+      def['$render_stash!'] = function() {
+        var $a, $b, TMP_1, self = this, stash = nil, template = nil;
+
+        self.stash_stats_window.$empty();
+        stash = (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$stash();
+        template = "<div>";
+        ($a = ($b = stash).$each, $a._p = (TMP_1 = function(type, count){var self = TMP_1._s || this;
+if (type == null) type = nil;if (count == null) count = nil;
+        return template = template['$+']("<div>" + (type) + ": " + (count))}, TMP_1._s = self, TMP_1), $a).call($b);
+        template = template['$+']("</div>");
+        return self.stash_stats_window.$append(template);
       };
 
       def['$render_building_stats!'] = function() {
@@ -28046,10 +28061,10 @@ if (job == null) job = nil;
       };
 
       return (def['$render_people_stats!'] = function() {
-        var $a, $b, TMP_1, self = this;
+        var $a, $b, TMP_2, self = this;
 
         self.people_stats_window.$empty();
-        return ($a = ($b = self.engine.$people()).$each, $a._p = (TMP_1 = function(person){var self = TMP_1._s || this, $a, $b, TMP_2, type = nil, thirst = nil, hunger = nil, energy = nil, waterkinPercentage = nil, action_description = nil, template = nil;
+        return ($a = ($b = self.engine.$people()).$each, $a._p = (TMP_2 = function(person){var self = TMP_2._s || this, $a, $b, TMP_3, type = nil, thirst = nil, hunger = nil, energy = nil, waterkinPercentage = nil, action_description = nil, template = nil;
           if (self.people_stats_window == null) self.people_stats_window = nil;
 if (person == null) person = nil;
         type = person.$type();
@@ -28059,11 +28074,11 @@ if (person == null) person = nil;
           waterkinPercentage = person.$waterskin().$percentage();
           action_description = person.$action().$description();
           template = "\n        <div>\n          <div>type: " + (type) + "</div>\n          <div>thirst: <progress value='" + (thirst) + "'></progress></div>\n          <div>hunger: <progress value='" + (hunger) + "'></progress></div>\n          <div>energy: <progress value='" + (energy) + "'></progress></div>\n\n          <div>action_description: " + (action_description) + "</div>\n          <div>waterkin capacity: <progress value='" + (waterkinPercentage) + "'></progress>\n          <div>items:</div>\n        ";
-          ($a = ($b = person.$inventory()).$each, $a._p = (TMP_2 = function(type, count){var self = TMP_2._s || this;
+          ($a = ($b = person.$inventory()).$each, $a._p = (TMP_3 = function(type, count){var self = TMP_3._s || this;
 if (type == null) type = nil;if (count == null) count = nil;
-          return template = template['$+']("<div>" + (type) + ": " + (count))}, TMP_2._s = self, TMP_2), $a).call($b);
+          return template = template['$+']("<div>" + (type) + ": " + (count))}, TMP_3._s = self, TMP_3), $a).call($b);
           template = template['$+']("\n          <div>\n          </div>\n          <br>\n        </div>\n        ");
-          return self.people_stats_window.$append(template);}, TMP_1._s = self, TMP_1), $a).call($b);
+          return self.people_stats_window.$append(template);}, TMP_2._s = self, TMP_2), $a).call($b);
       }, nil) && 'render_people_stats!';
     })(self, null);
 
@@ -28117,26 +28132,26 @@ if (type == null) type = nil;if (count == null) count = nil;
       };
 
       def['$setup!'] = function() {
-        var $a, $b, TMP_3, self = this;
+        var $a, $b, TMP_4, self = this;
 
-        ($a = ($b = self.startButton).$on, $a._p = (TMP_3 = function(){var self = TMP_3._s || this, $a;
+        ($a = ($b = self.startButton).$on, $a._p = (TMP_4 = function(){var self = TMP_4._s || this, $a;
           if (self.playing == null) self.playing = nil;
 
         if ((($a = self.playing) !== nil && (!$a._isBoolean || $a == true))) {
             return self['$stop!']()
             } else {
             return self['$start!']()
-          }}, TMP_3._s = self, TMP_3), $a).call($b, "click");
+          }}, TMP_4._s = self, TMP_4), $a).call($b, "click");
         return self.window.$setup();
       };
 
       def['$start!'] = function() {
-        var $a, $b, TMP_4, self = this;
+        var $a, $b, TMP_5, self = this;
         if ($gvars.window == null) $gvars.window = nil;
 
-        self.game_loop = ($a = ($b = $gvars.window).$every, $a._p = (TMP_4 = function(){var self = TMP_4._s || this;
+        self.game_loop = ($a = ($b = $gvars.window).$every, $a._p = (TMP_5 = function(){var self = TMP_5._s || this;
 
-        return self['$update!']()}, TMP_4._s = self, TMP_4), $a).call($b, (1.0)['$/'](self.turns_per_second));
+        return self['$update!']()}, TMP_5._s = self, TMP_5), $a).call($b, (1.0)['$/'](self.turns_per_second));
         self.game_loop.$start();
         self.playing = true;
         self.window['$playing='](true);
@@ -28165,14 +28180,14 @@ if (type == null) type = nil;if (count == null) count = nil;
     })(self, null);
 
     return (def.$initialize = function() {
-      var $a, $b, TMP_5, $c, self = this;
+      var $a, $b, TMP_6, $c, self = this;
 
-      return ($a = ($b = (($c = $scope.Document) == null ? $opal.cm('Document') : $c))['$ready?'], $a._p = (TMP_5 = function(){var self = TMP_5._s || this, $a;
+      return ($a = ($b = (($c = $scope.Document) == null ? $opal.cm('Document') : $c))['$ready?'], $a._p = (TMP_6 = function(){var self = TMP_6._s || this, $a;
         if (self.game_loop == null) self.game_loop = nil;
 
       self.game_loop = (($a = $scope.GameLoop) == null ? $opal.cm('GameLoop') : $a).$new();
         self.game_loop['$setup!']();
-        return self.game_loop['$start!']();}, TMP_5._s = self, TMP_5), $a).call($b);
+        return self.game_loop['$start!']();}, TMP_6._s = self, TMP_6), $a).call($b);
     }, nil) && 'initialize';
   })(self, null);
   return (($a = $scope.TheGame) == null ? $opal.cm('TheGame') : $a).$new();

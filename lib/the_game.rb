@@ -87,12 +87,25 @@ class TheGame
       @time_window           = Element.find("#time")
       @people_stats_window   = Element.find("#people")
       @building_stats_window = Element.find("#buildings")
+      @stash_stats_window    = Element.find("#stash")
     end
 
     def update
       render_time!
       render_people_stats!
       render_building_stats!
+      render_stash!
+    end
+
+    def render_stash!
+      @stash_stats_window.empty
+      stash = Settlement.instance.stash
+      template = "<div>"
+      stash.each do |type, count|
+        template += "<div>#{type}: #{count}"
+      end
+      template += "</div>"
+      @stash_stats_window.append(template)
     end
 
     def render_building_stats!
