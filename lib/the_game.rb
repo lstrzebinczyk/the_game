@@ -84,17 +84,37 @@ class TheGame
   class Menu
     def initialize(engine)
       @engine = engine
-      @time_window         = Element.find("#time")
-      @people_stats_window = Element.find("#people")
+      @time_window           = Element.find("#time")
+      @people_stats_window   = Element.find("#people")
+      @building_stats_window = Element.find("#buildings")
     end
 
     def update
       render_time!
       render_people_stats!
+      render_building_stats!
+    end
+
+    def render_building_stats!
+      @building_stats_window.empty
+
+      dormitory = Settlement.instance.dormitory
+
+      unless dormitory.nil?
+        template = "<div>"
+        template += "<div>DORMITORY:</div>"
+        template += "<div>status: #{dormitory.status}</div>"
+        if dormitory.status == "plan"
+          template += "<div>firewood needed: #{dormitory.firewood_needed}</div>"
+        elsif dormitory.status == "building"
+          template += "<div>construction left: #{dormitory.minutes_left}</div>"
+        end
+
+        @building_stats_window.append(template)
+      end
     end
 
     def render_time!
-      # console.log @engine.time
       @time_window.text(@engine.time)
     end
 

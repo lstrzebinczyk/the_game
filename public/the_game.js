@@ -27928,7 +27928,7 @@ if (job == null) job = nil;
 (function($opal) {
   var $a, self = $opal.top, $scope = $opal, nil = $opal.nil, $breaker = $opal.breaker, $slice = $opal.slice, $klass = $opal.klass, $gvars = $opal.gvars;
 
-  $opal.add_stubs(['$find', '$render_time!', '$render_people_stats!', '$text', '$time', '$empty', '$each', '$type', '$thirst', '$hunger', '$energy', '$percentage', '$waterskin', '$description', '$action', '$+', '$inventory', '$append', '$people', '$new', '$on', '$stop!', '$start!', '$setup', '$every', '$update!', '$/', '$start', '$playing=', '$stop', '$private', '$update', '$render', '$ready?', '$setup!']);
+  $opal.add_stubs(['$find', '$render_time!', '$render_people_stats!', '$render_building_stats!', '$empty', '$dormitory', '$instance', '$nil?', '$+', '$status', '$==', '$firewood_needed', '$minutes_left', '$append', '$text', '$time', '$each', '$type', '$thirst', '$hunger', '$energy', '$percentage', '$waterskin', '$description', '$action', '$inventory', '$people', '$new', '$on', '$stop!', '$start!', '$setup', '$every', '$update!', '$/', '$start', '$playing=', '$stop', '$private', '$update', '$render', '$ready?', '$setup!']);
   ;
   ;
   ;
@@ -28002,20 +28002,41 @@ if (job == null) job = nil;
 
       var def = self._proto, $scope = self._scope;
 
-      def.time_window = def.engine = def.people_stats_window = nil;
+      def.building_stats_window = def.time_window = def.engine = def.people_stats_window = nil;
       def.$initialize = function(engine) {
         var $a, self = this;
 
         self.engine = engine;
         self.time_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#time");
-        return self.people_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#people");
+        self.people_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#people");
+        return self.building_stats_window = (($a = $scope.Element) == null ? $opal.cm('Element') : $a).$find("#buildings");
       };
 
       def.$update = function() {
         var self = this;
 
         self['$render_time!']();
-        return self['$render_people_stats!']();
+        self['$render_people_stats!']();
+        return self['$render_building_stats!']();
+      };
+
+      def['$render_building_stats!'] = function() {
+        var $a, self = this, dormitory = nil, template = nil;
+
+        self.building_stats_window.$empty();
+        dormitory = (($a = $scope.Settlement) == null ? $opal.cm('Settlement') : $a).$instance().$dormitory();
+        if ((($a = dormitory['$nil?']()) !== nil && (!$a._isBoolean || $a == true))) {
+          return nil
+          } else {
+          template = "<div>";
+          template = template['$+']("<div>DORMITORY:</div>");
+          template = template['$+']("<div>status: " + (dormitory.$status()) + "</div>");
+          if (dormitory.$status()['$==']("plan")) {
+            template = template['$+']("<div>firewood needed: " + (dormitory.$firewood_needed()) + "</div>")
+          } else if (dormitory.$status()['$==']("building")) {
+            template = template['$+']("<div>construction left: " + (dormitory.$minutes_left()) + "</div>")};
+          return self.building_stats_window.$append(template);
+        };
       };
 
       def['$render_time!'] = function() {
