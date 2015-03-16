@@ -82,7 +82,58 @@ require 'the_game/container'
 
 class TheGame
   class Menu
+    def initialize(engine)
+      @engine = engine
+      @time_window         = Element.find("#time")
+      @people_stats_window = Element.find("#people")
+    end
+
     def update
+      render_time!
+      render_people_stats!
+    end
+
+    def render_time!
+      # console.log @engine.time
+      @time_window.text(@engine.time)
+    end
+
+    def render_people_stats!
+      @people_stats_window.empty
+      @engine.people.each do |person|
+        type   = person.type
+        thirst = person.thirst
+        hunger = person.hunger
+        energy = person.energy
+        waterkinPercentage = person.waterskin.percentage
+        action_description = person.action.description
+
+
+        template = "
+        <div>
+          <div>type: #{type}</div>
+          <div>thirst: <progress value='#{thirst}'></progress></div>
+          <div>hunger: <progress value='#{hunger}'></progress></div>
+          <div>energy: <progress value='#{energy}'></progress></div>
+
+          <div>action_description: #{action_description}</div>
+          <div>waterkin capacity: <progress value='#{waterkinPercentage}'></progress>
+          <div>items:</div>
+        "
+
+        person.inventory.each do |type, count|
+          template += "<div>#{type}: #{count}"
+        end
+
+        template += "
+          <div>
+          </div>
+          <br>
+        </div>
+        "
+
+        @people_stats_window.append(template)
+      end
     end
   end
 
@@ -103,7 +154,7 @@ class TheGame
   class GameLoop
     def initialize
       @engine      = TheGame::Engine.new
-      @menu        = TheGame::Menu.new
+      @menu        = TheGame::Menu.new(@engine)
       @window      = TheGame::Window.new
       @startButton = Element.find("#start")
       @playing     = true
@@ -126,9 +177,13 @@ class TheGame
     end
 
     def start!
-      @game_loop = every(1000/@turns_per_second) do
+
+      @game_loop = $window.every(1.0/@turns_per_second) do
         update!
+        # puts "in loop"
       end
+      @game_loop.start
+      # update!
       @playing = true
       @window.playing = true
       @startButton.text("stop")

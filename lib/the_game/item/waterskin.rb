@@ -14,6 +14,10 @@ class TheGame
         @content << item
       end
 
+      def percentage
+        units / capacity
+      end
+
       def get_drink
         @content.pop
       end

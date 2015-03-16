@@ -13,6 +13,12 @@ class TheGame
       ITEM_TYPES
     end
 
+    def each
+      ITEM_TYPES.each do |type|
+        yield(type, count(type))
+      end
+    end
+
     def add(item)
       @content[item.type] << item
     end
